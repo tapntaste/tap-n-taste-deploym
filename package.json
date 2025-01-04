@@ -15,7 +15,7 @@
   },
   "private": true,
   "dependencies": {
-    "@emotion/react": "^11.13.3",
+    "@emotion/react": "^11.13.3", 
     "@emotion/styled": "^11.13.0",
     "@fontsource/poppins": "^5.1.1",
     "@hookform/resolvers": "^3.9.1",
@@ -60,7 +60,7 @@
     "react-toastify": "^10.0.6",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
-    "styled-components": "5.3.6",
+    "styled-components": "^6.1.13",
     "twilio": "^5.4.0",
     "uuid": "^11.0.3",
     "zod": "^3.24.1"
