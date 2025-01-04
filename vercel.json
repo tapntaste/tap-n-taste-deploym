@@ -1,23 +1,8 @@
 {
-  "version": 2,
   "rewrites": [
     {
-      "source": "/t-scanning/(.*)",
-      "destination": "/dist/t-scanning/index.html"
-    },
-    {
-      "source": "/t-admin/(.*)",
-      "destination": "/dist/t-admin/index.html"
-    },
-    {
-      "source": "/tap-n-taste-api/(.*)",
-      "destination": "/dist/tap-n-taste-api/main.js"
-    }
-  ],
-  "builds": [
-    {
-      "src": "dist/tap-n-taste-api/main.js",
-      "use": "@vercel/node"
+      "source": "/(.*)", 
+      "destination": "/index.html"
     }
   ]
 }
