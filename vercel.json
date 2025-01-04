@@ -1,14 +1,14 @@
 {
   "builds": [
     {
-      "src": "dist/tap-n-taste-api/main.js",
+      "src": "/dist/tap-n-taste-api/main.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "dist/tap-n-taste-api/main.js"
+      "dest": "/dist/tap-n-taste-api/main.js"
     }
   ]
 }
