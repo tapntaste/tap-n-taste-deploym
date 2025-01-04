@@ -1,0 +1,42 @@
+[build]
+  # Set the base directory for your build (for example, if the app is under 'dist')
+  base = "dist"
+
+[[redirects]]
+  from = "/t-scanning/*"
+  to = "/t-scanning/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/t-admin/*"
+  to = "/t-a[build]
+  # Set the base directory for your build (for example, if the app is under 'dist')
+  base = "dist"
+
+[[redirects]]
+  from = "/t-scanning/*"
+  to = "/t-scanning/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/t-admin/*"
+  to = "/t-admin/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/tap-n-taste-api/*"
+  to = "/tap-n-taste-api/main.js"
+  status = 200
+  force = true
+dmin/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/tap-n-taste-api/*"
+  to = "/tap-n-taste-api/main.js"
+  status = 200
+  force = true
