@@ -16,19 +16,5 @@
       "source": "/(.*)", 
       "destination": "/dist/t-scanning/index.html"
     }
-  ],
-  "builds": [
-    {
-      "src": "dist/tap-n-taste-api/main.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "dist/t-scanning/**/*",
-      "use": "@vercel/static-build"
-    },
-    {
-      "src": "dist/t-admin/**/*",
-      "use": "@vercel/static-build"
-    }
   ]
 }
