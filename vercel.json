@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 2,
   "rewrites": [
     {
       "source": "/t-scanning/(.*)",
@@ -17,6 +17,14 @@
     }
   ],
   "builds": [
+    {
+      "src": "dist/t-scanning/**/*",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "dist/t-admin/**/*",
+      "use": "@vercel/static"
+    },
     {
       "src": "dist/tap-n-taste-api/main.js",
       "use": "@vercel/node"
