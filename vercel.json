@@ -1,14 +1,33 @@
 {
-  "builds": [
+  "version": 3,
+  "rewrites": [
     {
-      "src": "dist/tap-n-taste-api/main.js",
-      "use": "@vercel/node"
+      "source": "/t-scanning/(.*)",
+      "destination": "/dist/t-scanning/index.html"
+    },
+    {
+      "source": "/t-admin/(.*)",
+      "destination": "/dist/t-admin/index.html"
     }
   ],
   "routes": [
     {
-      "src": "/(.*)",
+      "src": "/tap-n-taste-api/(.*)",
       "dest": "dist/tap-n-taste-api/main.js"
+    }
+  ],
+  "builds": [
+    {
+      "src": "dist/t-scanning/**/*",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "dist/t-admin/**/*",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "dist/tap-n-taste-api/main.js",
+      "use": "@vercel/node"
     }
   ]
 }
