@@ -3,14 +3,14 @@
   base = "/"
 
 [[redirects]]
-  from = "/t-scanning/*"
-  to = "/t-scanning/index.html"
+  from = "/*"
+  to = "/dist/t-scanning/index.html"
   status = 200
   force = true
 
 [[redirects]]
-  from = "/t-admin/*"
-  to = "/t-admin/index.html"
+  from = "/*"
+  to = "/dist/t-admin/index.html"
   status = 200
   force = true
 
