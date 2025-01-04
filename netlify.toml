@@ -1,6 +1,6 @@
 [build]
   # Set the base directory for your build (for example, if the app is under 'dist')
-  base = "dist"
+  base = "/"
 
 [[redirects]]
   from = "/t-scanning/*"
