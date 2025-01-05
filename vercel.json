@@ -9,6 +9,6 @@
    
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "dist/tap-n-taste-api/main.js" }
+    { "src": "/(.*)", "dest": "/dist/tap-n-taste-api/main.js" }
   ]
 }
