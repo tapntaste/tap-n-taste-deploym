@@ -1,13 +1,7 @@
 {
-  "installCommand": "pnpm install",
+  
   "version": 2,
-  "builds": [
-    {
-      "src": "/dist/tap-n-taste-api/tap-n-taste-api/src/main.js",
-      "use": "@vercel/node"
-    }
-   
-  ],
+ 
   "routes": [
     { "src": "/(.*)", "dest": "/dist/tap-n-taste-api/tap-n-taste-api/src/main.js" }
   ]
