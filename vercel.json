@@ -1,6 +1,11 @@
 {
   "version": 2,
+  "functions": {
+    "api/vercel.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
   "routes": [
-    { "src": "/(.*)", "dest": "api/main.js" }  
+    { "src": "/api/(.*)", "dest": "/api/main.js" }
   ]
 }
