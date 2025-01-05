@@ -1,6 +1,6 @@
 {
   "version": 2,
   "routes": [
-    { "src": "/api/(.*)", "dest": "/api/main.js" }
+    { "src": "/(.*)", "dest": "/dist/tap-n-taste-api/main.js" }
   ]
 }
