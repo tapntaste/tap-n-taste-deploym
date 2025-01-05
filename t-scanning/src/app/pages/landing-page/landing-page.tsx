@@ -14,6 +14,8 @@ import OrderPrepare from '../order-prepare/order-prepare';
 import OrderComplete from '../order-complete/order-complete';
 
 import OrderFlow from '../order-flow/order-flow';
+import PaymentScreen from '../tapn\'taste flow/payment-screen/payment-screen';
+import PaymentSuccess from '../tapn\'taste flow/payment-success/payment-success';
 export const LandingPage = () => {
   return (
     <Box>
@@ -41,7 +43,12 @@ export const LandingPage = () => {
         <Route path="user/:userId/profile" element={<ProfilePage />} />
         <Route path="user/:userId/order-flow" element={<OrderFlow />} />
         <Route path="otp" element={<TSubmit />} />
-      </Routes>
+
+
+        {/* TAP N TASTE FLOW */}
+        <Route path='/payment-screen' element={<PaymentScreen />} />
+        <Route path='/payment-success' element={<PaymentSuccess />} />
+        </Routes>
     </Box>
   );
 };
