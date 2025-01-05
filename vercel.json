@@ -2,5 +2,7 @@
   "version": 2,
   "routes": [
     { "src": "/(.*)", "dest": "dist/tap-n-taste-api/main.js" }
-  ]
+  ],
+  "devCommand": "node dist/tap-n-taste-api/main.js"
 }
+
