@@ -4,18 +4,18 @@
 
 [[redirects]]
   from = "/*"
-  to = "/dist/t-scanning/index.html"
+  to = "  /t-scanning/index.html"
   status = 200
   force = true
 
 [[redirects]]
   from = "/*"
-  to = "/dist/t-admin/index.html"
+  to = "/t-admin/index.html"
   status = 200
   force = true
 
 [[redirects]]
-  from = "/tap-n-taste-api/*"
+  from = "/*"
   to = "/tap-n-taste-api/main.js"
   status = 200
   force = true
