@@ -5,11 +5,8 @@
     {
       "src": "dist/tap-n-taste-api/main.js",
       "use": "@vercel/node"
-    },
-    {
-      "src": "src/**/*",
-      "use": "@vercel/static"
     }
+   
   ],
   "routes": [
     { "src": "/(.*)", "dest": "dist/tap-n-taste-api/main.js" }
