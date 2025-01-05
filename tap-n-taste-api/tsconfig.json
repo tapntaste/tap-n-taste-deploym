@@ -7,7 +7,7 @@
     "skipLibCheck": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "outDir": "dist/tap-n-taste-api",  // Specify output directory
+    "outDir": "api/tap-n-taste-api",  // Specify output directory
     "target": "ES6",                  // Target modern JavaScript version
     "module": "CommonJS"              // Use CommonJS modules for Node.js
   },
