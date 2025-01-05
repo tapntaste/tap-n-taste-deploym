@@ -11,9 +11,9 @@
       "defaultConfiguration": "production",
       "options": {
         "platform": "node",
-        "outputPath": "api/tap-n-taste-api",  // Updated output directory
+        "outputPath": "dist/tap-n-taste-api",
         "format": ["cjs"],
-        "bundle": true,  // Enable bundling for cleaner output
+        "bundle": true,  
         "main": "tap-n-taste-api/src/main.ts",
         "tsConfig": "tap-n-taste-api/tsconfig.app.json",
         "assets": ["tap-n-taste-api/src/assets"],
