@@ -1,9 +1,9 @@
 import { Box, Typography } from '@mui/material';
-import { offersSectionData } from '../../constants/LandingPageData';
 import { TButton, TCard } from '@tap-n-taste/ui';
-import '../../style.css';
+import '../app/style.css';
+import { hotDealsData } from 't-scanning/src/app/constants/CartPageData';
 
-const OfferPage = () => {
+const HotDeals = () => {
   return (
     <Box className="my-20">
       <Box className="flex justify-between items-center">
@@ -11,7 +11,7 @@ const OfferPage = () => {
           variant="h5"
           sx={{ fontFamily: 'Poppins', fontWeight: 'bold' }}
         >
-          Offers of the day
+          Hot Deals!
         </Typography>
         <TButton
           text="View All"
@@ -20,13 +20,18 @@ const OfferPage = () => {
         />
       </Box>
       <Box className="flex flex-row gap-12 overflow-x-auto no-scrollbar mt-3">
-        {offersSectionData.map((card, index) => (
+        {hotDealsData.map((card, index) => (
           <TCard
             key={index}
             imgURL={card.imgURL}
-            gradient={true}
+            gradient={false}
             primeText={card.primeText}
             secText={card.secText}
+            sx={{
+              root: { width: '310px', height: '110px' },
+              primeText: { fontSize: '30px' },
+              secText: { fontSize: '20px' },
+            }}
           />
         ))}
       </Box>
@@ -34,4 +39,4 @@ const OfferPage = () => {
   );
 };
 
-export default OfferPage;
+export default HotDeals;

@@ -9,7 +9,7 @@ import {
   TTableSelector,
   TViewBar,
 } from '@tap-n-taste/ui';
-import OfferPage from '../../offers-page/offers-page';
+import OfferPage from '../../../../components/OffersPage';
 import ChefSpecial from 't-scanning/src/components/ChefSpecial';
 import FaqPage from 't-scanning/src/components/FaqPage';
 import IssueSection from 't-scanning/src/components/IssueSection';

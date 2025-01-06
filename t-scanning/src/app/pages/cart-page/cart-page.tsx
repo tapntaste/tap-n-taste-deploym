@@ -8,12 +8,12 @@ import {
 } from '@tap-n-taste/ui';
 import ControlPointRoundedIcon from '@mui/icons-material/ControlPointRounded';
 import Divider from '@mui/material/Divider';
-import ApplyCoupons from './apply-coupons/apply-coupons';
-import HotDeals from './hot-deals/hot-deals';
-import CartTable from './cart-table/cart-table';
+import ApplyCoupons from '../../../components/ApplyCoupons';
+import HotDeals from '../../../components/HotDeals';
 import { useState } from 'react';
 import { ExpandMoreOutlined } from '@mui/icons-material';
 import { cartPageCardsData } from '../../constants/CartPageData';
+import CartTable from 't-scanning/src/components/CartTable';
 
 const CartPage = () => {
   const [expanded, setExpanded] = useState(false);
