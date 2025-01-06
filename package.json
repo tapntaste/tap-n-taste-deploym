@@ -12,7 +12,8 @@
     "build:admin": "nx build t-admin",
     "build:scanning": "nx build t-scanning",
     "postbuild": "node create-redirects.js", 
-    "test": "nx test"
+    "test": "nx test",
+    "vercel-build": "echo hello"
   },
   "private": true,
   "dependencies": {
