@@ -1,9 +1,15 @@
 {
-  "rewrites": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/(.*)",
-      "destination": "tap-n-taste-api/api"
+      "src": "dist/tap-n-taste-api/main.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "dist/tap-n-taste-api/main.js"
     }
   ]
 }
-
