@@ -1,15 +1,9 @@
 {
   "version": 2,
- "builds": [
-    {
-      "src": "tap-n-taste-api/main.ts",
-      "use": "@vercel/node"
-    }
-  ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "tap-n-taste-api/main.js"
+      "dest": "/index.js"
     }
   ]
 }

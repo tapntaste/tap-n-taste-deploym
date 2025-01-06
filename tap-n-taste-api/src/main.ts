@@ -6,24 +6,27 @@ import dotenv from 'dotenv';
 import errorHandler from './middlewares/errorHandler';
 import { handleFileUpload } from './middlewares/uploadMiddleware';
 import passport from './utils/googleAuth';
-import http from 'http';
-import socketIo from 'socket.io';
-import cors from 'cors';
+import http from 'http';  // Import HTTP to create server
+import socketIo from 'socket.io';  // Import Socket.IO
+import cors from 'cors';  // Import CORS for cross-origin handling
 
 // Load environment variables from .env file
 dotenv.config();
 
 const app = express();
-const server = http.createServer(app);
-export const io = new socketIo.Server(server);
+const server = http.createServer(app);  // Create an HTTP server from Express
+export const io = new socketIo.Server(server, {  // Initialize Socket.IO
+  
+});
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 3000;
 
 // CORS Configuration
 const corsOptions = {
-  origin: ['http://localhost:4200', 'http://localhost:4300'],
-  credentials: true,
+  origin:[ 'http://localhost:4200', 'http://localhost:4300'],  // Allow both frontend URLs
+  credentials: true,  // Allow cookies to be sent with requests
 };
+
 
 // Enable CORS with the specified options
 app.use(cors(corsOptions));
@@ -36,7 +39,7 @@ connectDB();
 
 // Middleware to parse JSON and handle file upload
 app.use(express.urlencoded({ extended: true }));
-app.use(handleFileUpload);
+app.use(handleFileUpload);  // Global file upload middleware
 
 // Initialize Passport
 app.use(passport.initialize());
@@ -56,9 +59,11 @@ app.get('/health', async (req, res) => {
     timestamp: new Date(),
     database: 'Unknown',
     memoryUsage: process.memoryUsage(),
+    // loadAverage: process.loadavg(),
   };
 
   try {
+    // Check database connection
     const isDatabaseConnected = await checkDatabaseConnection();
     healthReport.database = isDatabaseConnected ? 'Connected' : 'Disconnected';
   } catch (err) {
@@ -79,16 +84,15 @@ app.get('/', (req, res) => {
 });
 
 // Start Server
-if (process.env.NODE_ENV !== 'vercel') {
-  server.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
-}
+server.listen(PORT, () => {  // Use the `server` object to listen instead of `app.listen()`
+  console.log(`Server running on http://localhost:${PORT}`);
+});
 
 // Socket.IO Logic: Listen for connections
 io.on('connection', (socket) => {
   console.log('A user connected');
   
+  // Handle disconnection
   socket.on('disconnect', () => {
     console.log('User disconnected');
   });
@@ -96,9 +100,8 @@ io.on('connection', (socket) => {
 
 // Helper function to check database connection
 async function checkDatabaseConnection() {
+  // Implement database health check logic here
+  // Example (for MongoDB):
   const mongoose = require('mongoose');
-  return mongoose.connection.readyState === 1;
+  return mongoose.connection.readyState === 1;  // Check if DB is connected
 }
-
-// Export the app for Vercel
-export { app };
