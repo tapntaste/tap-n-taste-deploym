@@ -99,3 +99,4 @@ async function checkDatabaseConnection() {
   const mongoose = require('mongoose');
   return mongoose.connection.readyState === 1;  // Check if DB is connected
 }
+export default server
