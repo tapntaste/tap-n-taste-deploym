@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "dist/tap-n-taste-api/main.js",
+      "src": "tap-n-taste-api/**/*.ts",
       "use": "@vercel/node"
     }
   ],
