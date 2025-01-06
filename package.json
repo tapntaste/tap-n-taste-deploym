@@ -7,10 +7,11 @@
     "start:backend": "nx serve tap-n-taste-api --port 3000",
     "start:admin": "nx serve t-admin --port 4200",
     "start:scanning": "nx serve t-scanning --port 4300",
-    "build": "nx build",
+    "build": "nx build && npm run postbuild", 
     "build:backend": "nx build tap-n-taste-api",
     "build:admin": "nx build t-admin",
     "build:scanning": "nx build t-scanning",
+    "postbuild": "node create-redirects.js", 
     "test": "nx test"
   },
   "private": true,
@@ -135,3 +136,4 @@
     "includedScripts": []
   }
 }
+

@@ -17,14 +17,13 @@ const app = express();
 const server = http.createServer(app);
 export const io = new socketIo.Server(server);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;  // Change to your desired port (4000 for example)
 
 // CORS Configuration
 const corsOptions = {
-  origin:[ 'http://localhost:4200', 'http://localhost:4300'],  // Allow both frontend URLs
+  origin: ['http://localhost:4200', 'http://localhost:4300'],  // Allow both frontend URLs
   credentials: true,  // Allow cookies to be sent with requests
 };
-
 
 // Enable CORS with the specified options
 app.use(cors(corsOptions));
@@ -57,7 +56,6 @@ app.get('/health', async (req, res) => {
     timestamp: new Date(),
     database: 'Unknown',
     memoryUsage: process.memoryUsage(),
-    // loadAverage: process.loadavg(),
   };
 
   try {
@@ -98,8 +96,6 @@ io.on('connection', (socket) => {
 
 // Helper function to check database connection
 async function checkDatabaseConnection() {
-  // Implement database health check logic here
-  // Example (for MongoDB):
   const mongoose = require('mongoose');
   return mongoose.connection.readyState === 1;  // Check if DB is connected
 }
