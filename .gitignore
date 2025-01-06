@@ -96,3 +96,5 @@ vite.config.*.timestamp*
 # Nx
 .nx/
 *.nx.json
+
+.vercel
