@@ -51,6 +51,7 @@ export const LandingPage = () => {
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/booking-confirmation" element={<BookingConfirmation />} />
         <Route path="/order-placed" element={<OrderPlacedScreen />} />
+        <Route path="/order-placed" element={<OrderPlacedScreen />} />
       </Routes>
     </Box>
   );
