@@ -4,8 +4,8 @@ import { createTheme, ThemeProvider, CssBaseline } from '@mui/material';
 import { TAbout } from '@tap-n-taste/ui';
 import { ToastContainer } from 'react-toastify';
 import theme from 't-admin/src/theme';
-import ContactPage from './pages/contact-page/contact-page';
 import AboutPage from './pages/about-page/about-page';
+import ContactPage from './pages/tapn\'taste flow/contact-page/contact-page';
 
 const App = () => (
   <ThemeProvider theme={theme}>
