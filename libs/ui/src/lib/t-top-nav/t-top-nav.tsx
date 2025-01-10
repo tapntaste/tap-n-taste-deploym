@@ -30,7 +30,7 @@ export function TopNav() {
   };
 
   return (
-    <Box className="">
+    <Box className="px-[8%] sm:px-[15%] sticky top-0 bg-tertiary bg-white z-20">
       <Box className="flex items-center justify-between py-5 sm:py-10 relative">
         {/* Sidebar for mobile and tablet screens */}
         <TSidebar />

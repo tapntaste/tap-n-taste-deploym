@@ -8,7 +8,7 @@ const TopCustomerLikes = () => {
       <Box className="flex justify-between items-center">
         <Typography
           variant="h5"
-          sx={{ fontFamily: 'Poppins', fontWeight: 'bold' }}
+          sx={{  fontWeight: 'bold' }}
         >
           Mostly Liked by Customers
         </Typography>

@@ -5,7 +5,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { navLinksData } from 't-scanning/src/app/constants/LandingPageData';
 import { Typography } from '@mui/material';
 import Logo from '../../assets/logo.png';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 
 export default function TSidebar() {
   const [open, setOpen] = React.useState(false);
@@ -14,6 +14,8 @@ export default function TSidebar() {
     setOpen(newOpen);
   };
 
+  // Use useParams hook to get the dynamic restaurant ID
+  const { restaurantId } = useParams(); 
   const DrawerList = (
     <Box
       className="w-[250px] h-full py-6 relative md:flex lg:hidden"
@@ -21,8 +23,16 @@ export default function TSidebar() {
       onClick={toggleDrawer(false)}
     >
       <Box className="flex flex-col gap-4 cursor-pointer">
-        {navLinksData.map((navLink, index) => (
-          <NavLink key={navLink.linkText} to={navLink.path} end={navLink.end}>
+        {navLinksData.map((navLink, index) =>
+        
+        {
+           // Check if the navLink is for the home page, and append `/homepage`
+        const path = navLink.path === '/restaurant/:restaurantId' 
+        ? `/restaurant/${restaurantId}/homepage`
+        : `/restaurant/${restaurantId}${navLink.path}`;
+        
+          return (
+            <NavLink key={navLink.linkText} to={path} end={navLink.end}>
             <Box className="px-6 py-2 hover:bg-primary hover:text-white flex gap-2 items-center justify-start transition-all duration-300">
               <navLink.icon
                 sx={{
@@ -39,7 +49,9 @@ export default function TSidebar() {
               </Typography>
             </Box>
           </NavLink>
-        ))}
+        )}
+        
+        )}
       </Box>
 
       <Box className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center justify-center">

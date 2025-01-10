@@ -43,7 +43,7 @@ const StyledTView = styled.div`
 export function TView() {
   return (
     <StyledTView>
-      <Wrapper>
+      <Wrapper className="flex flex-wrap">
         <Button>ALL</Button>
         <Button>Starters</Button>
         <Button>Appetizers</Button>

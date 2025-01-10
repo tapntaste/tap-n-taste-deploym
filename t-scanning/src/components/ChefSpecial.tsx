@@ -8,7 +8,7 @@ const ChefSpecial = () => {
       <Box className="flex justify-between items-center overflow-visible">
         <Typography
           variant="h5"
-          sx={{ fontFamily: 'Poppins', fontWeight: 'bold' }}
+          sx={{ fontWeight: 'bold' }}
         >
           Chef's Special
         </Typography>
@@ -40,7 +40,6 @@ const ChefSpecial = () => {
             <Typography
               variant="body1"
               sx={{
-                fontFamily: 'Poppins',
                 color: '#616161',
                 paddingLeft: 2,
               }}

@@ -5,7 +5,7 @@ import Restaurant from '../models/restaurant.model.js';
 export const createMenuItem = async (req, res) => {
   try {
     const restaurantId = req.params.id;
-    const { name, price, category, createdBy } = req.body;
+    const { name, price, category } = req.body;
 
     // Validate required fields
     if (!name || !price || !category) {

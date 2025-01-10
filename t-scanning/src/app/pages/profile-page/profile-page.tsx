@@ -8,7 +8,7 @@ import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
 import { TButton, TFooter } from '@tap-n-taste/ui';
 import ProfilePic from '../../../assets/Group.png';
 
-const ProfilePage = () => {
+export const ProfilePage = () => {
   const [userName, setUserName] = useState('');
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +57,6 @@ const ProfilePage = () => {
           <h3
             style={{
               margin: 0,
-              fontFamily: 'Poppins, sans-serif',
               fontWeight: 400,
               fontSize: '18px',
               color: 'black',
@@ -89,7 +88,6 @@ const ProfilePage = () => {
           sx={{
             width: '80%',
             marginBottom: '10px',
-            fontFamily: 'Poppins, sans-serif',
           }}
         />
 
@@ -104,7 +102,6 @@ const ProfilePage = () => {
           sx={{
             color: '#F1414F',
             border: '1px solid #F1414F',
-            fontFamily: 'Poppins, sans-serif',
             padding: '4px 10px',
             fontSize: '14px',
             fontWeight: 500,
@@ -117,7 +114,6 @@ const ProfilePage = () => {
             fullWidth
             sx={{
               textAlign: 'left',
-              fontFamily: 'Poppins, sans-serif',
               borderRadius: '20px',
               fontSize: '14px',
               color: 'black',
@@ -140,7 +136,6 @@ const ProfilePage = () => {
             fullWidth
             sx={{
               textAlign: 'left',
-              fontFamily: 'Poppins, sans-serif',
               borderRadius: '20px',
               fontSize: '14px',
               color: 'black',
@@ -160,7 +155,6 @@ const ProfilePage = () => {
             fullWidth
             sx={{
               textAlign: 'left',
-              fontFamily: 'Poppins, sans-serif',
               borderRadius: '20px',
               fontSize: '14px',
               color: 'black',
@@ -181,7 +175,6 @@ const ProfilePage = () => {
             fullWidth
             sx={{
               textAlign: 'left',
-              fontFamily: 'Poppins, sans-serif',
               borderRadius: '20px',
               fontSize: '14px',
               color: 'black',
@@ -214,11 +207,6 @@ const ProfilePage = () => {
             marginTop: '20px',
           }}
         />
-
-        {/* Footer */}
-        <Box sx={{ width: '100%', backgroundColor: 'white', marginTop: '20px' }}>
-          <TFooter />
-        </Box>
       </Box>
     </Box>
   );

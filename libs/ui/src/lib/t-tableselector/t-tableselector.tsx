@@ -21,7 +21,7 @@ export function TTableSelector({
   };
 
   return (
-    <Box className={`z-50 w-fit h-fit ${className}`} sx={sx}>
+    <Box className={`z-10 w-fit h-fit ${className}`} sx={sx}>
       <div className="flex items-center justify-center text-red-500">
         {/* Dropdown */}
         <h1 className="font-semibold text-black mr-2">Table No.</h1>

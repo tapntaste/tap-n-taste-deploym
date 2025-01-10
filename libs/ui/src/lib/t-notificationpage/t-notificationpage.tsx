@@ -47,8 +47,6 @@ const StyledTNotificationPage = styled.div`
 export function TNotificationPage() {
   return (
     <Box className="px-[8%] sm:px-[15%]">
-      {/* Top Navigation Bar */}
-      <TopNav />
       <StyledTNotificationPage>
         <TNotificationBar></TNotificationBar>
         <div>
