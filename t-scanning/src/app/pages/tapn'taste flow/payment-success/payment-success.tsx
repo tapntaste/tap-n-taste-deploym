@@ -3,7 +3,7 @@ import { TButton } from '@tap-n-taste/ui';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import Tick from '../../../../assets/tick-circle.png';
 
-const PaymentSuccess = () => {
+export const PaymentSuccess = () => {
   const navigate = useNavigate();
   return (
     <Box className="w-full min-h-screen px-[8%] sm:px-[15%] pt-10 flex justify-center items-center flex-col">

@@ -123,23 +123,24 @@ import NotificationsActiveOutlinedIcon from '@mui/icons-material/NotificationsAc
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
 
+
 export const navLinksData = [
   {
     icon: HomeOutlinedIcon,
     linkText: 'Home',
-    path: '/restaurant/:restaurantId/',
+    path: '/',
     end: true, // Active only for the exact "/restaurants/:id"
   },
   {
     icon: RestaurantMenuOutlinedIcon,
     linkText: 'Menu',
-    path: '/restaurant/:restaurantId/menu',
+    path: '/menu',
     end: false, // Sub-paths are fine
   },
   {
     icon: NotificationsActiveOutlinedIcon,
     linkText: 'Notifications',
-    path: '/restaurant/:restaurantId/notification',
+    path: '/notification',
     end: true,
   },
   {

@@ -9,7 +9,7 @@ interface TbuttonProps {
   children: React.ReactNode;
 }
 
-const Tbutton: React.FC<TbuttonProps> = ({
+ const Tbutton: React.FC<TbuttonProps> = ({
   style,
   onMouseEnter,
   onMouseLeave,
@@ -26,7 +26,7 @@ const Tbutton: React.FC<TbuttonProps> = ({
   );
 };
 
-const OrderPrepare: React.FC = () => {
+export const OrderPrepare: React.FC = () => {
   return (
     <div
       style={{
@@ -47,7 +47,6 @@ const OrderPrepare: React.FC = () => {
           padding: "20px",
           textAlign: "center",
           boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
-          fontFamily: "'Poppins', sans-serif",
         }}
       >
         {/* Close Icon */}

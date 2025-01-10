@@ -9,7 +9,7 @@ const OfferPage = () => {
       <Box className="flex justify-between items-center">
         <Typography
           variant="h5"
-          sx={{ fontFamily: 'Poppins', fontWeight: 'bold' }}
+          sx={{  fontWeight: 'bold' }}
         >
           Offers of the day
         </Typography>

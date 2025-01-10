@@ -16,7 +16,7 @@ import { menuCardData } from '../../constants/MenuPageData';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 
-export default function MenuPage() {
+export const MenuPage=() =>{
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -38,7 +38,6 @@ export default function MenuPage() {
 
   return (
     <Box className="px-[8%] sm:px-[15%]">
-      <TopNav />
       <TSearchbar />
       <TView />
 
@@ -64,9 +63,6 @@ export default function MenuPage() {
       </Box>
 
       <BottomInfoPopUp noOfItems={3} />
-      <Box className="mb-4">
-        <TFooter />
-      </Box>
     </Box>
   );
 }

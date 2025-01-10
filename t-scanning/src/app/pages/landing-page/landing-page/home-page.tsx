@@ -17,12 +17,16 @@ import GalleryPage from 't-scanning/src/components/GalleryPage';
 import TopCustomerLikes from 't-scanning/src/components/TopCustomerLikes';
 import { RestaurantInfoPage } from 't-scanning/src/components/RestaurantInfoPage';
 import ReviewPage from 't-scanning/src/components/ReviewCard';
-
-const HomePage = () => {
+import {useFetchRestaurantData} from '@tap-n-taste/hooks'
+import { RootState } from '@tap-n-taste/utils';
+import { useSelector } from 'react-redux';
+export const HomePage = () => {
+  const { restaurantData } = useSelector((state: RootState) => state.restaurant);
+  
+  
   return (
     <Box className="px-[8%] sm:px-[15%]">
       {/* Top Navigation Bar */}
-      <TopNav />
 
       {/* Table Selector */}
       <Box className="w-full flex items-center justify-center">
@@ -40,6 +44,7 @@ const HomePage = () => {
         deliveryAndDinning={true}
         distance={2.2}
         ratings={4.5}
+        restaurantData={restaurantData}
       />
 
       {/* <Box className="flex justify-between items-center mb-8">
@@ -82,9 +87,6 @@ const HomePage = () => {
           Powered by Tap'nTaste
         </h1>
       </Box>
-
-      {/* Mobile Bottom Navigation */}
-      <TFooter />
     </Box>
   );
 };

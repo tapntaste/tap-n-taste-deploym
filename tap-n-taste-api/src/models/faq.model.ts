@@ -37,16 +37,6 @@ const faqSchema = new mongoose.Schema(
       enum: ['general', 'menu', 'order', 'delivery', 'other'], 
       default: 'general' 
     }, // Category to classify the FAQ (e.g., menu, order-related, general)
-
-    createdAt: { 
-      type: Date, 
-      default: Date.now 
-    }, // Timestamp when the FAQ was created
-
-    updatedAt: { 
-      type: Date 
-    }, // Timestamp when the FAQ was last updated
-
   },
   { timestamps: true }
 );

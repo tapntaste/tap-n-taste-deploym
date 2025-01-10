@@ -21,6 +21,7 @@ interface RestaurantProps {
   deliveryAndDinning: boolean;
   distance: number;
   ratings: number;
+  restaurantData:any;
 }
 
 export const RestaurantInfoPage = ({
@@ -33,6 +34,7 @@ export const RestaurantInfoPage = ({
   deliveryAndDinning,
   distance,
   ratings,
+  restaurantData
 }: RestaurantProps) => {
   const navigate = useNavigate();
   return (

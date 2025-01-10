@@ -5,7 +5,7 @@ import { TBarButton, TButton, TFooter } from '@tap-n-taste/ui';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 
-const BookingConfirmation = () => {
+export const BookingConfirmation = () => {
   const navigate = useNavigate();
 
   const handleNotificationClick = () => {
@@ -59,7 +59,6 @@ const BookingConfirmation = () => {
           <span className="text-primary">support@gourmetbistro.com</span>
         </p>
       </Box>
-      <TFooter />
     </Box>
   );
 };

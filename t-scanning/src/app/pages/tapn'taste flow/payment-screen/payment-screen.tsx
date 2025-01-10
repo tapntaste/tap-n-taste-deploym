@@ -5,7 +5,7 @@ import React from 'react'
 import { TButton } from '@tap-n-taste/ui'
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 
-const PaymentScreen = () => {
+export const PaymentScreen = () => {
     
   const navigate = useNavigate();
   return (

@@ -17,7 +17,7 @@ import CallIcon from '@mui/icons-material/Call';
 import MailIcon from '@mui/icons-material/Mail';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
-const ContactPage = () => {
+export const ContactPage = () => {
   const [subject, setSubject] = React.useState('Select Subject');
 
   const handleChange = (event: SelectChangeEvent) => {

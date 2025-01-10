@@ -46,15 +46,6 @@ const contactSchema = new mongoose.Schema(
       default: 'Email' 
     }, // Preferred contact method for communication
 
-    createdAt: { 
-      type: Date, 
-      default: Date.now 
-    }, // Date when the contact was created
-
-    updatedAt: { 
-      type: Date 
-    }, // Last updated date
-
   },
   { timestamps: true }
 );

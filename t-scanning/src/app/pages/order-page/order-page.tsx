@@ -4,7 +4,7 @@ import { TButton } from '@tap-n-taste/ui';
 import Cross from '../../../assets/cross.png';
 import CloseIcon from '@mui/icons-material/Close';
 
-const OrderPage = () => {
+export const OrderPage = () => {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(true);
@@ -122,7 +122,6 @@ const OrderPage = () => {
                 borderRadius: '12px',
                 width: '120px',
                 height: '46px',
-                fontFamily: 'Poppins',  // Ensuring the font is Poppins
                 fontWeight: 400,
                 fontSize: '20px',
                 lineHeight: '30px',
@@ -138,7 +137,7 @@ const OrderPage = () => {
                 borderRadius: '12px',
                 width: '120px',
                 height: '46px',
-                fontFamily: 'Poppins',  // Ensuring the font is Poppins
+                fontFamily: '',  // Ensuring the font is Poppins
                 fontWeight: 400,
                 fontSize: '20px',
                 lineHeight: '30px',
