@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const tableSchema = new mongoose.Schema({
   name: { type: String, required: true, trim: true }, // e.g., "Table 1"
-  number: { type: Number, required: true, unique: true }, // e.g., 1
+  number: { type: Number, required: true }, // e.g., 1
   restaurant: { type: mongoose.Schema.Types.ObjectId, ref: "Restaurant", required: true },
   
   // QR Code for menu/digital interaction

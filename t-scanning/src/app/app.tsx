@@ -8,6 +8,7 @@ import AboutPage from './pages/about-page/about-page';
 import ContactPage from "./pages/tapn'taste flow/contact-page/contact-page";
 import { Provider } from 'react-redux';
 import { store } from '@tap-n-taste/utils';
+import { RestaurantList } from '@tap-n-taste/scanning';
 
 const App = () => (
   <Provider store={store}>
@@ -15,7 +16,7 @@ const App = () => (
       <CssBaseline /> {/* Ensures consistent baseline styles across browsers */}
       <ToastContainer position="top-right" autoClose={5000} />
       <Routes>
-        <Route path="/" element={<div>Tap-n-Taste Page</div>} />
+        <Route path="/" element={<RestaurantList/>} />
         <Route path="/restaurant/:restaurantId/*" element={<LandingPage />} />
       </Routes>
     </ThemeProvider>

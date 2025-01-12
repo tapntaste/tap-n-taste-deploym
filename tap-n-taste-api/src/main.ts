@@ -9,6 +9,7 @@ import passport from './utils/googleAuth';
 import http from 'http';  // Import HTTP to create server
 import socketIo from 'socket.io';  // Import Socket.IO
 import cors from 'cors';  // Import CORS for cross-origin handling
+import { BACKEND_URL,ADMIN_FRONTEND_URL,SCANNING_FRONTEND_URL } from './constant/API.constant';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -21,7 +22,7 @@ const PORT = process.env.PORT || 3000;
 
 // CORS Configuration
 const corsOptions = {
-  origin:[ 'http://localhost:4200', 'http://localhost:4300'],  // Allow both frontend URLs
+  origin:[ ADMIN_FRONTEND_URL, SCANNING_FRONTEND_URL],  // Allow both frontend URLs
   credentials: true,  // Allow cookies to be sent with requests
 };
 
@@ -89,7 +90,7 @@ app.get('/api', (req, res) => {
 
 // Start Server
 server.listen(PORT, () => {  // Use the `server` object to listen instead of `app.listen()`
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT} Backend Server running on ${BACKEND_URL} , Admin Frontend running on ${ADMIN_FRONTEND_URL} , Scanning Frontend running on ${SCANNING_FRONTEND_URL}`);
 });
 
 // Socket.IO Logic: Listen for connections
