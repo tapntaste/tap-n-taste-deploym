@@ -51,8 +51,8 @@ export const RestaurantInfoPage = ({
   const { restaurantData } = useSelector(
     (state: RootState) => state.restaurant
   );
-   // State for features
-   const [activeFeatures, setActiveFeatures] = useState<any[]>([]);
+  // State for features
+  const [activeFeatures, setActiveFeatures] = useState<any[]>([]);
   const isDesktop = useMediaQuery('(min-width:600px)');
   const phone = restaurantData?.contact[0]?.phone;
   const location = restaurantData?.location;
@@ -76,33 +76,32 @@ export const RestaurantInfoPage = ({
   };
   useEffect(() => {
     const featureLabels: { [key: string]: string } = {
-      isOrderOnline: "Order Online Available",
-      isReviewActivated: "Reviews Activated",
-      isBookTable: "Table Booking Available",
-      isEventBook: "Event Booking Available",
-      isArMenu: "Augmented Reality Menu Available",
-      isMenuAvailable: "Menu Available",
-      isDineInAvailable: "Dine-In Available",
-      isDeliveryAvailable: "Delivery Available",
-      isTakeawayAvailable: "Takeaway Available",
-      isPureVeg: "Pure Vegetarian",
-      isNonVeg: "Non-Vegetarian Options Available",
+      isOrderOnline: 'Order Online Available',
+      isReviewActivated: 'Reviews Activated',
+      isBookTable: 'Table Booking Available',
+      isEventBook: 'Event Booking Available',
+      isArMenu: 'Augmented Reality Menu Available',
+      isMenuAvailable: 'Menu Available',
+      isDineInAvailable: 'Dine-In Available',
+      isDeliveryAvailable: 'Delivery Available',
+      isTakeawayAvailable: 'Takeaway Available',
+      isPureVeg: 'Pure Vegetarian',
+      isNonVeg: 'Non-Vegetarian Options Available',
     };
 
     const features = restaurantData?.features || {};
+    console.log('Features:', features);
 
-    // Filter for features that are true
-    let activeFeatures = Object.values(features)
-    activeFeatures=activeFeatures.filter((ele:any,index)=>{
-      if(ele===true){
-        return featureLabels[features[index]]
-      }
-      return false
-    })
+    // Filter for features that are true and map to the featureLabels
+    const activeFeatures = Object.keys(features)
+      .filter((key) => features[key] === true) // Only keep keys where the value is true
+      .map((key) => featureLabels[key]); // Map the key to its label
 
-    setActiveFeatures(activeFeatures);
-  }, [restaurantData,restaurantData?.features]);
-  console.log(activeFeatures);
+    console.log('Active Features:', activeFeatures);
+
+    setActiveFeatures(activeFeatures); // Set the state with the active feature labels
+  }, [restaurantData]);
+
 
   return (
     <Box className="z-10 font-primary">
@@ -206,7 +205,7 @@ export const RestaurantInfoPage = ({
                   ))}
                 </List>
               ) : (
-                <Typography variant="body1" color="textSecondary">
+                <Typography color="textSecondary">
                   No active features available.
                 </Typography>
               )}
