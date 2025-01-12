@@ -14,6 +14,8 @@ import OrderPrepare from '../order-prepare/order-prepare';
 import OrderComplete from '../order-complete/order-complete';
 
 import OrderFlow from '../order-flow/order-flow';
+import OrderChoices from '../order-choice/order-choice';
+import OrderChoice1 from '../order-choice/orderchoice1';
 export const LandingPage = () => {
   return (
     <Box>
@@ -40,6 +42,8 @@ export const LandingPage = () => {
         <Route path="user/:userId/order-complete" element={<OrderComplete />} />
         <Route path="user/:userId/profile" element={<ProfilePage />} />
         <Route path="user/:userId/order-flow" element={<OrderFlow />} />
+        <Route path="order-choice" element={<OrderChoices />} />
+        <Route path="order-choices-1" element={<OrderChoice1 />} />
         <Route path="otp" element={<TSubmit />} />
       </Routes>
     </Box>
