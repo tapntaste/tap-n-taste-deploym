@@ -60,6 +60,9 @@ const PATHS = {
   CONTACT: '/contact*',
 };
 
+
+console.log(BACKEND_URL,SCANNING_FRONTEND_URL,ADMIN_FRONTEND_URL);
+
 /**
  * @component LandingPage
  * @description Handles route navigation and shared layout with Tailwind CSS and constants for paths.
