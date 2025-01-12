@@ -10,6 +10,7 @@ import Review from '../models/review.model';
 import FAQ from '../models/faq.model';
 import Table from '../models/table.model';
 import Event from '../models/event.model';
+import Feature from '../models/feature.model';
 // Create a restaurant
 export const createRestaurant = async (req, res, next) => {
   try {
@@ -44,7 +45,8 @@ export const getRestaurantById = async (req, res, next) => {
       .populate('reviews')
       .populate('faq')
       .populate('table')
-      .populate('events');
+      .populate('events')
+      .populate('features');
     if (!restaurant)
       return res.status(404).json({ message: 'Restaurant not found' });
     res.status(200).json(restaurant);
@@ -70,13 +72,14 @@ export const updateRestaurant = async (req, res, next) => {
       faq, // Added to capture FAQs
       table,  // Added table to the request body
       events, // Added to capture events
+      features, // Added to capture features
       ...restaurantData
     } = req.body;
 
     const restaurantId = req.params.id;
     const userId = req.user.id; // Assuming user ID is attached to `req.user` from the auth middleware
 
-    let locationId, openHoursId, mediaId, socialLinksId,tableId;
+    let locationId, openHoursId, mediaId, socialLinksId,tableId,featuresId;
 
     // Handle Location Update or Creation
     if (location) {
@@ -363,6 +366,36 @@ if (events && Array.isArray(events)) {
   }
 }
 
+  // Handle Features Update or Creation
+  if (features) {
+    if (features._id) {
+      // Update existing Features
+      const updatedFeatures = await Feature.findByIdAndUpdate(
+        features._id,
+        {
+          ...features,
+          restaurantId, // Link Features with the restaurant
+          updatedBy: userId, // User who is updating the Features
+        },
+        {
+          new: true,
+          runValidators: true,
+          session,
+        }
+      );
+      featuresId = updatedFeatures?._id;
+    } else {
+      // Create new Features with restaurant and user references
+      const newFeatures = new Feature({
+        ...features,
+        restaurantId, 
+        createdBy: userId, 
+      });
+      await newFeatures.save({ session });
+      featuresId = newFeatures._id;
+    }
+  }
+
     // Update Restaurant Data with location and contact references
     const updatedRestaurant = await Restaurant.findByIdAndUpdate(
       restaurantId,
@@ -378,6 +411,7 @@ if (events && Array.isArray(events)) {
         faq: faqIds.length ? faqIds : undefined, // Update with FAQs if present
         table: tableId ? [tableId] : undefined, // Add table reference if exists
         events: eventIds.length ? eventIds : undefined, // Add events to the restaurant (new or existing)
+        features: featuresId ? [featuresId] : undefined, // Update features reference
       },
       { new: true, runValidators: true, session }
     );

@@ -1,19 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-// Define Features Interface
-interface Features {
-  isOrderOnline?: boolean;
-  isReviewActivated?: boolean;
-  isBookTable?: boolean;
-  isEventBook?: boolean;
-  isArMenu?: boolean;
-  isMenuAvailable?: boolean;
-  isDineInAvailable?: boolean;
-  isDeliveryAvailable?: boolean;
-  isTakeawayAvailable?: boolean;
-  isNonVeg?: boolean;
-  isPureVeg?: boolean;
-}
 
 // Restaurant Document Interface
 interface IRestaurant extends Document {
@@ -27,7 +13,7 @@ interface IRestaurant extends Document {
   status?: string;
   distance?: number;
   cuisine?: string[];
-  features?: Features;
+  features?:mongoose.Types.ObjectId;
   facilities?: string[];
   categories?: string[];
   table?: string[];
@@ -42,19 +28,7 @@ interface IRestaurant extends Document {
   faq?: mongoose.Types.ObjectId[];
 }
 
-const FeaturesSchema = new Schema<Features>({
-  isOrderOnline: { type: Boolean, default: false },
-  isReviewActivated: { type: Boolean, default: false },
-  isBookTable: { type: Boolean, default: false },
-  isEventBook: { type: Boolean, default: false },
-  isArMenu: { type: Boolean, default: false },
-  isMenuAvailable: { type: Boolean, default: false },
-  isDineInAvailable: { type: Boolean, default: false },
-  isDeliveryAvailable: { type: Boolean, default: false },
-  isTakeawayAvailable: { type: Boolean, default: false },
-  isPureVeg: { type: Boolean, default: false },
-  isNonVeg: { type: Boolean, default: false },
-});
+
 
 const restaurantSchema = new Schema<IRestaurant>(
   {
@@ -72,7 +46,7 @@ const restaurantSchema = new Schema<IRestaurant>(
     },
     distance: { type: Number },
     cuisine: { type: [String] },
-    features: { type: FeaturesSchema, default: () => ({}) },
+    features:{ type: mongoose.Schema.Types.ObjectId, ref: 'Feature' },
     facilities: { type: [String] },
     categories: { type: [String] },
     averageRating: { type: Number, default: 0, min: 0, max: 5 },

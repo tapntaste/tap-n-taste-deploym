@@ -39,8 +39,6 @@ export const HomePage = () => {
         restaurantDesc="North Indian | Chinese | Thai"
         restaurantAddress="Door 8-9/2, Rushikonda, Visakhapatnam"
         isOpen={true}
-        closingTime={11}
-        daysOperate="Mon-Fri"
         deliveryAndDinning={true}
         distance={2.2}
         ratings={4.5}
