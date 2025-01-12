@@ -17,27 +17,15 @@ import { useFetchRestaurantList } from '@tap-n-taste/hooks';
 
 const primaryColor = '#F1414F'; // Custom Red
 const secondaryColor = '#F1414F'; // Light Red
-const textPrimaryColor = '#000000'; // Black text for readability
 const textSecondaryColor = '#FFFFFF'; // White text for readability
 
 
 export const RestaurantList: React.FC = () => {
-  // const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const navigate = useNavigate();
-
   const { restaurants, loading, error } = useFetchRestaurantList();
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
-
-  // useEffect(() => {
-  //   axios
-  //     .get(`${BACKEND_URL}/api/restaurants`)
-  //     .then((response) => setRestaurants(response.data))
-  //     .catch((error) =>
-  //       console.error('Error fetching restaurant data:', error)
-  //     );
-  // }, []);
 
   return (
     <Box>

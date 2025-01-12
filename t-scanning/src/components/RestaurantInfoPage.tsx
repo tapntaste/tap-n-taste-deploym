@@ -1,4 +1,4 @@
-import { Box, Chip, Grid, Rating } from '@mui/material';
+import { Box, Chip, Grid, Rating, Typography } from '@mui/material';
 import { ImageSlider } from '@tap-n-taste/ui';
 import { TButton } from '@tap-n-taste/ui';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -10,6 +10,8 @@ import AssistantDirectionOutlinedIcon from '@mui/icons-material/AssistantDirecti
 import CallIcon from '@mui/icons-material/Call';
 import { useNavigate } from 'react-router-dom';
 import { sliderImages } from '../app/constants/LandingPageData';
+import { RootState } from '@tap-n-taste/utils';
+import { useSelector } from 'react-redux';
 
 interface RestaurantProps {
   restaurantName: string;
@@ -34,9 +36,10 @@ export const RestaurantInfoPage = ({
   deliveryAndDinning,
   distance,
   ratings,
-  restaurantData
+
 }: RestaurantProps) => {
   const navigate = useNavigate();
+  const { restaurantData } = useSelector((state: RootState) => state.restaurant);
   return (
     <Box className="z-10 font-primary">
       <ImageSlider
@@ -56,11 +59,12 @@ export const RestaurantInfoPage = ({
         <Box className="header flex flex-col sm:flex-row justify-between items-center">
           <Box>
             <h1 className="text-3xl sm:text-4xl font-semibold">
-              {restaurantName}
+              {restaurantData?.name}
             </h1>
             <p className="text-[#8E8E8E] text-sm md:text-base mb-5">
-              {restaurantDesc}
+              {restaurantData?.description}
             </p>
+            <Typography className='text-gray-500'>{restaurantData?.slug}</Typography>
           </Box>
           <Box className="flex">
             <TButton

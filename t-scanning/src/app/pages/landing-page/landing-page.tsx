@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Box } from '@mui/material';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useParams } from 'react-router-dom';
 import {
   TFaq,
   TFooter,
@@ -73,9 +73,12 @@ export const LandingPage = () => {
   const { restaurantData, loading, error } = useSelector(
     (state: RootState) => state.restaurant
   );
+  const {restaurantId}=useParams()
+  console.log(restaurantId);
+  
 
   useEffect(() => {
-    dispatch(fetchRestaurantThunk('6780da43d5eb2186d06373bb'));
+    dispatch(fetchRestaurantThunk(restaurantId||'12345'));
   }, [dispatch]);
 
   console.log(restaurantData);
