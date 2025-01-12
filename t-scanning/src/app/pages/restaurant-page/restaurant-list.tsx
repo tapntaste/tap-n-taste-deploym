@@ -13,57 +13,31 @@ import {
 import { TFooter, TopNav } from '@tap-n-taste/ui';
 import { useNavigate } from 'react-router-dom';
 import { BACKEND_URL } from '@tap-n-taste/constant';
+import { useFetchRestaurantList } from '@tap-n-taste/hooks';
 
 const primaryColor = '#F1414F'; // Custom Red
 const secondaryColor = '#F1414F'; // Light Red
 const textPrimaryColor = '#000000'; // Black text for readability
 const textSecondaryColor = '#FFFFFF'; // White text for readability
 
-interface Restaurant {
-  _id: string;
-  name: string;
-  tagline: string;
-  description: string;
-  slug: string;
-  averageRating: number;
-  status: string;
-  distance: number;
-  contact: {
-    phone: string;
-    email: string;
-  }[];
-  offers: {
-    title: string;
-    description: string;
-    discountPercentage: number;
-  }[];
-  faq: {
-    question: string;
-    answer: string;
-  }[];
-  media: {
-    banner: string;
-  };
-  socialLinks: {
-    facebook?: string;
-    instagram?: string;
-    twitter?: string;
-    website?: string;
-  };
-}
 
 export const RestaurantList: React.FC = () => {
-  const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+  // const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    axios
-      .get(BACKEND_URL)
-      .then((response) => setRestaurants(response.data))
-      .catch((error) =>
-        console.error('Error fetching restaurant data:', error)
-      );
-  }, []);
+  const { restaurants, loading, error } = useFetchRestaurantList();
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
+  // useEffect(() => {
+  //   axios
+  //     .get(`${BACKEND_URL}/api/restaurants`)
+  //     .then((response) => setRestaurants(response.data))
+  //     .catch((error) =>
+  //       console.error('Error fetching restaurant data:', error)
+  //     );
+  // }, []);
 
   return (
     <Box>
