@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import { TFooter, TopNav } from '@tap-n-taste/ui';
 import { useNavigate } from 'react-router-dom';
+import { BACKEND_URL } from '@tap-n-taste/constant';
 
 const primaryColor = '#F1414F'; // Custom Red
 const secondaryColor = '#F1414F'; // Light Red
@@ -57,7 +58,7 @@ export const RestaurantList: React.FC = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:3000/api/restaurants')
+      .get(BACKEND_URL)
       .then((response) => setRestaurants(response.data))
       .catch((error) =>
         console.error('Error fetching restaurant data:', error)
