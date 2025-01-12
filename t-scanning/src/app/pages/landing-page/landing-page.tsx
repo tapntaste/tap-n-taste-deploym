@@ -31,6 +31,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, fetchRestaurantThunk, RootState } from '@tap-n-taste/utils';
 import { useEffect } from 'react';
+import {BACKEND_URL,SCANNING_FRONTEND_URL,ADMIN_FRONTEND_URL} from '@tap-n-taste/constant';
 // @ Paths for routing as constants for easy maintenance and scalability
 const PATHS = {
   HOME: '/',

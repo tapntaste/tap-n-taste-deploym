@@ -24,7 +24,7 @@ export const createRestaurant = async (req, res, next) => {
 // Get all restaurants
 export const getRestaurants = async (req, res, next) => {
   try {
-    const restaurants = await Restaurant.find();
+    const restaurants = await Restaurant.find().populate('media');
     res.status(200).json(restaurants);
   } catch (error) {
     next(error);

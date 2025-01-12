@@ -16,7 +16,7 @@ const App: React.FC = () => {
       <CssBaseline /> {/* Ensures consistent baseline styles across browsers */}
       <Routes>
         {/* Default Route */}
-        <Route path="/" element={<div>Tap-n-Taste Home Page</div>} />
+        <Route path="/admin/page" element={<div>Tap-n-Taste Home Page</div>} />
 
         <Route
           path="/restaurant/:restaurantId/login"
