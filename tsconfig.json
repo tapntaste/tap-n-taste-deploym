@@ -2,12 +2,15 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "allowJs": false,
-    "esModuleInterop": true,  // Change this to true
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true
+    "strict": true,
+    "declaration": true,
+    "composite": true,
+    "module": "CommonJS"
   },
   "files": [],
-  "include": ["src/**/*"],  // Add this to include all the source files
+  "include": ["src/**/*"],
   "references": [
     {
       "path": "./tsconfig.app.json"
