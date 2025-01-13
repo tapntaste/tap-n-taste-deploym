@@ -1,8 +1,20 @@
 {
   "rewrites": [
     {
+      "source": "/api/(.*)", 
+      "destination": "/dist/tap-n-taste-api/main.js"
+    },
+    {
+      "source": "/admin/(.*)", 
+      "destination": "/dist/t-admin/index.html"
+    },
+    {
+      "source": "/scanning/(.*)", 
+      "destination": "/dist/t-scanning/index.html"
+    },
+    {
       "source": "/(.*)", 
-      "destination": "/index.html"
+      "destination": "/dist/t-scanning/index.html"
     }
   ]
 }

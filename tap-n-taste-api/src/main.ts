@@ -82,6 +82,12 @@ app.get('/test', (req, res) => {
 app.get('/', (req, res) => {
   res.send({ message: 'Welcome to the Tap-n-Taste API!' });
 });
+app.get('/api/', (req, res) => {
+  res.send({ message: 'Welcome to the Tap-n-Taste API!' });
+});
+app.get('/api', (req, res) => {
+  res.send({ message: 'Welcome to the Tap-n-Taste API!' });
+});
 
 // Start Server
 server.listen(PORT, () => {  // Use the `server` object to listen instead of `app.listen()`
@@ -105,3 +111,4 @@ async function checkDatabaseConnection() {
   const mongoose = require('mongoose');
   return mongoose.connection.readyState === 1;  // Check if DB is connected
 }
+export default server;

@@ -7,7 +7,7 @@
     "start:backend": "nx serve tap-n-taste-api --port 3000",
     "start:admin": "nx serve t-admin --port 4200",
     "start:scanning": "nx serve t-scanning --port 4300",
-    "build": "nx build && npm run postbuild && tsc",
+    "build": "nx run-many --target=build --projects=tap-n-taste-api,t-scanning,t-admin --parallel=false",
     "build:backend": "nx build tap-n-taste-api",
     "build:admin": "nx build t-admin",
     "build:scanning": "nx build t-scanning",
@@ -61,7 +61,7 @@
     "react-toastify": "^10.0.6",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
-    "styled-components": "^6.1.14",
+    "styled-components": "6.1.14",
     "twilio": "^5.4.0",
     "uuid": "^11.0.3",
     "zod": "^3.24.1"
