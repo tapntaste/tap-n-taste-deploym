@@ -13,7 +13,7 @@
         "platform": "node",
         "outputPath": "dist/tap-n-taste-api",
         "format": ["cjs"],
-        "bundle": false,
+        "bundle": true,  
         "main": "tap-n-taste-api/src/main.ts",
         "tsConfig": "tap-n-taste-api/tsconfig.app.json",
         "assets": ["tap-n-taste-api/src/assets"],
