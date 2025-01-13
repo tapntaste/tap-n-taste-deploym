@@ -8,7 +8,7 @@ const CuisinesOffered = () => {
       <Box className="flex justify-between items-center">
         <Typography
           variant="h5"
-          sx={{ fontFamily: 'Poppins', fontWeight: 'bold' }}
+          sx={{ fontWeight: 'bold' }}
         >
           Cuisine's we offer
         </Typography>

@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@mui/material';
 
-const CartTable = () => {
+export const CartTable = () => {
   return (
     <Box
       className="w-full mt-11 bg-zinc-100 text-black p-2 mb-10"

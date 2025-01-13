@@ -1,5 +1,5 @@
 import { Box, InputAdornment, TextField } from '@mui/material';
-import CouponIcon from '../../../../assets/coupon.png';
+import CouponIcon from '../assets/coupon.png';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 const ApplyCoupons = () => {
