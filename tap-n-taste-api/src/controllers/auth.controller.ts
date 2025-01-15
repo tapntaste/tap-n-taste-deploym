@@ -201,7 +201,7 @@ export const googleAuthCallback = (req: Request, res: Response) => {
 // };
 export const signup = async (req: Request, res: Response) => {
   try {
-    const { name, email, password, phone } = req.body;
+    const { name, email, password, phone,restaurantId } = req.body;
 
     // Validate inputs
     if (!name || !password || (!email && !phone)) {
@@ -234,14 +234,26 @@ export const signup = async (req: Request, res: Response) => {
       email: email || phone || uuidv4(), // Set to null if not provided
       phone: phone || email || uuidv4(), // Set to null if not provided
       password,
+      restaurantId,
       role: 'User', // Default role
       status: 'verified', // Directly set status as verified for signup
     });
 
     await user.save();
 
+    // Generate JWT token
+    const token = jwt.sign(
+      { id: user._id, email: user.email, role: user.role },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRY }
+    );
+
     // Return success response
-    res.status(201).json({
+    res.status(200).cookie('token', token, {
+      httpOnly: true, // Prevents client-side JS from accessing the cookie
+      secure: true, // Send only over HTTPS in production
+      sameSite: 'none', // For cross-origin requests, SameSite must be 'None'
+    }).json({
       message: 'User created successfully',
       user: {
         id: user._id,
@@ -250,6 +262,7 @@ export const signup = async (req: Request, res: Response) => {
         phone: user.phone,
         role: user.role,
         status: user.status,
+        restaurantId,
       },
     });
   } catch (error) {
@@ -260,7 +273,7 @@ export const signup = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
   try {
-    const { email, phone, password } = req.body;
+    const { email, phone, password,restaurantId } = req.body;
 
     if (!password || (!email && !phone)) {
       return res
@@ -302,6 +315,11 @@ export const login = async (req: Request, res: Response) => {
       { expiresIn: JWT_EXPIRY }
     );
 
+    if(restaurantId){
+      user.restaurantId = restaurantId
+      await user.save()
+    }
+
     res
       .setHeader('token', token)
       .status(200)
@@ -312,7 +330,15 @@ export const login = async (req: Request, res: Response) => {
       })
       .json({
         token,
-        user,
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          role: user.role,
+          status: user.status,
+          restaurantId,
+        },
         message: 'Login successful',
         id: user?.id,
         restaurantId: user?.restaurantId,

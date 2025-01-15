@@ -4,6 +4,11 @@ import styled from 'styled-components';
 import { FaStar } from 'react-icons/fa6';
 import { TbSquareDot } from 'react-icons/tb'; // Import the TbSquareDot icon
 import TCounter from '../t-counter/t-counter';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@tap-n-taste/utils';
+import { addMenuItemToCartThunk, removeMenuItemFromCartThunk } from 'libs/utils/src/store/cartSlice';
+import { TButton } from '../t-button';
+import { Button } from '@mui/material';
 
 
 const CardContainer = styled.div`
@@ -165,10 +170,28 @@ export function TCustomCard({
   rating,
   price,
   veg,
-  onClick,
+  id,
 }: any) {
+
+
+  const dispatch = useDispatch<AppDispatch>();
+  const { cartItems, loading, error } = useSelector((state: RootState) => state.cart);
+  const { restaurantData } = useSelector((state: RootState) => state.restaurant);
+  const authState = useSelector((state: RootState) => state.auth);
+  const handleAddItem = () => {
+    dispatch(addMenuItemToCartThunk({ userId:authState?.userData?.id, menuItemId:id ,restaurantId:restaurantData._id}));
+    console.log(authState);
+    
+  };
+
+  const handleRemoveItem = (userId: string, menuItemId: string) => {
+    dispatch(removeMenuItemFromCartThunk({ userId, menuItemId,restaurantId:restaurantData._id }));
+  };
+
+
+
   return (
-    <StyledTCustomCard onClick={onClick}>
+    <StyledTCustomCard>
       <CardContainer>
         <Image src={image} alt={title} />
         <InfoContainer>
@@ -191,7 +214,7 @@ export function TCustomCard({
             </RatingContainer>
             <RightContainer>
               <TCounter />
-              <AddButton>ADD</AddButton>
+              <Button onClick={handleAddItem}>ADD</Button>
             </RightContainer>
           </ActionContainer>
         </InfoContainer>

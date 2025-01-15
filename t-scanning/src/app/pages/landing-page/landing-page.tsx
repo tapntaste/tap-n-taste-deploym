@@ -69,6 +69,9 @@ console.log(BACKEND_URL,SCANNING_FRONTEND_URL,ADMIN_FRONTEND_URL);
  */
 export const LandingPage = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const authState = useSelector((state: RootState) => state.auth);
+  console.log('fasd',authState);
+  
   
   const { restaurantData, loading, error } = useSelector(
     (state: RootState) => state.restaurant

@@ -4,7 +4,7 @@ import TuneIcon from '@mui/icons-material/Tune';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
-import { Container, Dialog } from '@mui/material';
+import { Box, Container, Dialog } from '@mui/material';
 import { TFilterPopUp } from '../t-filter-popup';
 import { TSortPopUp } from '../t-sort-popup';
 
@@ -29,9 +29,9 @@ export const TManage = () => {
 
   return (
     <>
-      <StyledTManage>
-        <StyledContainer>
-          <StyledButton onClick={handleFilterOpen}>
+    <Box className='flex md:flex-row flex-col justify-center items-center'>
+    <StyledTManage >
+          <StyledButton onClick={handleFilterOpen} className='h-[100px'>
             <TuneIcon style={{ fontSize: '16px' }} />
             <span>Filters</span>
           </StyledButton>
@@ -40,8 +40,8 @@ export const TManage = () => {
             <SwapVertIcon style={{ fontSize: '16px' }} />
             <span>Sort</span>
           </StyledButton>
-        </StyledContainer>
       </StyledTManage>
+    </Box>
 
       {/* Filter Dialog */}
       <Dialog
@@ -78,16 +78,6 @@ const StyledTManage = styled.div`
   width: fit-content;
 `;
 
-const StyledContainer = styled(Container)`
-  display: flex;
-  align-items: center;
-  padding: 0;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-`;
 
 const StyledButton = styled.button`
   display: flex;
@@ -100,6 +90,7 @@ const StyledButton = styled.button`
   font-size: 12px;
   cursor: pointer;
   padding: 1px 8px;
+  height:50px;
   transition: background-color 0.3s ease;
 
   &:hover {
@@ -113,6 +104,7 @@ const StyledButton = styled.button`
   @media (max-width: 768px) {
     font-size: 10px;
     padding: 6px 10px;
+     height:30px;
   }
 `;
 

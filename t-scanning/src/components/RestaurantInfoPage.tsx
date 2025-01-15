@@ -59,7 +59,7 @@ export const RestaurantInfoPage = ({
   const openGoogleMaps = () => {
     const { lat, lng } = location.geoCoordinates;
     if (!lat || !lng) {
-      console.log('latitude or longitude not found', lat, lng);
+      console.error('latitude or longitude not found', lat, lng);
     } else {
       const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
       window.open(mapsUrl, '_blank');
@@ -90,15 +90,11 @@ export const RestaurantInfoPage = ({
     };
 
     const features = restaurantData?.features || {};
-    console.log('Features:', features);
 
     // Filter for features that are true and map to the featureLabels
     const activeFeatures = Object.keys(features)
       .filter((key) => features[key] === true) // Only keep keys where the value is true
       .map((key) => featureLabels[key]); // Map the key to its label
-
-    console.log('Active Features:', activeFeatures);
-
     setActiveFeatures(activeFeatures); // Set the state with the active feature labels
   }, [restaurantData]);
 
@@ -234,7 +230,7 @@ export const RestaurantInfoPage = ({
           text="Menu"
           className={{ root: '!bg-[#F1414F] !text-white w-full' }}
           icon={<RestaurantMenuIcon className="text-white" />}
-          onClick={() => navigate('/restaurant/:restaurantId/menu')} // Navigate to Menu
+          onClick={() => navigate(`/restaurant/${restaurantData?._id}/menu`)} // Navigate to Menu
         />
       </Box>
     </Box>

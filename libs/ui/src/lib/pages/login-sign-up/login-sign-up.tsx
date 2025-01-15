@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import profileIcon from '../../../assets/profile-icon.png';
 import googleIcon from '../../../assets/devicon_google.svg';
 import { Box, TextField, Typography } from '@mui/material';
@@ -7,8 +7,11 @@ import { TButton, TInput } from '@tap-n-taste/ui';
 import { BackendUrl } from '@tap-n-taste/admin';
 import { axiosInstance, useAuth } from '@tap-n-taste/hooks';
 import { useForm, Controller, FieldValues } from 'react-hook-form';
-import { restaurantId } from '@tap-n-taste/constant';
 import axios from 'axios';
+import { AppDispatch, RootState } from '@tap-n-taste/utils';
+import { useDispatch, useSelector } from 'react-redux';
+import { authenticateUser } from 'libs/utils/src/store/authSlice';
+import { ADMIN_SIGN_UP_URL, LOGIN_URL, SIGN_UP_URL } from '@tap-n-taste/constant';
 
 interface Props {
   type: string;
@@ -26,9 +29,14 @@ interface FormValues {
 
 export function LoginSignUp({ type, isAdminSignUpLogin }: Props) {
   const navigate = useNavigate();
-  const { id, adminId } = useParams<{ id: string; adminId: string }>();
+  const { id, adminId,restaurantId } = useParams<{ id: string; adminId: string ,restaurantId:any}>();
   const [isLogin, setIsLogin] = useState(type === 'login');
   const { loading, error, signupOrLogin } = useAuth();
+  const location = useLocation();
+  const restaurantData = location.state;
+  // const restaurantId = restaurantData?._id || '1';
+  const dispatch = useDispatch<AppDispatch>();
+const authState = useSelector((state: RootState) => state.auth);
   const {
     control,
     handleSubmit,
@@ -81,7 +89,8 @@ export function LoginSignUp({ type, isAdminSignUpLogin }: Props) {
     setIsLogin(!isLogin);
   };
   const handleSignupLogin = async (data: FormValues) => {
-    console.log(data);
+    data.restaurantId=restaurantId;
+    console.log('fasdfasdff',data);
 
     const payload = isLogin
       ? { ...data, email: data.emailPhone, phone: data.emailPhone }
@@ -96,18 +105,35 @@ export function LoginSignUp({ type, isAdminSignUpLogin }: Props) {
 
     // console.log(res); // Handle response as needed
     // console.log(res);
-
-    await signupOrLogin(
-      isLogin
-        ? '/auth/login'
-        : isAdminSignUpLogin
-        ? '/auth/admin/signup'
-        : '/auth/signup',
-      payload,
-      isAdminSignUpLogin,
-      isLogin
-    );
+    const endpoint =  isLogin
+    ? LOGIN_URL
+    : isAdminSignUpLogin
+    ? ADMIN_SIGN_UP_URL
+    : SIGN_UP_URL
+    dispatch(authenticateUser({endpoint, payload }));
+    // await signupOrLogin(
+    //   isLogin
+    //     ? '/auth/login'
+    //     : isAdminSignUpLogin
+    //     ? '/auth/admin/signup'
+    //     : '/auth/signup',
+    //   payload,
+    //   isAdminSignUpLogin,
+    //   isLogin
+    // );
   };
+
+  useEffect(() => {
+    if (authState.isAuthenticated) {
+      const userId = authState.userData?.id;
+      const role = authState.userData?.role;
+      const redirectUrl = role === 'Admin'
+        ? `/restaurant/${restaurantId}/admin/${userId}`
+        : `/restaurant/${restaurantId}/user/${userId}`;
+
+      navigate(redirectUrl);
+    }
+  }, [authState.isAuthenticated]);
   return (
     <Box className="w-full h-screen flex items-center justify-center">
       <Box className="w-full sm:w-[60%] md:w-[50%] lg:w-[40%] xl:w-[30%] flex flex-col items-center gap-6 overflow-y-scroll px-10 sm:px-5 md:px-2">

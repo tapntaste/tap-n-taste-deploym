@@ -70,16 +70,17 @@ export const updateRestaurant = async (req, res, next) => {
       offers, // Added to capture offers
       reviews, // Added to capture reviews
       faq, // Added to capture FAQs
-      table,  // Added table to the request body
+      table, // Added table to the request body
       events, // Added to capture events
       features, // Added to capture features
+      menuItems,
       ...restaurantData
     } = req.body;
 
     const restaurantId = req.params.id;
     const userId = req.user.id; // Assuming user ID is attached to `req.user` from the auth middleware
 
-    let locationId, openHoursId, mediaId, socialLinksId,tableId,featuresId;
+    let locationId, openHoursId, mediaId, socialLinksId, tableId, featuresId;
 
     // Handle Location Update or Creation
     if (location) {
@@ -269,7 +270,7 @@ export const updateRestaurant = async (req, res, next) => {
       }
     }
     // Handle Reviews Update or Creation
-    const reviewIds = []; // To store review IDs
+    let reviewIds = []; // To store review IDs
     if (reviews && Array.isArray(reviews)) {
       for (const reviewData of reviews) {
         let reviewId;
@@ -290,10 +291,11 @@ export const updateRestaurant = async (req, res, next) => {
           );
           reviewId = updatedReview?._id;
         } else {
-          // Create new review with restaurant and user references
+       
           const newReview = new Review({
             ...reviewData,
-            restaurant: restaurantId, // Link the review with the restaurant
+            restaurant: restaurantId, // Link the review with the restaurant,
+            media:mediaId?mediaId:undefined,
             user: userId, // User who is creating the review
           });
           await newReview.save({ session });
@@ -301,6 +303,8 @@ export const updateRestaurant = async (req, res, next) => {
         }
         reviewIds.push(reviewId);
       }
+      const existingRestaurant = await Restaurant.findById(restaurantId);
+      reviewIds = existingRestaurant ? [...existingRestaurant.reviews, ...reviewIds] : [];
     }
 
     const faqIds = []; // Array to hold FAQ IDs
@@ -328,8 +332,8 @@ export const updateRestaurant = async (req, res, next) => {
       }
     }
 
-     // Handle Table Update or Creation
-     if (table) {
+    // Handle Table Update or Creation
+    if (table) {
       if (table._id) {
         // Update existing Table
         const updatedTable = await Table.findByIdAndUpdate(
@@ -340,62 +344,75 @@ export const updateRestaurant = async (req, res, next) => {
         tableId = updatedTable?._id;
       } else {
         // Create new Table
-        const newTable = new Table({ ...table, restaurant: restaurantId, createdBy: userId });
+        const newTable = new Table({
+          ...table,
+          restaurant: restaurantId,
+          createdBy: userId,
+        });
         await newTable.save({ session });
         tableId = newTable._id;
       }
     }
-// Handle Event Update or Creation
-const eventIds = []; // To store event IDs
-if (events && Array.isArray(events)) {
-  for (const eventData of events) {
-    let eventId;
-    if (eventData._id) {
-      const updatedEvent = await Event.findByIdAndUpdate(
-        eventData._id,
-        { ...eventData, restaurant: restaurantId, user: userId },
-        { new: true, runValidators: true, session }
-      );
-      eventId = updatedEvent?._id;
-    } else {
-      const newEvent = new Event({ ...eventData, restaurant: restaurantId, user: userId });
-      await newEvent.save({ session });
-      eventId = newEvent._id;
-    }
-    eventIds.push(eventId);
-  }
-}
-
-  // Handle Features Update or Creation
-  if (features) {
-    if (features._id) {
-      // Update existing Features
-      const updatedFeatures = await Feature.findByIdAndUpdate(
-        features._id,
-        {
-          ...features,
-          restaurantId, // Link Features with the restaurant
-          updatedBy: userId, // User who is updating the Features
-        },
-        {
-          new: true,
-          runValidators: true,
-          session,
+    // Handle Event Update or Creation
+    const eventIds = []; // To store event IDs
+    if (events && Array.isArray(events)) {
+      for (const eventData of events) {
+        let eventId;
+        if (eventData._id) {
+          const updatedEvent = await Event.findByIdAndUpdate(
+            eventData._id,
+            { ...eventData, restaurant: restaurantId, user: userId },
+            { new: true, runValidators: true, session }
+          );
+          eventId = updatedEvent?._id;
+        } else {
+          const newEvent = new Event({
+            ...eventData,
+            restaurant: restaurantId,
+            user: userId,
+          });
+          await newEvent.save({ session });
+          eventId = newEvent._id;
         }
-      );
-      featuresId = updatedFeatures?._id;
-    } else {
-      // Create new Features with restaurant and user references
-      const newFeatures = new Feature({
-        ...features,
-        restaurantId, 
-        createdBy: userId, 
-      });
-      await newFeatures.save({ session });
-      featuresId = newFeatures._id;
+        eventIds.push(eventId);
+      }
     }
-  }
 
+    // Handle Features Update or Creation
+    if (features) {
+      if (features._id) {
+        // Update existing Features
+        const updatedFeatures = await Feature.findByIdAndUpdate(
+          features._id,
+          {
+            ...features,
+            restaurantId, // Link Features with the restaurant
+            updatedBy: userId, // User who is updating the Features
+          },
+          {
+            new: true,
+            runValidators: true,
+            session,
+          }
+        );
+        featuresId = updatedFeatures?._id;
+      } else {
+        // Create new Features with restaurant and user references
+        const newFeatures = new Feature({
+          ...features,
+          restaurantId,
+          createdBy: userId,
+        });
+        await newFeatures.save({ session });
+        featuresId = newFeatures._id;
+      }
+    }
+    // Handle menu item updates if provided
+    let menuIds;
+    if (menuItems && Array.isArray(menuItems)) {
+      const existingRestaurant = await Restaurant.findById(restaurantId);
+      menuIds = existingRestaurant ? [...existingRestaurant.menu, ...menuItems] : [];
+    }
     // Update Restaurant Data with location and contact references
     const updatedRestaurant = await Restaurant.findByIdAndUpdate(
       restaurantId,
@@ -407,11 +424,12 @@ if (events && Array.isArray(events)) {
         media: mediaId, // Update with new or existing Media ID
         socialLinks: socialLinksId, // Update with new or existing SocialLinks ID
         offers: offerIds.length ? offerIds : undefined, // Add offers to the restaurant (new or existing)
-        reviews: reviewIds.length ? reviewIds : undefined, // Add reviews to the restaurant (new or existing)
         faq: faqIds.length ? faqIds : undefined, // Update with FAQs if present
         table: tableId ? [tableId] : undefined, // Add table reference if exists
         events: eventIds.length ? eventIds : undefined, // Add events to the restaurant (new or existing)
         features: featuresId ? [featuresId] : undefined, // Update features reference
+        menu: menuIds && menuIds.length ? menuIds : undefined,
+        reviews: reviewIds && reviewIds.length ? reviewIds : undefined,
       },
       { new: true, runValidators: true, session }
     );
@@ -430,6 +448,76 @@ if (events && Array.isArray(events)) {
     session.endSession();
   }
 };
+
+
+export const updateRestaurantMedia = async (req, res, next) => {
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+
+    const restaurantId = req.params.id;
+    const userId = req.user.id; // Assumes user ID is provided by auth middleware
+
+    const { banner, logo, gallery, photos, videos, mediaDescription, status, mediaType, tags } = req.body;
+
+    let mediaData = await Media.findOne({ restaurantId });
+
+    if (mediaData) {
+      // Update existing media record
+      mediaData = await Media.findOneAndUpdate(
+        { restaurantId },
+        {
+          $set: {
+            banner,
+            logo,
+            gallery,
+            photos,
+            videos,
+            mediaDescription,
+            status,
+            mediaType,
+            tags,
+            updatedAt: Date.now(),
+            createdBy: userId,
+          },
+        },
+        { new: true, runValidators: true, session }
+      );
+    } else {
+      // Create a new media entry if it doesn't exist
+      mediaData = new Media({
+        restaurantId,
+        banner,
+        logo,
+        gallery,
+        photos,
+        videos,
+        mediaDescription,
+        status,
+        mediaType,
+        tags,
+        createdBy: userId,
+      });
+      await mediaData.save({ session });
+    }
+
+    // Ensure the restaurant exists and reference is correct
+    const restaurantExists = await Restaurant.findById(restaurantId);
+    if (!restaurantExists) {
+      await session.abortTransaction();
+      return res.status(404).json({ message: 'Restaurant not found' });
+    }
+
+    await session.commitTransaction();
+    res.status(200).json({ message: 'Media updated successfully', mediaData });
+  } catch (error) {
+    await session.abortTransaction();
+    next(error);
+  } finally {
+    session.endSession();
+  }
+};
+
 
 // Delete a restaurant
 export const deleteRestaurant = async (req, res, next) => {

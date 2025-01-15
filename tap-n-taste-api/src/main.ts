@@ -10,7 +10,7 @@ import http from 'http';  // Import HTTP to create server
 import socketIo from 'socket.io';  // Import Socket.IO
 import cors from 'cors';  // Import CORS for cross-origin handling
 import { BACKEND_URL,ADMIN_FRONTEND_URL,SCANNING_FRONTEND_URL } from './constant/API.constant';
-
+import cookieParser from 'cookie-parser';
 // Load environment variables from .env file
 dotenv.config();
 
@@ -35,7 +35,8 @@ app.use(express.json());
 
 // Database Connection
 connectDB();
-
+// Use cookie-parser middleware
+app.use(cookieParser());
 // Middleware to parse JSON and handle file upload
 app.use(express.urlencoded({ extended: true }));
 app.use(handleFileUpload);  // Global file upload middleware

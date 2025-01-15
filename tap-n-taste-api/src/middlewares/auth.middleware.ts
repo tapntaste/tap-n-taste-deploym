@@ -7,12 +7,12 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
 export const authenticate = (req: Request, res: Response, next: NextFunction) => {
   try {
     // Extract token from header
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    const authHeader = req.headers.authorization|| req.cookies['token']; // Extract token from header or cookie;;
+    if (!authHeader) {
       return res.status(401).json({ error: 'Access denied. No token provided.' });
     }
 
-    const token = authHeader.split(' ')[1];
+    const token = authHeader.split(' ')[1]
     const decoded = jwt.verify(token, JWT_SECRET); // Verify token
     req.user = decoded; // Attach decoded token to request object
     next();

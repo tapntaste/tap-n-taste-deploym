@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { RootState } from '@tap-n-taste/utils';
+import { useSelector } from 'react-redux';
 
 const StyledFaq = styled.div`
   font-family: Arial, sans-serif;
@@ -102,26 +104,11 @@ interface TFaqProps {
   faqs?: FAQ[];
 }
 
-export function TFaq({
-  faqs = [
-    {
-      question: 'Do you offer catering services?',
-      answer:
-        "Currently, we don't offer catering services, but we're happy to accommodate large orders for pickup or delivery. Please contact us for more information.",
-    },
-    {
-      question: 'Are there vegan options?',
-      answer:
-        'Yes, we offer a variety of vegan options. Check our menu for details.',
-    },
-    {
-      question: 'How long does delivery take?',
-      answer:
-        'Delivery usually takes 30-45 minutes depending on your location.',
-    },
-  ],
-}: TFaqProps) {
+export function TFaq() {
+  const { restaurantData } = useSelector((state: RootState) => state.restaurant);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  const faqs = restaurantData?.faq||[]
 
   const toggleFaq = (index: number) => {
     setActiveIndex(activeIndex === index ? null : index);
@@ -133,7 +120,7 @@ export function TFaq({
         <h2>FAQ's</h2>
         <div className="faq-line"></div>
       </div>
-      {faqs.map((faq, index) => (
+      {faqs.map((faq:any, index:any) => (
         <div
           className={`faq-item ${activeIndex === index ? 'active' : ''}`}
           key={index}

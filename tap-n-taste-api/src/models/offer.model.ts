@@ -4,6 +4,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 interface IOffer extends Document {
   title: string;                     // Title of the offer
   description: string;               // A description of the offer
+  banner: string;               // A description of the offer
   discountPercentage: number;        // Discount percentage or value
   offerType: string;                 // Type of offer (restaurant-wide, menu item, etc.)
   validityStart: Date;               // Start date for offer validity
@@ -26,6 +27,7 @@ const offerSchema = new Schema<IOffer>(
   {
     title: { type: String, required: true, trim: true },
     description: { type: String, required: true, trim: true },
+    banner: { type: String, trim: true },
     discountPercentage: { type: Number, required: true, min: 0, max: 100 },
     offerType: {
       type: String,

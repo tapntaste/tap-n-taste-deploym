@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSwipeable } from 'react-swipeable';
 import { RootState } from '@tap-n-taste/utils';
 import { useSelector } from 'react-redux';
@@ -15,10 +15,7 @@ interface ImageSliderProps {
   [rest: string]: any; // Additional props
 }
 
-export function ImageSlider({
-  className = {},
-  ...rest
-}: ImageSliderProps) {
+export function ImageSlider({ className = {}, ...rest }: ImageSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleSwipeLeft = () => {
@@ -65,14 +62,16 @@ export function ImageSlider({
     >
       {/* Container for image */}
       <div className="w-full h-full overflow-hidden">
-        <img
-          src={restaurantData?.media?.gallery[currentIndex]}
-          alt={`Slide ${currentIndex}`}
-          loading="lazy"
-          className={`w-full h-full object-cover object-center rounded-xl transition-transform duration-500 ${
-            className.image || ''
-          }`}
-        />
+        <Suspense fallback={<div>Loading Image...</div>}>
+          <img
+            loading="lazy"
+            src={restaurantData?.media?.gallery[currentIndex]}
+            alt={`Slide ${currentIndex}`}
+            className={`w-full h-full object-cover object-center rounded-xl transition-transform duration-500 ${
+              className.image || ''
+            }`}
+          />
+        </Suspense>
       </div>
 
       {/* Indicators */}

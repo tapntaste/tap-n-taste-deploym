@@ -6,6 +6,8 @@ import TSidebar from '../t-sidebar/t-sidebar';
 import { navLinksData } from 't-scanning/src/app/constants/LandingPageData';
 import { TButton } from '../t-button';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { RootState } from '@tap-n-taste/utils';
+import { useSelector } from 'react-redux';
 
 const themeColor = '#F1414F'; // Define your color here
 
@@ -13,9 +15,10 @@ export function TopNav() {
   const navigate = useNavigate();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
-
+  const { restaurantData } = useSelector((state: RootState) => state.restaurant);
+  const restaurantId =restaurantData?._id
+  const authState = useSelector((state: RootState) => state.auth);
   const handleNotificationClick = () => {
-    const restaurantId = 'your-restaurant-id'; // Replace with actual restaurantId
     navigate(`/restaurant/${restaurantId}/notification`);
   };
 
@@ -60,7 +63,7 @@ export function TopNav() {
         </Box>
 
         {/* Sign In / Sign Up Buttons */}
-        <Box className="hidden md:flex gap-4 max-lg:gap-2">
+      {  !  authState?.isAuthenticated && <Box className="hidden md:flex gap-4 max-lg:gap-2">
           <TButton
             text="Sign Up"
             className={{ text: 'lg:text-xs' }}
@@ -69,7 +72,7 @@ export function TopNav() {
               border: '2px solid #F1414F',
               color: '#F1414F',
             }}
-            onClick={() => navigate('/restaurant/:restaurantId/sign-up')} // Navigate to sign-up
+            onClick={() => navigate(`/restaurant/${restaurantId}/sign-up`, { state: restaurantData })} // Navigate to sign-up
           />
           <TButton
             text="Sign In"
@@ -82,9 +85,9 @@ export function TopNav() {
                 backgroundColor: '#DC3D4A',
               },
             }}
-            onClick={() => navigate('/restaurant/:restaurantId/login')} // Navigate to login
+            onClick={() => navigate(`/restaurant/${restaurantId}/login`, { state: restaurantData })} // Navigate to login
           />
-        </Box>
+        </Box>}
 
         {/* Notifications Icon (Visible on mobile and tablet only) */}
         <Box className="block md:hidden">
