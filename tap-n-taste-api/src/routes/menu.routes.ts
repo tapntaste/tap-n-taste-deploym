@@ -5,7 +5,8 @@ import {
   getAllMenuItemsForRestaurant,
   getMenuItemById,
   updateMenuItem,
-  deleteMenuItem
+  deleteMenuItem,
+  getFilteredMenuItemsForRestaurant
 } from '../controllers/menu.controller';
 
 const menuRoutes = express.Router({ mergeParams: true });
@@ -15,6 +16,7 @@ menuRoutes.post('/', authenticate, authorize('Admin', 'SuperAdmin'), createMenuI
 
 // Get all menu items - All users can access
 menuRoutes.get('/', getAllMenuItemsForRestaurant);
+menuRoutes.get('/filter', getFilteredMenuItemsForRestaurant);
 
 // Get a specific menu item by ID - All users can access
 menuRoutes.get('/:menuId', getMenuItemById);

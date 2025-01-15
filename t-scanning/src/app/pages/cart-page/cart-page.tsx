@@ -14,6 +14,9 @@ import { useState } from 'react';
 import { ExpandMoreOutlined } from '@mui/icons-material';
 import { cartPageCardsData } from '../../constants/CartPageData';
 import CartTable from 't-scanning/src/components/CartTable';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@tap-n-taste/utils';
+import { addMenuItemToCartThunk, removeMenuItemFromCartThunk } from 'libs/utils/src/store/cartSlice';
 
 export const CartPage = () => {
   const [expanded, setExpanded] = useState(false);
@@ -21,6 +24,11 @@ export const CartPage = () => {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+
+
+
+
+
 
   return (
     <Box className="px-[8%] sm:px-[10%] font-primary">

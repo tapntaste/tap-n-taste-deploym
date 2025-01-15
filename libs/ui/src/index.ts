@@ -34,3 +34,5 @@ export * from './lib/t-button/t-button';
 export * from './lib/t-main-layout';
 export * from './lib/t-image-slider';
 export * from './lib/t-admin-components'
+export * from './lib/t-loading/t-loading';
+export * from './lib/t-error/t-error';

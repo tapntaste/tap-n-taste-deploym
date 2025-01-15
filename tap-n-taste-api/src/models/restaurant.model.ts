@@ -26,6 +26,7 @@ interface IRestaurant extends Document {
   reviews?: mongoose.Types.ObjectId[];
   events?: mongoose.Types.ObjectId[];
   faq?: mongoose.Types.ObjectId[];
+  menu?: mongoose.Types.ObjectId[];
 }
 
 
@@ -58,6 +59,7 @@ const restaurantSchema = new Schema<IRestaurant>(
     events: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event' }],
     faq: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FAQ' }],
     table: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Table' }],
+    menu: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Menu' }],
   },
   { timestamps: true }
 );

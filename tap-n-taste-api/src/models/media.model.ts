@@ -11,10 +11,16 @@ const mediaSchema = new mongoose.Schema(
 
     banner: {
       type: String,
-      required: true,
+    }, // Banner image URL (could be a primary image or feature image)
+    logo: {
+      type: String,
     }, // Banner image URL (could be a primary image or feature image)
 
     gallery: {
+      type: [String],
+      default: [],
+    }, // Gallery of images (array of image URLs)
+    photos: {
       type: [String],
       default: [],
     }, // Gallery of images (array of image URLs)

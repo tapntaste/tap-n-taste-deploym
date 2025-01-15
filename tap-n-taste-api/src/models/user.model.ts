@@ -12,6 +12,7 @@ export interface IUser extends Document {
   otpExpiry?: number; // Add OTP expiry date
   role: 'User' | 'Admin' | 'SuperAdmin';
   restaurantId?: mongoose.Schema.Types.ObjectId; // Admin only, linking to restaurant
+  cart?: mongoose.Schema.Types.ObjectId[]; // Admin only, linking to restaurant
   status: 'pending' | 'verified'; // Status after email verification
   comparePassword: (candidatePassword: string) => Promise<boolean>;
 
@@ -102,6 +103,10 @@ const userSchema = new mongoose.Schema(
     orderHistory: [{ 
       type: mongoose.Schema.Types.ObjectId, 
       ref: 'Order' 
+    }], // List of past orders by the user
+    cart: [{ 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'Menu' 
     }], // List of past orders by the user
   },
   { timestamps: true }

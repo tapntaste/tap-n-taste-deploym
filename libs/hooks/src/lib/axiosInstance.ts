@@ -3,6 +3,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify'; // Import toast for notifications
 import 'react-toastify/dist/ReactToastify.css'; // Import toast styles
 
+const token = localStorage.getItem('auth_token'); // Or use a cookie if stored that way
 export const axiosInstance = axios.create({
   baseURL: `${BACKEND_URL}/api`, // API Base URL
   withCredentials: true, // Send cookies with requests

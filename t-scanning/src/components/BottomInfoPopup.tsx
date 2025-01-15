@@ -2,19 +2,24 @@ import React from 'react';
 import { Box } from '@mui/material';
 import { TButton, TCard } from '@tap-n-taste/ui';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import { useSelector } from 'react-redux';
+import { RootState } from '@tap-n-taste/utils';
 
 const BottomInfoPopUp = ({ noOfItems = 1 }) => {
-  console.log(noOfItems);
+  const { restaurantData } = useSelector((state: RootState) => state.restaurant);
+  console.log('fasdfasdf',restaurantData);
+  
 
   return (
-    <Box className="flex flex-col sm:flex-row justify-between items-center rounded-lg font-primary bg-white shadow-lg p-4 mb-10 mt-10">
+    <Box className="flex gap-2 flex-col sm:flex-row justify-between items-center rounded-lg font-primary bg-white shadow-lg p-4 mb-10 mt-10">
       {/* Restaurant Image */}
       <Box className="flex-shrink-0 mb-4 sm:mb-0">
         <TCard
-          imgURL="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          imgURL={restaurantData?.media?.banner}
           gradient={false}
           sx={{
             root: {
+              margin: '0 auto',
               width: {
                 xs: '80px', // Extra-small screens
                 sm: '90px', // Small screens
@@ -32,7 +37,7 @@ const BottomInfoPopUp = ({ noOfItems = 1 }) => {
 
       {/* Restaurant Details */}
       <Box className="flex-1 sm:ml-6 text-center sm:text-left">
-        <h1 className="text-sm sm:text-lg font-bold">Restaurant Name</h1>
+        <h1 className="text-sm sm:text-lg font-bold">{restaurantData?.name}</h1>
         <p className="text-xs sm:text-base text-primary cursor-pointer">
           View Menu
         </p>

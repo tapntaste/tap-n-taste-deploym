@@ -2,8 +2,11 @@ import { Box, Typography } from '@mui/material';
 import { offersSectionData } from '../app/constants/LandingPageData';
 import { TButton, TCard } from '@tap-n-taste/ui';
 import '../app/style.css';
+import { useSelector } from 'react-redux';
+import { RootState } from '@tap-n-taste/utils';
 
 const OfferPage = () => {
+  const { restaurantData } = useSelector((state: RootState) => state.restaurant);
   return (
     <Box className="my-20">
       <Box className="flex justify-between items-center">
@@ -20,13 +23,13 @@ const OfferPage = () => {
         />
       </Box>
       <Box className="flex flex-row gap-12 overflow-x-auto no-scrollbar mt-3">
-        {offersSectionData.map((card, index) => (
+        {restaurantData?.offers?.map((card:any,index:any) => (
           <TCard
             key={index}
-            imgURL={card.imgURL}
+            imgURL={card?.banner}
             gradient={true}
-            primeText={card.primeText}
-            secText={card.secText}
+            primeText={card?.title}
+            // secText={card?.description}
           />
         ))}
       </Box>

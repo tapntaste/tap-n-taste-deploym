@@ -12,18 +12,16 @@ import {
 } from '@mui/material';
 import StarOutlinedIcon from '@mui/icons-material/StarOutlined';
 import { TButton } from '@tap-n-taste/ui';
+import { useCreateReview, useFetchReviews } from '@tap-n-taste/hooks';
+import { useSelector } from 'react-redux';
+import { RootState } from '@tap-n-taste/utils';
 
-// TypeScript types
 type Review = {
   rating: number;
-  date: string;
-  text: string;
-  user: string;
-  images?: string[];
-};
-
-type ReviewCardProps = {
-  review: Review;
+  review: string;
+  user: { name: string };
+  media?: Array<{ banner: string }>;
+  createdAt: string;
 };
 
 type ReviewFormProps = {
@@ -31,7 +29,9 @@ type ReviewFormProps = {
 };
 
 // Reusable ReviewCard Component
-const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
+const ReviewCard: React.FC<{ review: Review ,restaurantData?: any}> = ({ review }) => {
+  const reviewDate = new Date(review.createdAt).toLocaleDateString();
+
   return (
     <Card className="!bg-[#FAFAFA] p-4 !rounded-lg !shadow-none">
       {/* Rating and Date */}
@@ -44,48 +44,36 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
             {review.rating}
           </Typography>
         </Box>
-        <Box>
-          <Typography variant="caption" className="text-gray-500">
-            Posted on {review.date}
-          </Typography>
-        </Box>
+        <Typography variant="caption" className="text-gray-500">
+          Posted on {reviewDate}
+        </Typography>
       </Box>
 
       {/* Main Content */}
       <CardContent className="flex justify-between">
         <Box>
           <Typography variant="body1" className="mb-2">
-            {review.text}
+            {review.review}
           </Typography>
           <Typography variant="caption" className="text-gray-500">
-            ~{review.user}
+            ~ {review.user.name}
           </Typography>
         </Box>
-        {/* Images */}
-        {review.images && review.images.length > 0 && (
-          <Box className="relative flex items-center">
-            {/* First Image */}
-            <CardMedia
-              component="img"
-              className="w-12 h-12 rounded object-cover"
-              image={review.images[0]}
-              alt="Review Image"
-            />
 
-            {/* Second Image and Overlay */}
-            {review.images.length > 1 && (
-              <Box className="relative ml-2 w-12 h-12">
-                <CardMedia
-                  component="img"
-                  className="absolute w-full h-full rounded object-cover"
-                  image={review.images[1]}
-                  alt="Review Image"
-                />
-                <Box className="absolute inset-0 bg-black opacity-50 rounded flex justify-center items-center">
-                  <Typography variant="body2" className="text-white">
-                    +{review.images.length - 1}
-                  </Typography>
-                </Box>
+        {/* Display Media Images */}
+        {review.media && review.media.length > 0 && (
+          <Box className="flex items-center">
+            {/* {review.media.slice(0, 2).map((mediaItem, index) => ( */}
+              <CardMedia
+                component="img"
+                className="w-12 h-12 rounded object-cover ml-2"
+                image={review.media[0].banner}
+                // alt={`Review Image ${index + 1}`}
+              />
+            {/* ))} */}
+            {review.media.length > 2 && (
+              <Box className="ml-2 flex justify-center items-center bg-black opacity-50 rounded text-white w-12 h-12">
+                +{review.media.length - 2}
               </Box>
             )}
           </Box>
@@ -95,26 +83,28 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
   );
 };
 
-// Review List Component
-
-const ReviewList: React.FC<{ reviews: Review[] }> = ({ reviews }) => {
+// ReviewList Component
+const ReviewList: React.FC = () => {
+  const { restaurantData } = useSelector((state: RootState) => state.restaurant);
+  const { reviews, loading, error } = useFetchReviews(restaurantData?._id);
   const [showAll, setShowAll] = useState(false);
-  const maxReviewsToShow = 3; // Adjust this number to control how many reviews are initially visible
+  const maxReviewsToShow = 3;
 
-  const reviewsToDisplay = showAll
-    ? reviews
-    : reviews.slice(0, maxReviewsToShow);
+  if (loading) return <Typography>Loading reviews...</Typography>;
+  if (error) return <Typography>Error loading reviews</Typography>;
+
+  const reviewsToDisplay = showAll ? reviews : reviews.slice(0, maxReviewsToShow);
 
   return (
     <Box className="flex flex-col gap-4">
-      {reviewsToDisplay.map((review, index) => (
-        <ReviewCard key={index} review={review} />
+      {reviewsToDisplay.map((review: any, index: any) => (
+        <ReviewCard key={index} review={review} restaurantData={restaurantData} />
       ))}
       {reviews.length > maxReviewsToShow && (
         <Button
           variant="text"
           color="error"
-          className="mt-4 align-left"
+          className="mt-4"
           onClick={() => setShowAll(!showAll)}
         >
           {showAll ? 'Show less' : 'See all Reviews'}
@@ -124,10 +114,10 @@ const ReviewList: React.FC<{ reviews: Review[] }> = ({ reviews }) => {
   );
 };
 
-// Review Form Component
+// ReviewForm Component
 const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
-  const [rating, setRating] = React.useState<number | null>(0);
-  const [review, setReview] = React.useState<string>('');
+  const [rating, setRating] = useState<number | null>(0);
+  const [review, setReview] = useState<string>('');
 
   const handleSubmit = () => {
     if (rating && review) {
@@ -140,17 +130,12 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
   return (
     <Box className="mt-8 flex flex-col gap-4">
       <Typography variant="h6">Add your rating and review!</Typography>
-      <Box className="flex items-center">
-        <Rating
-          name="rating"
-          value={rating}
-          onChange={(_, newValue) => setRating(newValue)}
-          precision={0.5}
-        />
-      </Box>
-      <Typography variant="caption" className="text-gray-500 block">
-        Tap to add your rating
-      </Typography>
+      <Rating
+        name="rating"
+        value={rating}
+        onChange={(_, newValue) => setRating(newValue)}
+        precision={0.5}
+      />
       <TextField
         fullWidth
         multiline
@@ -164,76 +149,32 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
         fullWidth
         variant="contained"
         color="error"
-        className={{
-          root: 'py-3 !rounded-lg !bg-[#F1414F] !text-white w-full',
-        }}
         onClick={handleSubmit}
         text="Submit Review →"
         disabled={!rating || !review}
-      ></TButton>
+      />
     </Box>
   );
 };
 
 // Main ReviewPage Component
 const ReviewPage: React.FC = () => {
-  const reviews: Review[] = [
-    {
-      rating: 4.5,
-      date: '03 Aug, 2024',
-      text: 'The food and ambiance is great here.',
-      user: 'Amrutha Sinha',
-      images: [
-        'https://via.placeholder.com/50', // Replace with actual image URLs
-        'https://via.placeholder.com/50',
-      ],
-    },
-    {
-      rating: 5,
-      date: '04 Aug, 2024',
-      text: 'Excellent service and quality!',
-      user: 'John Doe',
-      images: ['https://via.placeholder.com/50'],
-    },
-    {
-      rating: 4.5,
-      date: '03 Aug, 2024',
-      text: 'The food and ambiance is great here.',
-      user: 'Amrutha Sinha',
-      images: [
-        'https://via.placeholder.com/50', // Replace with actual image URLs
-        'https://via.placeholder.com/50',
-      ],
-    },
-    {
-      rating: 5,
-      date: '04 Aug, 2024',
-      text: 'Excellent service and quality!',
-      user: 'John Doe',
-      images: ['https://via.placeholder.com/50'],
-    },
-    {
-      rating: 4.5,
-      date: '03 Aug, 2024',
-      text: 'The food and ambiance is great here.',
-      user: 'Amrutha Sinha',
-      images: [
-        'https://via.placeholder.com/50', // Replace with actual image URLs
-        'https://via.placeholder.com/50',
-      ],
-    },
-    {
-      rating: 5,
-      date: '04 Aug, 2024',
-      text: 'Excellent service and quality!',
-      user: 'John Doe',
-      images: ['https://via.placeholder.com/50'],
-    },
-  ];
+  const { restaurantData } = useSelector((state: RootState) => state.restaurant);
+  const restaurantId = restaurantData?._id;
+  const { createReview } = useCreateReview(restaurantId);
 
-  const handleReviewSubmit = (data: { rating: number; review: string }) => {
+  const handleReviewSubmit = async (data: { rating: number; review: string }) => {
     console.log('Review submitted:', data);
-    // Handle review submission logic here
+    const newReview = {
+      rating: data?.rating,
+      review: data?.review,
+    };
+
+    try {
+      await createReview(newReview);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -241,7 +182,7 @@ const ReviewPage: React.FC = () => {
       <Typography variant="h4" className="!mb-4 text-[#4D4D4D]">
         Reviews
       </Typography>
-      <ReviewList reviews={reviews} />
+      <ReviewList />
       <ReviewForm onSubmit={handleReviewSubmit} />
     </Box>
   );

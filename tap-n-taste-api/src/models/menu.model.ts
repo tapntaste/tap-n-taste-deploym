@@ -1,44 +1,14 @@
 import mongoose, { Schema } from 'mongoose';
-interface Features {
-  isOrderOnline?: boolean;
-  isReviewActivated?: boolean;
-  isBookTable?: boolean;
-  isEventBook?: boolean;
-  isArMenu?: boolean;
-  isMenuAvailable?: boolean;
-  isDineInAvailable?: boolean;
-  isDeliveryAvailable?: boolean;
-  isTakeawayAvailable?: boolean;
-  isNonVeg?: boolean;
-  isPureVeg?: boolean;
-  isWifi?: boolean;
-  isParking?: boolean;
-  isKidsPlayArea?: boolean;
-}
-const FeaturesSchema = new Schema<Features>({
-  isOrderOnline: { type: Boolean, default: false },
-  isReviewActivated: { type: Boolean, default: false },
-  isBookTable: { type: Boolean, default: false },
-  isEventBook: { type: Boolean, default: false },
-  isArMenu: { type: Boolean, default: false },
-  isMenuAvailable: { type: Boolean, default: false },
-  isDineInAvailable: { type: Boolean, default: false },
-  isDeliveryAvailable: { type: Boolean, default: false },
-  isTakeawayAvailable: { type: Boolean, default: false },
-  isPureVeg: { type: Boolean, default: false },
-  isNonVeg: { type: Boolean, default: false },
-  isWifi: { type: Boolean, default: false },
-  isParking: { type: Boolean, default: false },
-  isKidsPlayArea: { type: Boolean, default: false },
-});
+
 const menuItemSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
     description: { type: String, trim: true },
+    banner: { type: String},
     price: { type: Number, required: true, min: 0 },
     category: { type: String, required: true }, // e.g., Starter, Main Course, Dessert
     isAvailable: { type: Boolean, default: true },
-    preparationTime: { type: Number, min: 1, required: true }, // Time in minutes
+    preparationTime: { type: Number, min: 1}, // Time in minutes
 
     // Ratings and Reviews
     ratings: {
@@ -73,7 +43,7 @@ const menuItemSchema = new mongoose.Schema(
     // Customization options
     customizations: [
       {
-        name: { type: String, trim: true, required: true }, // e.g., "Extra Cheese", "Add Fries"
+        name: { type: String, trim: true}, // e.g., "Extra Cheese", "Add Fries"
         price: { type: Number, min: 0, default: 0 },
         isAvailable: { type: Boolean, default: true },
       },
@@ -85,7 +55,8 @@ const menuItemSchema = new mongoose.Schema(
       eventBooking: { type: Boolean, default: false },
       tableBooking: { type: Boolean, default: true },
     },
-    features: { type: FeaturesSchema, default: () => ({}) },
+    features:{ type: mongoose.Schema.Types.ObjectId, ref: 'Feature' },
+    media:{ type: mongoose.Schema.Types.ObjectId, ref: 'Media' },
     ambiance: [{ type: String }], // e.g., "Romantic, Family-friendly, Casual"
     openHoursByService: {
       dineIn: { start: { type: String }, end: { type: String } },
@@ -101,7 +72,7 @@ const menuItemSchema = new mongoose.Schema(
     },
     ingredients: [
       {
-        name: { type: String, trim: true, required: true }, // e.g., "Tomatoes"
+        name: { type: String, trim: true }, // e.g., "Tomatoes"
         isOrganic: { type: Boolean, default: false }, // Organic or not
         isLocallySourced: { type: Boolean, default: false }, // Locally sourced or not
       },
@@ -111,7 +82,7 @@ const menuItemSchema = new mongoose.Schema(
       location: { type: String, trim: true }, // e.g., "California, USA"
     },
     inStock: { type: Boolean, default: true },
-    estimatedCookingTime: { type: Number, required: true, min: 0 }, // Time in minutes
+    estimatedCookingTime: { type: Number, min: 0 }, // Time in minutes
     popularityScore: { type: Number, default: 0 }, // Derived from sales or ratings
     discountPercentage: { type: Number, min: 0, max: 100 },
     isOnPromotion: { type: Boolean, default: false },
@@ -171,7 +142,7 @@ const menuItemSchema = new mongoose.Schema(
     comboOptions: [
       {
         comboName: { type: String, trim: true }, // e.g., "Burger + Fries + Drink"
-        price: { type: Number, required: true },
+        price: { type: Number },
         itemsIncluded: [
           { type: mongoose.Schema.Types.ObjectId, ref: 'MenuItem' },
         ], // References to other menu items
@@ -219,5 +190,5 @@ const menuItemSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const MenuItem = mongoose.model('MenuItem', menuItemSchema);
-export default MenuItem;
+const Menu = mongoose.model('Menu', menuItemSchema);
+export default Menu;
