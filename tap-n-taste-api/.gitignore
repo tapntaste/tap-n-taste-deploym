@@ -1,0 +1,98 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# Compiled output
+dist/
+tmp/
+build/
+/out-tsc/
+
+# Dependencies
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+/.log
+
+# Debugging
+/coverage/
+testem.log
+error.log
+debug.log
+
+# IDEs and editors
+.idea/
+*.iml
+.vscode/
+.vscode-test/
+/.classpath
+/.project
+.settings/
+*.launch
+*.sublime-workspace
+*.swp
+*.lock-wscript
+
+# IDE - VSCode (allow specific files)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# System files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Env files
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env.*.local
+
+# Cache files
+.cache/
+.cache-loader/
+.parcel-cache/
+/.eslintcache
+/.turbo/
+.nx/cache/
+.nx/workspace-data/
+*.tsbuildinfo
+.pnp.*
+.pnpm-debug.log*
+node_modules/.cache/
+
+# Testing
+/jest-test-results.json
+/karma-html-reporter/
+coverage/
+
+# Miscellaneous
+.sass-cache/
+.connect.lock
+libpeerconnection.log
+.idea_modules/
+*.pid
+*.seed
+*.pid.lock
+*.log
+*.tgz
+*.orig
+*.rej
+*~
+
+# Specific tools
+.vite
+vite.config.*.timestamp*
+.vitepress/dist
+
+# Nx
+.nx/
+*.nx.json

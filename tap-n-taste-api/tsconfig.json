@@ -1,17 +1,15 @@
 {
   "compilerOptions": {
-    "esModuleInterop": true,
-    "allowJs": true,
-    "checkJs": false,
-    "strict": false,
-    "skipLibCheck": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "outDir": "dist/tap-n-taste-api",  // Specify output directory
-    "target": "ES6",                  // Target modern JavaScript version
-    "module": "CommonJS"              // Use CommonJS modules for Node.js
+    "esModuleInterop": true,           // Enable esModuleInterop
+    "noEmit": true,                    // Prevent TypeScript from emitting output
+    "allowJs": true,                   // Allow JavaScript files
+    "checkJs": false,                  // Disable JS type checking
+    "strict": false,                   // Relax strict type checking
+    "skipLibCheck": true,              // Skip library type checks
+    "noUnusedLocals": false,           // Disable unused locals check
+    "noUnusedParameters": false        // Disable unused parameters check
   },
   "include": [
-    "src/**/*"                         // Include all files in the src directory
+    "src/**/*"                          // Adjust this as needed to include your files
   ]
 }
