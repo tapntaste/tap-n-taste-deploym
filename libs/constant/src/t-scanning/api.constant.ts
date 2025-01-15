@@ -1,5 +1,5 @@
 
-const IsDevelopment=true;
+const IsDevelopment=false;
 const DEV_BACKEND_URL='http://localhost:3000'
 const PROD_BACKEND_URL='https://principal-maybelle-unfetchai-6b091143.koyeb.app'
 const DEV_SCANNING_FRONTEND_URL='http://localhost:4300'
