@@ -1,5 +1,16 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Box } from '@mui/material';
+import { TOrderplaced, TNotificationPage, TCouponpage } from '@tap-n-taste/ui';
+import ProductAdd from '../productadd-page/productadd';
+import OrderPage from '../order-page/order-page';
+import ProfilePage from '../profile-page/profile-page';
+import OrderPrepare from '../order-prepare/order-prepare';
+import OrderComplete from '../order-complete/order-complete';
+
+import OrderFlow from '../order-flow/order-flow';
+import OrderChoices from '../order-choice/order-choice';
+import OrderChoice1 from '../order-choice/orderchoice1';
+
 import { Routes, Route, useParams } from 'react-router-dom';
 import {
   TFaq,
@@ -51,6 +62,8 @@ const PATHS = {
   ORDER_COMPLETE: '/user/:userId/order-complete',
   PROFILE: '/user/:userId/profile',
   ORDER_FLOW: '/user/:userId/order-flow',
+  ORDER_CHOICE: "/order-choice",
+  ORDER_CHOICES_1: "/order-choices-1",
   OTP_SUBMIT: '/otp',
   PAYMENT_SCREEN: '/payment-screen',
   PAYMENT_SUCCESS: '/payment-success',
@@ -117,7 +130,9 @@ export const LandingPage = () => {
           <Route path={PATHS.ORDER_PREPARE} element={<OrderPrepare />} />
           <Route path={PATHS.ORDER_COMPLETE} element={<OrderComplete />} />
           <Route path={PATHS.PROFILE} element={<ProfilePage />} />
-          <Route path={PATHS.ORDER_FLOW} element={<OrderComplete />} />
+          <Route path={PATHS.ORDER_FLOW} element={<OrderFlow />} />
+          <Route path={PATHS.ORDER_CHOICE} element={<OrderChoices />} />
+          <Route path={PATHS.ORDER_CHOICES_1} element={<OrderChoice1 />} />
           <Route path={PATHS.OTP_SUBMIT} element={<TSubmit />} />
 
           {/* @ Tap N Taste Flow Routes */}
