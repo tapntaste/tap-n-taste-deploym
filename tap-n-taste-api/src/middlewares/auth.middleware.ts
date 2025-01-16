@@ -3,21 +3,32 @@ import { Request, Response, NextFunction } from 'express';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
 
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace Express {
+    interface Request {
+      user?: JwtPayload | { role?: string }; // Adjust to match the structure of your token
+    }
+  }
+}
+
+export type AugmentedRequest = Request;
 // Middleware to verify token
-export const authenticate = (req: Request, res: Response, next: NextFunction) => {
+export const authenticate = (req: Request, res: Response, next: NextFunction): void => {
   try {
     // Extract token from header
-    const authHeader = req.headers.authorization|| req.cookies['token']; // Extract token from header or cookie;;
+    const authHeader: string | undefined = req.headers.authorization || req.cookies['token'];
     if (!authHeader) {
-      return res.status(401).json({ error: 'Access denied. No token provided.' });
+      res.status(401).json({ error: 'Access denied. No token provided.' });
+      return;
     }
 
-    const token = authHeader.split(' ')[1]
-    const decoded = jwt.verify(token, JWT_SECRET); // Verify token
-    req.user = decoded; // Attach decoded token to request object
+    const token: string = authHeader.split(' ')[1];
+    const decoded: JwtPayload | string = jwt.verify(token, JWT_SECRET);
+    req.user = decoded as JwtPayload; // Attach decoded token to request object
     next();
   } catch (error) {
-    return res.status(401).json({ error: 'Invalid or expired token.' });
+    res.status(401).json({ error: 'Invalid or expired token.' });
   }
 };
 

@@ -7,7 +7,7 @@
     "strict": true
   },
   "files": [],
-  "include": ["src/**/*"],  // Add this to include all the source files
+  "include": ["src/**/*","src/types/express.d.ts"],  // Add this to include all the source files
   "references": [
     {
       "path": "./tsconfig.app.json"
