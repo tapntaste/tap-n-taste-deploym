@@ -271,6 +271,39 @@ export const signup = async (req: Request, res: Response) => {
   }
 };
 
+// Fetch User Information
+export const fetchUser = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user.id; // Assuming user ID is attached to `req.user` from the auth middleware
+    if(!userId){
+      return res.status(404).json({ message: 'User not found, please Login again' });
+    }
+
+    // Find user in the database
+    const user = await User.findById(userId).select('-password -otp -otpExpiry'); // Exclude sensitive fields
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Respond with user information
+    res.status(200).json({  user: {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      role: user.role,
+      status: user.status,
+      restaurantId:user.restaurantId,
+    },
+    message: 'Fetch user successful',
+    id: user?.id,
+    restaurantId: user?.restaurantId,
+    role: user?.role, });
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ message: 'Error fetching user information', error });
+  }
+};
 export const login = async (req: Request, res: Response) => {
   try {
     const { email, phone, password,restaurantId } = req.body;

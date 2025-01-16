@@ -3,6 +3,7 @@ import {
   TButton,
   TCustomCard,
   TFooter,
+  TLoadingSpinner,
   TopNav,
   TTableSelector,
 } from '@tap-n-taste/ui';
@@ -10,25 +11,47 @@ import ControlPointRoundedIcon from '@mui/icons-material/ControlPointRounded';
 import Divider from '@mui/material/Divider';
 import ApplyCoupons from '../../../components/ApplyCoupons';
 import HotDeals from '../../../components/HotDeals';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ExpandMoreOutlined } from '@mui/icons-material';
 import { cartPageCardsData } from '../../constants/CartPageData';
 import CartTable from 't-scanning/src/components/CartTable';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@tap-n-taste/utils';
-import { addMenuItemToCartThunk, removeMenuItemFromCartThunk } from 'libs/utils/src/store/cartSlice';
+import {
+  addMenuItemToCartThunk,
+  fetchCartItemsThunk,
+  removeMenuItemFromCartThunk,
+} from 'libs/utils/src/store/cartSlice';
+import { useNavigate } from 'react-router-dom';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 export const CartPage = () => {
   const [expanded, setExpanded] = useState(false);
-
+  const dispatch = useDispatch<AppDispatch>();
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+  const authState = useSelector((state: RootState) => state.auth);
+  const { restaurantData } = useSelector(
+    (state: RootState) => state.restaurant
+  );
+  const navigate = useNavigate();
+  const userId = authState?.userData?.id;
+  const restaurantId = restaurantData?._id;
+  const { cartItems, loading, error } = useSelector(
+    (state: RootState) => state.cart
+  );
+  useEffect(() => {
+    dispatch(fetchCartItemsThunk({ userId, restaurantId }));
+  }, []);
+  console.log(cartItems);
 
-
-
-
-
+  const AddItemHandler = () => {
+    // /restaurant/${restaurantId}${navLink.path}
+    navigate(`/restaurant/${restaurantId}/menu`);
+  };
+  if (loading) return <TLoadingSpinner />;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <Box className="px-[8%] sm:px-[10%] font-primary">
@@ -37,16 +60,30 @@ export const CartPage = () => {
         <TTableSelector className="relative" />
       </Box>
       <Box className="mt-10 mb-10">
-        {cartPageCardsData.map((item, index) => (
-          <TCustomCard
-            image={item.image}
-            title={item.title}
-            description={item.description}
-            rating={item.rating}
-            price={item.price}
-            veg={false}
-          />
-        ))}
+        {cartItems?.length === 0 ? (
+          <Box className="flex flex-col gap-5 justify-center items-center">
+            <ShoppingCartIcon className='h-10 w-10'/>
+            <h1 className="text-xl font-semibold text-gray-500">
+              Your cart is empty
+            </h1>
+          </Box>
+        ) : (
+          cartItems.map((item: any) => (
+            <TCustomCard
+              key={item?.menuItem?._id}
+              image={item?.menuItem?.banner || ''}
+              title={item?.menuItem?.name || ''}
+              description={item?.menuItem?.description || ''}
+              rating={item?.menuItem?.ratings?.averageRating || 0}
+              price={item?.menuItem?.price || 0}
+              veg={item?.menuItem?.isVeg}
+              id={item?.menuItem?._id}
+              quantity={item?.quantity}
+              isAddButton={false}
+              isRemoveButton={true}
+            />
+          ))
+        )}
       </Box>
       <Box className="w-full flex justify-between items-center mb-10">
         <TButton
@@ -62,6 +99,7 @@ export const CartPage = () => {
           text="Add More Items"
           icon={<ControlPointRoundedIcon className="text-primary" />}
           className={{ text: 'text-primary capitalize font-semibold' }}
+          onClick={AddItemHandler}
         />
       </Box>
 
@@ -89,7 +127,7 @@ export const CartPage = () => {
         <h1>Your Cart</h1>
       </Divider>
 
-      <CartTable />
+      <CartTable cart={cartItems} />
       <Box className="w-full flex justify-center items-center mb-10">
         <TButton
           text="Place Order"
@@ -104,7 +142,6 @@ export const CartPage = () => {
           }}
         />
       </Box>
-
     </Box>
   );
 };

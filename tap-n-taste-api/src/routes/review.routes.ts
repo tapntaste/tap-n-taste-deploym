@@ -10,7 +10,7 @@ import { authenticate } from '../middlewares/auth.middleware'; // Middleware for
 const router = express.Router();
 
 // Create a review
-router.post('/:id', createReview);
+router.post('/:id', authenticate,createReview);
 
 // Update a review
 router.put('/:reviewId', authenticate, updateReview);

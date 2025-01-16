@@ -44,7 +44,7 @@ export const createReview = async (req, res, next) => {
     });
 
     await newReview.save();
-    res.status(201).json({ message: 'Review created successfully', data: newReview });
+    res.status(200).json({ message: 'Review created successfully', data: newReview });
 
   } catch (error) {
     next(error);

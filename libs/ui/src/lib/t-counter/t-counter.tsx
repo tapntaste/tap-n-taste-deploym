@@ -2,11 +2,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-export function TCounter() {
-  const [count, setCount] = useState(1);
+export function TCounter({count,setCount}:any) {
 
   const handleDecrement = () => {
-    if (count > 0) {
+    if (count > 1) {
       setCount(count - 1);
     }
   };

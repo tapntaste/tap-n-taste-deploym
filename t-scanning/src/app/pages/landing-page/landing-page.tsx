@@ -32,6 +32,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, fetchRestaurantThunk, RootState } from '@tap-n-taste/utils';
 import { useEffect } from 'react';
 import {BACKEND_URL,SCANNING_FRONTEND_URL,ADMIN_FRONTEND_URL} from '@tap-n-taste/constant';
+import { fetchUser } from 'libs/utils/src/store/authSlice';
 // @ Paths for routing as constants for easy maintenance and scalability
 const PATHS = {
   HOME: '/',
@@ -86,6 +87,13 @@ export const LandingPage = () => {
 
   console.log(restaurantData);
   
+  const { userData } = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    dispatch(fetchUser());
+  }, [dispatch]);
+  console.log(userData);
+
 
   return (
     <Box className="min-h-screen flex flex-col bg-white shadow-lg text-gray-800 position-relative">

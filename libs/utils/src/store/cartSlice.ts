@@ -1,8 +1,11 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { axiosInstance } from '@tap-n-taste/hooks'; // Ensure correct import
 
+// Define Cart Item structure with menuItemId and quantity
+
+
 interface CartState {
-  cartItems: string[];
+  cartItems:any; // Array of cart items, each with menuItemId and quantity
   loading: boolean;
   error: string | null;
 }
@@ -13,16 +16,48 @@ const initialState: CartState = {
   error: null,
 };
 
+// Thunk to fetch all cart items for a user
+export const fetchCartItemsThunk = createAsyncThunk(
+  'cart/fetchCartItems',
+  async (
+    { userId, restaurantId }: { userId: string; restaurantId: any },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.get(
+        `/restaurants/${restaurantId}/user/${userId}/cart`
+      );
+      return response.data.cart; // Assuming the API returns an array of cart items
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
 // Thunk to add menu item to cart
 export const addMenuItemToCartThunk = createAsyncThunk(
   'cart/addMenuItem',
-  async ({ userId, menuItemId ,restaurantId}: { userId: string; menuItemId: string,restaurantId:any }, { rejectWithValue }) => {
+  async (
+    {
+      userId,
+      menuItemId,
+      restaurantId,
+      quantity = 1,
+    }: {
+      userId: string;
+      menuItemId: string;
+      restaurantId: any;
+      quantity: number;
+    },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await axiosInstance.post(
         `/restaurants/${restaurantId}/user/${userId}/cart`,
-        { menuItemId }
+        { menuItemId, quantity }
       );
-      return response.data.cart;
+
+      return response.data.cart; // Assuming the cart is returned with updated items
     } catch (error) {
       return rejectWithValue((error as Error).message);
     }
@@ -32,13 +67,20 @@ export const addMenuItemToCartThunk = createAsyncThunk(
 // Thunk to remove menu item from cart
 export const removeMenuItemFromCartThunk = createAsyncThunk(
   'cart/removeMenuItem',
-  async ({ userId, menuItemId ,restaurantId}: { userId: string; menuItemId: string ,restaurantId:any}, { rejectWithValue }) => {
+  async (
+    {
+      userId,
+      menuItemId,
+      restaurantId,
+    }: { userId: string; menuItemId: string; restaurantId: any },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await axiosInstance.delete(
-        `/your-restaurant-id/user/${userId}/cart`,
+        `/restaurants/${restaurantId}/user/${userId}/cart`,
         { data: { menuItemId } }
       );
-      return response.data.cart;
+      return response.data.cart; // Assuming the updated cart is returned
     } catch (error) {
       return rejectWithValue((error as Error).message);
     }
@@ -51,29 +93,52 @@ const cartSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      // Handle fetchCartItems thunk
+      .addCase(fetchCartItemsThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        fetchCartItemsThunk.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.cartItems = action.payload; // Update cartItems with fetched data
+        }
+      )
+      .addCase(fetchCartItemsThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
       // Handle addMenuItem thunk
       .addCase(addMenuItemToCartThunk.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(addMenuItemToCartThunk.fulfilled, (state, action: PayloadAction<string[]>) => {
-        state.loading = false;
-        state.cartItems = action.payload;
-      })
+      .addCase(
+        addMenuItemToCartThunk.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.cartItems = action.payload; // Update cartItems after adding a menu item
+        }
+      )
       .addCase(addMenuItemToCartThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })
-      
+
       // Handle removeMenuItem thunk
       .addCase(removeMenuItemFromCartThunk.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(removeMenuItemFromCartThunk.fulfilled, (state, action: PayloadAction<string[]>) => {
-        state.loading = false;
-        state.cartItems = action.payload;
-      })
+      .addCase(
+        removeMenuItemFromCartThunk.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.cartItems = action.payload; // Update cartItems after removing a menu item
+        }
+      )
       .addCase(removeMenuItemFromCartThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;

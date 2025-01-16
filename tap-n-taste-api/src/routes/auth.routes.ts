@@ -8,6 +8,7 @@ import {
   requestAdminSignup,
   approveAdmin,
   googleAuthCallback,
+  fetchUser,
 } from '../controllers/auth.controller';
 import { authenticate, authorize } from '../middlewares/auth.middleware';
 import passport from '../utils/googleAuth';
@@ -20,7 +21,7 @@ router.post('/signup/verify', verifySignupOTP);
 router.post('/login', login);
 router.post('/otp/login', sendLoginOTP);
 router.post('/otp/login/verify', verifyLoginOTP);
-console.log('fasd');
+router.get('/fetch-user',authenticate, fetchUser);
 
 // Google Auth routes
 // router.get('/auth/google', googleAuth);

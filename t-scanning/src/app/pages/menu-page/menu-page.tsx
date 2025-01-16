@@ -22,12 +22,14 @@ export const MenuPage = () => {
   const [isVegActive, setVegActive] = useState<boolean>(false);
   const [isNonVegActive, setNonVegActive] = useState<boolean>(false);
   const [selectedCuisine, setSelectedCuisine] = useState<string | null>(null);
-const navigate = useNavigate();
-  const { restaurantData } = useSelector((state: RootState) => state.restaurant);
+  const navigate = useNavigate();
+  const { restaurantData } = useSelector(
+    (state: RootState) => state.restaurant
+  );
   const { menuItems, loading, error } = useMenuItems(restaurantData?._id);
 
   // Extract unique cuisines from menu items
-  const cuisines = [...new Set(menuItems?.map(item => item.category))];
+  const cuisines = [...new Set(menuItems?.map((item) => item.category))];
   const authState = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
@@ -36,19 +38,19 @@ const navigate = useNavigate();
 
       // Filter by cuisine
       if (selectedCuisine) {
-        filtered = filtered.filter(item => item.category === selectedCuisine);
+        filtered = filtered.filter((item) => item.category === selectedCuisine);
       }
 
       // Filter by Veg/Non-Veg if toggles are active
       if (isVegActive && !isNonVegActive) {
-        filtered = filtered.filter(item => item.isVeg);
+        filtered = filtered.filter((item) => item.isVeg);
       }
       if (isNonVegActive && !isVegActive) {
-        filtered = filtered.filter(item => !item.isVeg);
+        filtered = filtered.filter((item) => !item.isVeg);
       }
 
       // Apply search query filtering
-      filtered = filtered.filter(item =>
+      filtered = filtered.filter((item) =>
         item.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
 
@@ -74,14 +76,14 @@ const navigate = useNavigate();
     );
   };
 
-  const itemAddHandler = (e: React.MouseEvent<HTMLButtonElement>,id:any) => {
+  const itemAddHandler = (e: React.MouseEvent<HTMLButtonElement>, id: any) => {
     e.stopPropagation(); // Prevent event bubbling
     if (!authState?.isAuthenticated) {
       // Redirect to login page if not logged in
       navigate(`/restaurant/${restaurantData?._id}/login`);
     } else {
-      console.log('authenticated',authState);
-      
+      console.log('authenticated', authState);
+
       // Dispatch action to add item to cart
       // dispatch(addToCart({ itemId, title, price }));
     }
@@ -117,10 +119,16 @@ const navigate = useNavigate();
             <TButton
               key={index}
               text={cuisine}
-              className={{root:'p-4 word-wrap text-sm text-break ',text:'capitalize'}}
-              onClick={() => setSelectedCuisine(cuisine === selectedCuisine ? null : cuisine)}
+              className={{
+                root: 'p-4 word-wrap text-sm text-break ',
+                text: 'capitalize',
+              }}
+              onClick={() =>
+                setSelectedCuisine(cuisine === selectedCuisine ? null : cuisine)
+              }
               sx={{
-                backgroundColor: cuisine === selectedCuisine ? 'red' : '#EDEBEB',
+                backgroundColor:
+                  cuisine === selectedCuisine ? 'red' : '#EDEBEB',
                 color: cuisine === selectedCuisine ? '#fff' : 'black',
               }}
             />
@@ -131,7 +139,7 @@ const navigate = useNavigate();
       {/* Display Filtered Menu Items */}
       <Box className="mb-4">
         {!loading && filteredMenuItems.length > 0 ? (
-          filteredMenuItems.map(item =>
+          filteredMenuItems.map((item) =>
             item.isAvailable ? (
               <TCustomCard
                 key={item._id}
@@ -142,12 +150,17 @@ const navigate = useNavigate();
                 price={item?.price}
                 veg={item?.isVeg}
                 id={item?._id}
-                onClick={itemAddHandler}
+                isAddButton={true} // Show add button
+                isRemoveButton={false} // Don't show remove button
               />
             ) : null
           )
         ) : (
-          <p>{loading ? 'Loading menu items...' : 'No matching menu items found.'}</p>
+          <p>
+            {loading
+              ? 'Loading menu items...'
+              : 'No matching menu items found.'}
+          </p>
         )}
       </Box>
 

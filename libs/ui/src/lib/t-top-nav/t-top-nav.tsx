@@ -15,8 +15,10 @@ export function TopNav() {
   const navigate = useNavigate();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
-  const { restaurantData } = useSelector((state: RootState) => state.restaurant);
-  const restaurantId =restaurantData?._id
+  const { restaurantData } = useSelector(
+    (state: RootState) => state.restaurant
+  );
+  const restaurantId = restaurantData?._id;
   const authState = useSelector((state: RootState) => state.auth);
   const handleNotificationClick = () => {
     navigate(`/restaurant/${restaurantId}/notification`);
@@ -31,7 +33,6 @@ export function TopNav() {
     }
     setSnackbarOpen(false);
   };
-
   return (
     <Box className="px-[8%] sm:px-[15%] sticky top-0 bg-tertiary bg-white z-20">
       <Box className="flex items-center justify-between py-5 sm:py-10 relative">
@@ -63,34 +64,44 @@ export function TopNav() {
         </Box>
 
         {/* Sign In / Sign Up Buttons */}
-      {  !  authState?.isAuthenticated && <Box className="hidden md:flex gap-4 max-lg:gap-2">
-          <TButton
-            text="Sign Up"
-            className={{ text: 'lg:text-xs' }}
-            sx={{
-              backgroundColor: 'white',
-              border: '2px solid #F1414F',
-              color: '#F1414F',
-            }}
-            onClick={() => navigate(`/restaurant/${restaurantId}/sign-up`, { state: restaurantData })} // Navigate to sign-up
-          />
-          <TButton
-            text="Sign In"
-            className={{ text: 'lg:text-xs' }}
-            sx={{
-              backgroundColor: '#F1414F',
-              border: '2px solid #F1414F',
-              color: 'white',
-              '&:hover': {
-                backgroundColor: '#DC3D4A',
-              },
-            }}
-            onClick={() => navigate(`/restaurant/${restaurantId}/login`, { state: restaurantData })} // Navigate to login
-          />
-        </Box>}
+        {!authState?.isAuthenticated && (
+          <Box className="hidden md:flex gap-4 max-lg:gap-2">
+            <TButton
+              text="Sign Up"
+              className={{ text: 'lg:text-xs' }}
+              sx={{
+                backgroundColor: 'white',
+                border: '2px solid #F1414F',
+                color: '#F1414F',
+              }}
+              onClick={() =>
+                navigate(`/restaurant/${restaurantId}/sign-up`, {
+                  state: restaurantData,
+                })
+              } // Navigate to sign-up
+            />
+            <TButton
+              text="Sign In"
+              className={{ text: 'lg:text-xs' }}
+              sx={{
+                backgroundColor: '#F1414F',
+                border: '2px solid #F1414F',
+                color: 'white',
+                '&:hover': {
+                  backgroundColor: '#DC3D4A',
+                },
+              }}
+              onClick={() =>
+                navigate(`/restaurant/${restaurantId}/login`, {
+                  state: restaurantData,
+                })
+              } // Navigate to login
+            />
+          </Box>
+        )}
 
         {/* Notifications Icon (Visible on mobile and tablet only) */}
-        <Box className="block md:hidden">
+        <Box className="block lg:hidden">
           <NotificationsNoneIcon
             className="text-black hover:text-[#F1414F] transition-colors duration-300 cursor-pointer"
             fontSize="large"

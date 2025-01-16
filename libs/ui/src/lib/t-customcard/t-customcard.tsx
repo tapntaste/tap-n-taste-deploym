@@ -1,5 +1,5 @@
 // export default TCustomCard;
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaStar } from 'react-icons/fa6';
 import { TbSquareDot } from 'react-icons/tb'; // Import the TbSquareDot icon
@@ -171,21 +171,26 @@ export function TCustomCard({
   price,
   veg,
   id,
+  quantity,
+  isAddButton = true, // Default to true (add button)
+  isRemoveButton = false, // Default to false (remove button)
 }: any) {
 
 
   const dispatch = useDispatch<AppDispatch>();
   const { cartItems, loading, error } = useSelector((state: RootState) => state.cart);
+  const [count, setCount] = useState(quantity||1);
+
   const { restaurantData } = useSelector((state: RootState) => state.restaurant);
   const authState = useSelector((state: RootState) => state.auth);
   const handleAddItem = () => {
-    dispatch(addMenuItemToCartThunk({ userId:authState?.userData?.id, menuItemId:id ,restaurantId:restaurantData._id}));
+    dispatch(addMenuItemToCartThunk({ userId:authState?.userData?.id, menuItemId:id ,restaurantId:restaurantData._id,quantity:count}));
     console.log(authState);
     
   };
 
-  const handleRemoveItem = (userId: string, menuItemId: string) => {
-    dispatch(removeMenuItemFromCartThunk({ userId, menuItemId,restaurantId:restaurantData._id }));
+  const handleRemoveItem = () => {
+      dispatch(removeMenuItemFromCartThunk({ userId: authState?.userData?.id, menuItemId: id, restaurantId: restaurantData._id }));
   };
 
 
@@ -213,8 +218,14 @@ export function TCustomCard({
               <RatingText>{rating}</RatingText>
             </RatingContainer>
             <RightContainer>
-              <TCounter />
-              <Button onClick={handleAddItem}>ADD</Button>
+              <TCounter count={count} setCount={setCount}/>
+              {/* <Button onClick={handleAddItem}>ADD</Button> */}
+              {isAddButton && !isRemoveButton && (
+                <Button onClick={handleAddItem}>ADD</Button>
+              )}
+              {isRemoveButton && !isAddButton && (
+                <Button onClick={handleRemoveItem}>REMOVE</Button>
+              )}
             </RightContainer>
           </ActionContainer>
         </InfoContainer>

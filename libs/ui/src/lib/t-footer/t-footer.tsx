@@ -6,10 +6,18 @@ import { TNavButton } from '@tap-n-taste/ui';
 import LocalDiningIcon from '@mui/icons-material/LocalDining';
 import { Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { RootState } from '@tap-n-taste/utils';
+import { useSelector } from 'react-redux';
 
 export function TFooter() {
   const navigate = useNavigate();
-  const restaurantId = 'your-restaurant-id'; // Replace with actual restaurantId
+  const authState = useSelector((state: RootState) => state.auth);
+  
+  const { restaurantData, loading, error } = useSelector(
+    (state: RootState) => state.restaurant
+  );
+  const restaurantId=restaurantData?._id
+  const userId=authState?.userData?.id;
 
   return (
     <Box className="fixed z-[10] sm:hidden min-w-full bg-white rounded-lg bottom-0 flex items-center justify-between p-4 px-[8%] sm:px-[15%]">
@@ -18,7 +26,7 @@ export function TFooter() {
       </Button>
       <Button
         onClick={() =>
-          navigate(`/restaurant/${restaurantId}/user/:userId/order`)
+          navigate(`/restaurant/${restaurantId}/user/${userId}/order`)
         }
       >
         <TbTruckDelivery />
@@ -33,14 +41,14 @@ export function TFooter() {
       />
       <Button
         onClick={() =>
-          navigate(`/restaurant/${restaurantId}/user/:userId/cart`)
+          navigate(`/restaurant/${restaurantId}/user/${userId}/cart`)
         }
       >
         <IoCartOutline />
       </Button>
       <Button
         onClick={() =>
-          navigate(`/restaurant/${restaurantId}/user/:userId/profile`)
+          navigate(`/restaurant/${restaurantId}/user/${userId}/profile`)
         }
       >
         <PermIdentityIcon />
