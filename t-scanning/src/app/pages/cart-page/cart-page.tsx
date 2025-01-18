@@ -85,7 +85,7 @@ export const CartPage = () => {
           ))
         )}
       </Box>
-      <Box className="w-full flex justify-between items-center mb-10">
+      <Box className="w-full flex justify-between items-center mb-10 ">
         <TButton
           text="Cooking Requests"
           expand={expanded}
