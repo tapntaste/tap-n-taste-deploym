@@ -27,7 +27,9 @@ export const MenuPage = () => {
     (state: RootState) => state.restaurant
   );
   const { menuItems, loading, error } = useMenuItems(restaurantData?._id);
-
+  const { cartItems } = useSelector(
+    (state: RootState) => state.cart
+  );
   // Extract unique cuisines from menu items
   const cuisines = [...new Set(menuItems?.map((item) => item.category))];
   const authState = useSelector((state: RootState) => state.auth);
@@ -152,6 +154,7 @@ export const MenuPage = () => {
                 id={item?._id}
                 isAddButton={true} // Show add button
                 isRemoveButton={false} // Don't show remove button
+                isMenuCard={true}
               />
             ) : null
           )

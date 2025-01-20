@@ -1,9 +1,9 @@
-
+import { RootState } from '@tap-n-taste/utils';
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
-export function TCounter({count,setCount}:any) {
-
+export function TCounter({ count, setCount }: any) {
   const handleDecrement = () => {
     if (count > 1) {
       setCount(count - 1);
@@ -26,7 +26,7 @@ export function TCounter({count,setCount}:any) {
 }
 
 const CounterWrapper = styled.div`
-  background-color: #EDEBEB;
+  background-color: #edebeb;
   display: inline-flex;
   padding: 8px; /* Reduced padding */
   border-radius: 8px;
@@ -43,7 +43,7 @@ const CounterButton = styled.button`
   height: 24px; /* Reduced height */
   border: none;
   border-radius: 8px;
-  background-color: #EDEBEB;
+  background-color: #edebeb;
   color: #757575;
   font-size: 14px; /* Reduced font size */
   font-weight: bold;

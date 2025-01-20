@@ -201,7 +201,7 @@ export const googleAuthCallback = (req: Request, res: Response) => {
 // };
 export const signup = async (req: Request, res: Response) => {
   try {
-    const { name, email, password, phone,restaurantId } = req.body;
+    const { name, email, password, phone, restaurantId } = req.body;
 
     // Validate inputs
     if (!name || !password || (!email && !phone)) {
@@ -220,12 +220,10 @@ export const signup = async (req: Request, res: Response) => {
     const existingUserPhone = await User.findOne({ phone });
 
     if (existingUser || existingUserPhone) {
-      return res
-        .status(400)
-        .json({
-          message: 'Email or Phone already registered',
-          user: existingUser || existingUserPhone,
-        });
+      return res.status(400).json({
+        message: 'Email or Phone already registered',
+        user: existingUser || existingUserPhone,
+      });
     }
 
     // Create new user
@@ -249,22 +247,25 @@ export const signup = async (req: Request, res: Response) => {
     );
 
     // Return success response
-    res.status(200).cookie('token', token, {
-      httpOnly: true, // Prevents client-side JS from accessing the cookie
-      secure: true, // Send only over HTTPS in production
-      sameSite: 'none', // For cross-origin requests, SameSite must be 'None'
-    }).json({
-      message: 'User created successfully',
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        phone: user.phone,
-        role: user.role,
-        status: user.status,
-        restaurantId,
-      },
-    });
+    res
+      .status(200)
+      .cookie('token', token, {
+        httpOnly: true, // Prevents client-side JS from accessing the cookie
+        secure: true, // Send only over HTTPS in production
+        sameSite: 'none', // For cross-origin requests, SameSite must be 'None'
+      })
+      .json({
+        message: 'User created successfully',
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          role: user.role,
+          status: user.status,
+          restaurantId,
+        },
+      });
   } catch (error) {
     console.error('Signup error:', error);
     res.status(500).json({ message: 'Signup failed' });
@@ -275,30 +276,38 @@ export const signup = async (req: Request, res: Response) => {
 export const fetchUser = async (req: Request, res: Response) => {
   try {
     const userId = req.user.id; // Assuming user ID is attached to `req.user` from the auth middleware
-    if(!userId){
-      return res.status(404).json({ message: 'User not found, please Login again' });
+    if (!userId) {
+      return res
+        .status(404)
+        .json({ message: 'User not found, please Login again' });
     }
 
     // Find user in the database
-    const user = await User.findById(userId).select('-password -otp -otpExpiry'); // Exclude sensitive fields
+    const user = await User.findById(userId).select(
+      '-password -otp -otpExpiry'
+    ); // Exclude sensitive fields
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
     // Respond with user information
-    res.status(200).json({  user: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      phone: user.phone,
-      role: user.role,
-      status: user.status,
-      restaurantId:user.restaurantId,
-    },
-    message: 'Fetch user successful',
-    id: user?.id,
-    restaurantId: user?.restaurantId,
-    role: user?.role, });
+    res.status(200).json({
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+        status: user.status,
+        restaurantId: user.restaurantId,
+        table: user.table,
+        user:user
+      },
+      message: 'Fetch user successful',
+      id: user?.id,
+      restaurantId: user?.restaurantId,
+      role: user?.role,
+    });
   } catch (error) {
     console.error('Error fetching user:', error);
     res.status(500).json({ message: 'Error fetching user information', error });
@@ -306,7 +315,7 @@ export const fetchUser = async (req: Request, res: Response) => {
 };
 export const login = async (req: Request, res: Response) => {
   try {
-    const { email, phone, password,restaurantId } = req.body;
+    const { email, phone, password, restaurantId } = req.body;
 
     if (!password || (!email && !phone)) {
       return res
@@ -348,9 +357,9 @@ export const login = async (req: Request, res: Response) => {
       { expiresIn: JWT_EXPIRY }
     );
 
-    if(restaurantId){
-      user.restaurantId = restaurantId
-      await user.save()
+    if (restaurantId) {
+      user.restaurantId = restaurantId;
+      await user.save();
     }
 
     res
@@ -371,15 +380,39 @@ export const login = async (req: Request, res: Response) => {
           role: user.role,
           status: user.status,
           restaurantId,
+          table: user.table,
+          user:user
         },
         message: 'Login successful',
         id: user?.id,
         restaurantId: user?.restaurantId,
         role: user?.role,
-      })
+      });
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ message: 'Login failed' });
+  }
+};
+
+export const logout = (req, res) => {
+  try {
+    // Clear token from cookies
+    res.clearCookie('token', { httpOnly: true, secure: true });
+
+    // Optionally, clear token from the Authorization header
+    req.headers['authorization'] = null;
+
+    // Send success response
+    return res.status(200).json({
+      success: true,
+      message: 'Logged out successfully.',
+    });
+  } catch (error) {
+    // Handle any errors
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to log out. Please try again.',
+    });
   }
 };
 
@@ -479,12 +512,10 @@ export const requestAdminSignup = async (req: Request, res: Response) => {
     });
 
     await admin.save();
-    res
-      .status(201)
-      .json({
-        message: 'Admin registration request submitted for approval',
-        admin,
-      });
+    res.status(201).json({
+      message: 'Admin registration request submitted for approval',
+      admin,
+    });
   } catch (error) {
     res
       .status(500)

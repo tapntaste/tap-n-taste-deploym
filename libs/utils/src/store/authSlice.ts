@@ -45,6 +45,19 @@ export const authenticateUser = createAsyncThunk(
   }
 );
 
+export const logoutUser = createAsyncThunk(
+  'auth/logoutUser',
+  async (_, { rejectWithValue }) => {
+    try {
+      await axiosInstance.post('/auth/logout', {}, { withCredentials: true });
+      return true; // Logout successful
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to log out.');
+    }
+  }
+);
+
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -90,6 +103,20 @@ const authSlice = createSlice({
       .addCase(fetchUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+      .addCase(logoutUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.loading = false;
+        state.isAuthenticated = false;
+        state.userData = null;
+        localStorage.removeItem('user'); // Clear localStorage
+      })
+      .addCase(logoutUser.rejected, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });

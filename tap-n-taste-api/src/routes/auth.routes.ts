@@ -9,6 +9,7 @@ import {
   approveAdmin,
   googleAuthCallback,
   fetchUser,
+  logout,
 } from '../controllers/auth.controller';
 import { authenticate, authorize } from '../middlewares/auth.middleware';
 import passport from '../utils/googleAuth';
@@ -19,6 +20,7 @@ const router = express.Router();
 router.post('/signup', signup);
 router.post('/signup/verify', verifySignupOTP);
 router.post('/login', login);
+router.post('/logout', logout);
 router.post('/otp/login', sendLoginOTP);
 router.post('/otp/login/verify', verifyLoginOTP);
 router.get('/fetch-user',authenticate, fetchUser);

@@ -90,7 +90,32 @@ export const removeMenuItemFromCartThunk = createAsyncThunk(
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
-  reducers: {},
+  reducers: {
+    updateCartItemQuantity: (
+      state,
+      action: PayloadAction<{ menuItemId: string; quantity: number }>
+    ) => {
+      const { menuItemId, quantity } = action.payload;
+      console.log('Current State:', state);
+      console.log('Cart Items:', state.cartItems);
+    
+      if (!state.cartItems) {
+        state.cartItems = [];
+      }
+    
+      const item = state.cartItems.find((item: any) => {
+        console.log('Item:', item);
+        
+        return item.menuItem._id=== menuItemId
+      });
+      if (item) {
+        item.quantity = quantity;
+      } else {
+        console.warn('Item not found:', menuItemId);
+      }
+    },
+    
+  },
   extraReducers: (builder) => {
     builder
       // Handle fetchCartItems thunk
@@ -145,5 +170,5 @@ const cartSlice = createSlice({
       });
   },
 });
-
+export const { updateCartItemQuantity } = cartSlice.actions;
 export default cartSlice.reducer;

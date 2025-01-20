@@ -6,7 +6,7 @@ import Media from '../models/media.model';
 // Create a new review
 export const createReview = async (req, res, next) => {
   const { id: restaurantId } = req.params;
-  const userId = req?.user?.id||'6761ddce7092dc5215ddae95';
+  const userId = req?.user?.id;
   const { rating, review, media } = req.body;
 
   try {
