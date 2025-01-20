@@ -4,11 +4,18 @@ import { TButton, TCard } from '@tap-n-taste/ui';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { useSelector } from 'react-redux';
 import { RootState } from '@tap-n-taste/utils';
+import { useNavigate } from 'react-router-dom';
 
-const BottomInfoPopUp = ({ noOfItems = 1 }) => {
-  const { restaurantData } = useSelector((state: RootState) => state.restaurant);
-  console.log('fasdfasdf',restaurantData);
-  
+const BottomInfoPopUp = () => {
+  const { restaurantData } = useSelector(
+    (state: RootState) => state.restaurant
+  );
+  const authState = useSelector((state: RootState) => state.auth);
+  const userId = authState?.userData?.id;
+  const navigate = useNavigate();
+  const handleCartClick = () => {
+    navigate(`/restaurant/${restaurantData?._id}/user/${userId}/cart`);
+  };
 
   return (
     <Box className="flex gap-2 flex-col sm:flex-row justify-between items-center rounded-lg font-primary bg-white shadow-lg p-4 mb-10 mt-10">
@@ -38,14 +45,12 @@ const BottomInfoPopUp = ({ noOfItems = 1 }) => {
       {/* Restaurant Details */}
       <Box className="flex-1 sm:ml-6 text-center sm:text-left">
         <h1 className="text-sm sm:text-lg font-bold">{restaurantData?.name}</h1>
-        <p className="text-xs sm:text-base text-primary cursor-pointer">
-          View Menu
-        </p>
       </Box>
 
       {/* View Cart Button */}
       <Box className="relative bg-primary px-4 py-2 cursor-pointer rounded-md text-white flex flex-col items-center justify-center">
         <TButton
+          onClick={handleCartClick}
           text="View Cart"
           className={{
             text: 'text-xs sm:text-sm md:text-base text-white',
@@ -55,9 +60,6 @@ const BottomInfoPopUp = ({ noOfItems = 1 }) => {
             height: '40px', // Fixed button height for consistency
           }}
         />
-        <p className="mt-1 text-[10px] sm:text-xs md:text-sm bg-red-500 text-white rounded-full px-2">
-          {noOfItems} Items
-        </p>
       </Box>
 
       {/* Close Icon */}

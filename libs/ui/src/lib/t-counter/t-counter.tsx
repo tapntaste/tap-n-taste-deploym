@@ -1,9 +1,10 @@
+import { Typography } from '@mui/material';
 import { RootState } from '@tap-n-taste/utils';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
-export function TCounter({ count, setCount }: any) {
+export function TCounter({ count, setCount ,disabled}: any) {
   const handleDecrement = () => {
     if (count > 1) {
       setCount(count - 1);
@@ -17,9 +18,10 @@ export function TCounter({ count, setCount }: any) {
   return (
     <CounterWrapper>
       <CounterContainer>
-        <CounterButton onClick={handleDecrement}>-</CounterButton>
+        {disabled&&<Typography>quantity: </Typography>}
+        {!disabled&&<CounterButton disabled={disabled} onClick={handleDecrement}>-</CounterButton>}
         <CounterValue>{count}</CounterValue>
-        <CounterButton onClick={handleIncrement}>+</CounterButton>
+        {!disabled&&<CounterButton disabled={disabled} onClick={handleIncrement}>+</CounterButton>}
       </CounterContainer>
     </CounterWrapper>
   );

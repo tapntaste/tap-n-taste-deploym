@@ -12,6 +12,7 @@ import {
   updateCartItemQuantity,
 } from 'libs/utils/src/store/cartSlice';
 import { Button } from '@mui/material';
+import { deleteMenuItemFromOrder } from 'libs/utils/src/store/orderSlice';
 
 const CardContainer = styled.div`
   display: flex;
@@ -174,9 +175,13 @@ export function TCustomCard({
   veg,
   id,
   quantity,
-  isAddButton = true, // Default to true (add button)
+  isAddButton = false, // Default to true (add button)
   isRemoveButton = false, // Default to false (remove button)
+  isCancelButton=false,
   isMenuCard=false,
+  isOrderCard=false,
+  orderId,
+  handleDeleteMenuItems
 }: any) {
   const dispatch = useDispatch<AppDispatch>();
   const [count, setCount] = useState(quantity || 1);
@@ -185,6 +190,8 @@ export function TCustomCard({
     (state: RootState) => state.restaurant
   );
   const authState = useSelector((state: RootState) => state.auth);
+  const {orders} = useSelector((state: RootState) => state.order);
+  console.log(orders);
   const handleAddItem = () => {
     dispatch(
       addMenuItemToCartThunk({
@@ -196,6 +203,9 @@ export function TCustomCard({
     );
   };
 
+  const handleDeleteMenuItem = async () => {
+    handleDeleteMenuItems(orderId,id)
+  };
   const handleRemoveItem = () => {
     dispatch(
       removeMenuItemFromCartThunk({
@@ -233,14 +243,15 @@ export function TCustomCard({
               <RatingText>{rating}</RatingText>
             </RatingContainer>
             <RightContainer>
-              <TCounter count={isMenuCard?count:quantity} setCount={isMenuCard?setCount:handleCountChange} />
+              <TCounter disabled={isOrderCard} count={isMenuCard?count:quantity} setCount={isMenuCard?setCount:handleCountChange} />
               {/* <Button onClick={handleAddItem}>ADD</Button> */}
-              {isAddButton && !isRemoveButton && (
+              {!isOrderCard&&isAddButton && !isRemoveButton && (
                 <Button onClick={handleAddItem}>ADD</Button>
               )}
-              {isRemoveButton && !isAddButton && (
+              {!isOrderCard&& isRemoveButton && !isAddButton && (
                 <Button onClick={handleRemoveItem}>REMOVE</Button>
               )}
+              {isOrderCard&&<Button onClick={handleDeleteMenuItem}>Cancel</Button>}
             </RightContainer>
           </ActionContainer>
         </InfoContainer>

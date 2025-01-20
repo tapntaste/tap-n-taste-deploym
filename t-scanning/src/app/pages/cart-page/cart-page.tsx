@@ -46,32 +46,27 @@ export const CartPage = () => {
   );
   useEffect(() => {
     dispatch(fetchCartItemsThunk({ userId, restaurantId }));
-  }, [dispatch, userId, restaurantId,cartItems.length]);
+  }, [dispatch, userId, restaurantId, cartItems.length]);
 
   const handleOrderCreation = async () => {
     // Create the payload
     const orderData = {
       restaurantId,
-      items: cartItems.map((cartItem:any) => ({
+      items: cartItems.map((cartItem: any) => ({
         menuId: cartItem.menuItem._id,
         quantity: cartItem.quantity,
       })),
       tableId: userData?.table,
-      cookingRequest:cooking
+      cookingRequest: cooking,
     };
-    
 
     // Dispatch the createOrder thunk
     const result = await dispatch(createOrder(orderData));
-
-    // Handle the result
-    if (createOrder.fulfilled.match(result)) {
-      console.log('Order created successfully:', result.payload);
-    } else {
-      console.error('Order creation failed:', result.payload);
+    console.log(result);
+    if(result.meta.requestStatus === 'fulfilled') {
+      navigate(`/restaurant/${restaurantId}/user/${userId}/order-complete`);
     }
   };
-
 
   const AddItemHandler = () => {
     // /restaurant/${restaurantId}${navLink.path}
@@ -89,7 +84,7 @@ export const CartPage = () => {
       <Box className="mt-10 mb-10">
         {cartItems?.length === 0 ? (
           <Box className="flex flex-col gap-5 justify-center items-center">
-            <ShoppingCartIcon className='h-10 w-10'/>
+            <ShoppingCartIcon className="h-10 w-10" />
             <h1 className="text-xl font-semibold text-gray-500">
               Your cart is empty
             </h1>
@@ -136,8 +131,8 @@ export const CartPage = () => {
             className="w-full h-60 bg-zinc-200 p-4 rounded-xl"
             placeholder="Add Less Salt & Spices"
             style={{ height: '150px', resize: 'none' }} // This disables the resizing handle
-            onChange={(e:any)=>{
-              setCooking(e.target.value)
+            onChange={(e: any) => {
+              setCooking(e.target.value);
             }}
           />
         </CardContent>
@@ -157,7 +152,7 @@ export const CartPage = () => {
         <h1>Your Cart</h1>
       </Divider>
 
-      <CartTable cart={cartItems} />
+     { cartItems.length > 0 && <CartTable cart={cartItems} />}
       <Box className="w-full flex justify-center items-center mb-10">
         <TButton
           text="Place Order"

@@ -1,5 +1,5 @@
 import express from 'express';
-import { createOrder, deleteOrder, fetchOrdersByRestaurant, fetchUserOrders, updateOrder,fetchOrderId } from '../controllers/order.controller';
+import { createOrder, deleteOrder, fetchOrdersByRestaurant, fetchUserOrders, updateOrder,fetchOrderId, cancelMenuItem } from '../controllers/order.controller';
 
 const orderRoutes = express.Router();
 
@@ -11,6 +11,8 @@ orderRoutes.get('/restaurant/:restaurantId',fetchOrdersByRestaurant); // Fetch o
 orderRoutes.get('/:id',  fetchOrderId); // Update an order by ID
 orderRoutes.put('/:id',  updateOrder); // Update an order by ID
 orderRoutes.delete('/:id',  deleteOrder); // Delete an order by ID
+orderRoutes.patch('/:orderId/items/:menuId/cancel', cancelMenuItem);
+
 
 // PATCH route for updating the order status
 // orderRoutes.patch('/:orderId/status', updateOrderStatus); // Update order status by order ID
