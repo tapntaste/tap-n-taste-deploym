@@ -1,4 +1,4 @@
-import { Box, Snackbar, Alert, IconButton } from '@mui/material';
+import { Box, Snackbar, Alert, IconButton, Typography } from '@mui/material';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import Logo from '../../assets/logo.png';
 import { useState } from 'react';
@@ -6,9 +6,11 @@ import TSidebar from '../t-sidebar/t-sidebar';
 import { navLinksData } from 't-scanning/src/app/constants/LandingPageData';
 import { TButton } from '../t-button';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { RootState } from '@tap-n-taste/utils';
-import { useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@tap-n-taste/utils';
+import { useDispatch, useSelector } from 'react-redux';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { AccountCircle } from '@mui/icons-material';
+import { logoutUser } from 'libs/utils/src/store/authSlice';
 
 const themeColor = '#F1414F'; // Define your color here
 
@@ -19,10 +21,18 @@ export function TopNav() {
   const { restaurantData } = useSelector(
     (state: RootState) => state.restaurant
   );
-  const restaurantId = restaurantData?._id ||'6780da43d5eb2186d06373bb';
-  const authState = useSelector((state: RootState) => state.auth);
+  const restaurantId = restaurantData?._id || '6780da43d5eb2186d06373bb';
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const handleNotificationClick = () => {
     navigate(`/restaurant/${restaurantId}/notification`);
+  };
+  const dispatch = useDispatch<AppDispatch>();
+  const handleLogout = async () => {
+    try {
+      await dispatch(logoutUser()).unwrap();
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
 
   const handleSnackbarClose = (
@@ -41,31 +51,48 @@ export function TopNav() {
         <TSidebar />
 
         {/* Logo */}
-        <Box className="flex items-center space-x-2 cursor-pointer">
+        <Box
+          className="flex items-center space-x-2 cursor-pointer"
+          onClick={() => {
+            if (restaurantId) {
+              navigate(`/restaurant/${restaurantId}/`);
+            } else {
+              navigate(`/`);
+            }
+          }}
+        >
           <img src={Logo} alt="Brand Logo" className="h-12" />
           <h1 className="text-xl font-bold font-primary">Tapn'Taste</h1>
         </Box>
 
-        {/* Navigation Links */}
+        {/* Desktop Navigation Links */}
         <Box className="hidden lg:flex gap-2 xl:gap-8">
-          {navLinksData.map((navLink) => (
-            <NavLink
-              key={navLink.linkText}
-              to={navLink.path}
-              end={navLink.end}
-              className={({ isActive }) =>
-                `font-semibold lg:text-sm uppercase flex items-center gap-2 cursor-pointer ${
-                  isActive ? 'text-red-500' : 'hover:text-primary'
-                }`
-              }
-            >
-              {navLink.linkText}
-            </NavLink>
-          ))}
+          {navLinksData.map((navLink) => {
+            // Generate the correct path for dynamic links
+            const path =
+              navLink.path === '/restaurant/:restaurantId'
+                ? `/restaurant/${restaurantId}/homepage`
+                : `/restaurant/${restaurantId}${navLink.path}`;
+
+            return (
+              <NavLink
+                key={navLink.linkText}
+                to={path}
+                end={navLink.end}
+                className={({ isActive }) =>
+                  `font-semibold lg:text-sm uppercase flex items-center gap-2 cursor-pointer ${
+                    isActive ? 'text-red-500' : 'hover:text-primary'
+                  }`
+                }
+              >
+                {navLink.linkText}
+              </NavLink>
+            );
+          })}
         </Box>
 
         {/* Sign In / Sign Up Buttons */}
-        {!authState?.isAuthenticated && (
+        {!isAuthenticated && (
           <Box className="hidden md:flex gap-4 max-lg:gap-2">
             <TButton
               text="Sign Up"
@@ -100,18 +127,35 @@ export function TopNav() {
             />
           </Box>
         )}
-
+        {
+          <Box className="hidden md:flex gap-4 max-lg:gap-2">
+            <TButton
+              text="Logout"
+              className={{ text: 'lg:text-xs' }}
+              sx={{
+                backgroundColor: 'white',
+                border: '2px solid #F1414F',
+                color: '#F1414F',
+              }}
+              onClick={handleLogout} // Navigate to sign-up
+            />
+          </Box>
+        }
         {/* Notifications Icon (Visible on mobile and tablet only) */}
         <Box className="block lg:hidden">
-       { authState?.isAuthenticated?<NotificationsNoneIcon
-            className="text-black hover:text-[#F1414F] transition-colors duration-300 cursor-pointer"
-            fontSize="large"
-            onClick={handleNotificationClick}
-          />:
-          <IconButton onClick={() => navigate(`/restaurant/${restaurantId}/login`)}>
-
-            <AccountCircleIcon className='w-10 h-10'/>
-          </IconButton>}
+          {isAuthenticated ? (
+            <NotificationsNoneIcon
+              className="text-black hover:text-[#F1414F] transition-colors duration-300 cursor-pointer"
+              fontSize="large"
+              onClick={handleNotificationClick}
+            />
+          ) : (
+            <IconButton
+              onClick={() => navigate(`/restaurant/${restaurantId}/login`)}
+            >
+              <AccountCircleIcon className="w-10 h-10" />
+            </IconButton>
+          )}
         </Box>
 
         {/* Snackbar */}

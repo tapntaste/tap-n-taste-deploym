@@ -167,7 +167,7 @@ export const MenuPage = () => {
         )}
       </Box>
 
-      <BottomInfoPopUp noOfItems={filteredMenuItems.length} />
+      <BottomInfoPopUp />
     </Box>
   );
 };

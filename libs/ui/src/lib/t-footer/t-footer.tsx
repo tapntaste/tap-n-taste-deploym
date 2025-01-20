@@ -26,7 +26,7 @@ export function TFooter() {
       </Button>
       <Button
         onClick={() =>
-          navigate(`/restaurant/${restaurantId}/user/${userId}/order`)
+          navigate(`/restaurant/${restaurantId}/user/${userId}/order-complete`)
         }
       >
         <TbTruckDelivery />
@@ -34,8 +34,7 @@ export function TFooter() {
       <StyledTNavButton
         icon={<LocalDiningIcon sx={{ color: '#f1f1f1' }} />}
         onClick={() => {
-          console.log('Navigating to coupons page');
-          navigate(`/restaurant/${restaurantId}/coupons`);
+          navigate(`/restaurant/${restaurantId}/menu`);
         }}
         backgroundColor="red"
       />

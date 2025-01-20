@@ -39,3 +39,4 @@ export * from './lib/t-error/t-error';
 export * from './lib/t-book-event/t-book-event';
 export * from './lib/t-book-events/t-book-events';
 export * from './lib/t-ticket/t-ticket';
+export * from './lib/t-protected/t-protected';

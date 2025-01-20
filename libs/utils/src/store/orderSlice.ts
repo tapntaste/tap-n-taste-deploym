@@ -49,7 +49,7 @@ export const fetchOrders = createAsyncThunk(
   'orders/fetchOrders',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get('/orders');
+      const response = await axiosInstance.get('/restaurants/orders');
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch orders.');
@@ -62,8 +62,8 @@ export const fetchOrdersByUserId = createAsyncThunk(
   'orders/fetchOrdersByUserId',
   async (userId: string, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/order/user`);
-      return response.data;
+      const response = await axiosInstance.get(`/restaurants/order/user`);
+      return response.data.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch user orders.');
     }
@@ -75,7 +75,7 @@ export const fetchOrdersByRestaurantId = createAsyncThunk(
   'orders/fetchOrdersByRestaurantId',
   async (restaurantId: string, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/order/restaurant/${restaurantId}`);
+      const response = await axiosInstance.get(`/restaurants/order/restaurant/${restaurantId}`);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch restaurant orders.');
@@ -88,7 +88,7 @@ export const fetchOrderById = createAsyncThunk(
   'orders/fetchOrderById',
   async (orderId: string, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/order/${orderId}`);
+      const response = await axiosInstance.get(`/restaurants/order/${orderId}`);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch order.');
@@ -104,7 +104,7 @@ export const updateOrder = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axiosInstance.put(`/order/${orderId}`, updates);
+      const response = await axiosInstance.put(`/restaurants/order/${orderId}`, updates);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to update order.');
@@ -117,13 +117,32 @@ export const deleteOrder = createAsyncThunk(
   'orders/deleteOrder',
   async (orderId: string, { rejectWithValue }) => {
     try {
-      await axiosInstance.delete(`/order/${orderId}`);
+      await axiosInstance.delete(`/restaurants/order/${orderId}`);
       return orderId;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to delete order.');
     }
   }
 );
+
+// Async thunk to delete a menu item from an order
+export const deleteMenuItemFromOrder = createAsyncThunk(
+  'orders/deleteMenuItemFromOrder',
+  async (
+    { orderId, menuId }: { orderId: string; menuId: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.patch(
+        `/restaurants/order/${orderId}/items/${menuId}/cancel`
+      );
+      return response.data
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to delete menu item.');
+    }
+  }
+);
+
 
 // Order slice
 const orderSlice = createSlice({
@@ -223,6 +242,36 @@ const orderSlice = createSlice({
         state.orders = state.orders.filter((order) => order._id !== action.payload);
       })
       .addCase(deleteOrder.rejected, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(deleteMenuItemFromOrder.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        deleteMenuItemFromOrder.fulfilled,
+        (
+          state,
+          action: PayloadAction<{ orderId: string; menuId: string; updatedOrder: Order }>
+        ) => {
+          state.loading = false;
+
+          const { orderId, menuId, updatedOrder } = action.payload;
+
+          // Update current order if it matches the orderId
+          if (state.currentOrder && state.currentOrder._id === orderId) {
+            state.currentOrder = updatedOrder;
+          }
+
+          // Update the specific order in the orders array
+          const index = state.orders.findIndex((order) => order._id === orderId);
+          if (index !== -1) {
+            state.orders[index] = updatedOrder;
+          }
+        }
+      )
+      .addCase(deleteMenuItemFromOrder.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload;
       });
