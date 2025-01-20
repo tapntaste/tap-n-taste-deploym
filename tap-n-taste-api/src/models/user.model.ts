@@ -48,6 +48,7 @@ export interface IUser extends Document {
   isBlocked?: boolean; // Block user from login if true
   favoriteRestaurants?: mongoose.Schema.Types.ObjectId[]; // List of restaurants the user prefers
   orderHistory?: mongoose.Schema.Types.ObjectId[]; // List of past orders by user
+  table?: mongoose.Schema.Types.ObjectId;
 }
 
 const userSchema = new mongoose.Schema(
@@ -118,6 +119,10 @@ const userSchema = new mongoose.Schema(
         quantity: { type: Number, required: true, default: 1 },
       },
     ],
+    table: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Table',
+    },
   },
   { timestamps: true }
 );

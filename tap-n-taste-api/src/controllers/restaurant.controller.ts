@@ -44,7 +44,10 @@ export const getRestaurantById = async (req, res, next) => {
       .populate('offers')
       .populate('reviews')
       .populate('faq')
-      .populate('table')
+      .populate({
+        path: 'table',
+        options: { sort: { number: 1 } }, // Sorts tables by their 'number' field in ascending order
+      })
       .populate('events')
       .populate('features');
     if (!restaurant)
@@ -74,6 +77,7 @@ export const updateRestaurant = async (req, res, next) => {
       events, // Added to capture events
       features, // Added to capture features
       menuItems,
+      tax,
       ...restaurantData
     } = req.body;
 
@@ -413,6 +417,11 @@ export const updateRestaurant = async (req, res, next) => {
       const existingRestaurant = await Restaurant.findById(restaurantId);
       menuIds = existingRestaurant ? [...existingRestaurant.menu, ...menuItems] : [];
     }
+    let tableIds=[];
+    if (table) {
+      const existingRestaurant = await Restaurant.findById(restaurantId);
+      tableIds = existingRestaurant ? [...existingRestaurant.table, tableId] : [];
+    }
     // Update Restaurant Data with location and contact references
     const updatedRestaurant = await Restaurant.findByIdAndUpdate(
       restaurantId,
@@ -425,11 +434,12 @@ export const updateRestaurant = async (req, res, next) => {
         socialLinks: socialLinksId, // Update with new or existing SocialLinks ID
         offers: offerIds.length ? offerIds : undefined, // Add offers to the restaurant (new or existing)
         faq: faqIds.length ? faqIds : undefined, // Update with FAQs if present
-        table: tableId ? [tableId] : undefined, // Add table reference if exists
+        table: tableIds && tableIds.length ? tableIds : undefined, // Add table reference if exists
         events: eventIds.length ? eventIds : undefined, // Add events to the restaurant (new or existing)
         features: featuresId ? [featuresId] : undefined, // Update features reference
         menu: menuIds && menuIds.length ? menuIds : undefined,
         reviews: reviewIds && reviewIds.length ? reviewIds : undefined,
+        tax:tax&&tax.length?[...tax]:undefined
       },
       { new: true, runValidators: true, session }
     );

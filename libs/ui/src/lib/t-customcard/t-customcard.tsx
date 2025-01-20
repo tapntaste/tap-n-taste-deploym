@@ -6,10 +6,12 @@ import { TbSquareDot } from 'react-icons/tb'; // Import the TbSquareDot icon
 import TCounter from '../t-counter/t-counter';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@tap-n-taste/utils';
-import { addMenuItemToCartThunk, removeMenuItemFromCartThunk } from 'libs/utils/src/store/cartSlice';
-import { TButton } from '../t-button';
+import {
+  addMenuItemToCartThunk,
+  removeMenuItemFromCartThunk,
+  updateCartItemQuantity,
+} from 'libs/utils/src/store/cartSlice';
 import { Button } from '@mui/material';
-
 
 const CardContainer = styled.div`
   display: flex;
@@ -174,26 +176,39 @@ export function TCustomCard({
   quantity,
   isAddButton = true, // Default to true (add button)
   isRemoveButton = false, // Default to false (remove button)
+  isMenuCard=false,
 }: any) {
-
-
   const dispatch = useDispatch<AppDispatch>();
-  const { cartItems, loading, error } = useSelector((state: RootState) => state.cart);
-  const [count, setCount] = useState(quantity||1);
+  const [count, setCount] = useState(quantity || 1);
 
-  const { restaurantData } = useSelector((state: RootState) => state.restaurant);
+  const { restaurantData } = useSelector(
+    (state: RootState) => state.restaurant
+  );
   const authState = useSelector((state: RootState) => state.auth);
   const handleAddItem = () => {
-    dispatch(addMenuItemToCartThunk({ userId:authState?.userData?.id, menuItemId:id ,restaurantId:restaurantData._id,quantity:count}));
-    console.log(authState);
-    
+    dispatch(
+      addMenuItemToCartThunk({
+        userId: authState?.userData?.id,
+        menuItemId: id,
+        restaurantId: restaurantData._id,
+        quantity: count,
+      })
+    );
   };
 
   const handleRemoveItem = () => {
-      dispatch(removeMenuItemFromCartThunk({ userId: authState?.userData?.id, menuItemId: id, restaurantId: restaurantData._id }));
+    dispatch(
+      removeMenuItemFromCartThunk({
+        userId: authState?.userData?.id,
+        menuItemId: id,
+        restaurantId: restaurantData._id,
+      })
+    );
   };
 
-
+  const handleCountChange = (newCount: number) => {
+    dispatch(updateCartItemQuantity({ menuItemId: id, quantity: newCount }));
+  };
 
   return (
     <StyledTCustomCard>
@@ -218,7 +233,7 @@ export function TCustomCard({
               <RatingText>{rating}</RatingText>
             </RatingContainer>
             <RightContainer>
-              <TCounter count={count} setCount={setCount}/>
+              <TCounter count={isMenuCard?count:quantity} setCount={isMenuCard?setCount:handleCountChange} />
               {/* <Button onClick={handleAddItem}>ADD</Button> */}
               {isAddButton && !isRemoveButton && (
                 <Button onClick={handleAddItem}>ADD</Button>
@@ -234,5 +249,3 @@ export function TCustomCard({
     </StyledTCustomCard>
   );
 }
-
-export default TCustomCard;

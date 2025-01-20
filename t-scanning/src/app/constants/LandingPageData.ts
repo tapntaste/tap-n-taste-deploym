@@ -122,6 +122,7 @@ import RestaurantMenuOutlinedIcon from '@mui/icons-material/RestaurantMenuOutlin
 import NotificationsActiveOutlinedIcon from '@mui/icons-material/NotificationsActiveOutlined';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
+import { AccountCircle } from '@mui/icons-material';
 
 
 export const navLinksData = [
@@ -155,6 +156,7 @@ export const navLinksData = [
     path: '/contact',
     end: true,
   },
+
 ];
 
 export const chefSpecialData = [

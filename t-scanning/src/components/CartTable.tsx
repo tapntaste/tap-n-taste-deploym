@@ -8,6 +8,8 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { RootState } from '@tap-n-taste/utils';
 
 interface MenuItem {
   name: string;
@@ -26,12 +28,15 @@ interface CartProps {
 }
 
 export const CartTable: React.FC<{ cart: CartProps['cart'] }> = ({ cart }) => {
+  const { restaurantData, loading, error } = useSelector(
+    (state: RootState) => state.restaurant
+  );
   const calculateSubtotal = (cart: CartProps['cart']) =>
-    cart.reduce((sum, item) => sum + item.menuItem.price * item.quantity, 0);
-
+    cart?.reduce((sum, item) => sum + item?.menuItem?.price * item?.quantity, 0);
+  const serviceFee = restaurantData?.tax[1]?.value;
+  const serviceFees = restaurantData?.tax[0]?.value / 100;
   const subtotal = calculateSubtotal(cart);
-  const taxes = subtotal * 0.18; // Assuming 10% tax rate
-  const serviceFee = 50; // Flat service fee
+  const taxes = subtotal * serviceFees; // Assuming 10% tax rate
   const total = subtotal + taxes + serviceFee;
 
   return (
@@ -49,7 +54,7 @@ export const CartTable: React.FC<{ cart: CartProps['cart'] }> = ({ cart }) => {
         Order Summary
       </Typography>
       <Table size="small">
-        <TableHead >
+        <TableHead>
           <TableRow>
             <TableCell>
               <Typography fontWeight="bold">Item</Typography>
@@ -67,19 +72,19 @@ export const CartTable: React.FC<{ cart: CartProps['cart'] }> = ({ cart }) => {
         </TableHead>
         <TableBody>
           {cart?.map((item, index) => (
-            <TableRow key={index} className='flex flex-wrap'>
+            <TableRow key={index} className="flex flex-wrap">
               <TableCell>
-                <Typography>{item.menuItem.name}</Typography>
+                <Typography>{item?.menuItem?.name}</Typography>
               </TableCell>
               <TableCell align="center">
-                <Typography>{item.quantity}</Typography>
+                <Typography>{item?.quantity}</Typography>
               </TableCell>
               <TableCell align="right">
-                <Typography>₹{item.menuItem.price.toFixed(2)}</Typography>
+                <Typography>₹{item?.menuItem?.price?.toFixed(2)}</Typography>
               </TableCell>
               <TableCell align="right">
                 <Typography>
-                  ₹{(item.menuItem.price * item.quantity).toFixed(2)}
+                  ₹{(item?.menuItem?.price * item?.quantity)?.toFixed(2)}
                 </Typography>
               </TableCell>
             </TableRow>
@@ -89,7 +94,7 @@ export const CartTable: React.FC<{ cart: CartProps['cart'] }> = ({ cart }) => {
               <Typography fontWeight="bold">Subtotal</Typography>
             </TableCell>
             <TableCell align="right">
-              <Typography fontWeight="bold">₹{subtotal.toFixed(2)}</Typography>
+              <Typography fontWeight="bold">₹{subtotal}</Typography>
             </TableCell>
           </TableRow>
           <TableRow>
@@ -97,15 +102,15 @@ export const CartTable: React.FC<{ cart: CartProps['cart'] }> = ({ cart }) => {
               <Typography>Taxes & Fees (18%)</Typography>
             </TableCell>
             <TableCell align="right">
-              <Typography>₹{taxes.toFixed(2)}</Typography>
+              <Typography>₹{taxes?.toFixed(2)}</Typography>
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell colSpan={3} align="right">
-              <Typography >Service Fee</Typography>
+              <Typography>Service Fee</Typography>
             </TableCell>
             <TableCell align="right">
-              <Typography>₹{serviceFee.toFixed(2)}</Typography>
+              <Typography>₹{serviceFee?.toFixed(2)}</Typography>
             </TableCell>
           </TableRow>
           <TableRow>
@@ -116,7 +121,7 @@ export const CartTable: React.FC<{ cart: CartProps['cart'] }> = ({ cart }) => {
             </TableCell>
             <TableCell align="right">
               <Typography fontWeight="bold" fontSize="1.2rem">
-                ₹{total.toFixed(2)}
+                ₹{total?.toFixed(2)}
               </Typography>
             </TableCell>
           </TableRow>

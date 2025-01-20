@@ -1,69 +1,80 @@
-import React, { useState } from 'react';
-import { Box } from '@mui/material';
-
-import { RootState } from '@tap-n-taste/utils';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { Box, Select, MenuItem, FormControl, InputLabel, CircularProgress } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@tap-n-taste/utils';
+import { changeTableThunk } from 'libs/utils/src/store/tableSlice';
 
 interface TTableSelectorProps {
-  className?: string; // Custom className for additional styling
-  sx?: object; // Inline styles for MUI's Box component
+  className?: string;
+  sx?: object;
 }
 
-export function TTableSelector({
+export const TTableSelector: React.FC<TTableSelectorProps> = ({
   className = '',
   sx = {},
-}: TTableSelectorProps) {
-  const [selectedTable, setSelectedTable] = useState('');
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+}) => {
+  const [selectedTable, setSelectedTable] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const { userData } = useSelector((state: RootState) => state.auth); // Get the user data
+  const { restaurantData } = useSelector((state: RootState) => state.restaurant);
+  const availableTables = useSelector(
+    (state: RootState) => state.restaurant.restaurantData?.table || []
+  );
+  const restaurantId = restaurantData?._id;
 
-  const handleDropdownToggle = () => setIsDropdownOpen(!isDropdownOpen);
 
-  const handleSelect = (table: string) => {
-    setSelectedTable(table);
-    setIsDropdownOpen(false); // Close dropdown after selection
+  // If user has a table, set it as the selected table
+  useEffect(() => {
+    if (userData?.table) {
+      setSelectedTable(userData.table); // Set the table assigned to the user
+    }
+  }, [userData]);
+
+  const handleChange = async (event: any) => {
+    const newTableId = event.target.value as string;
+    setIsLoading(true);
+    if (selectedTable) {
+      await dispatch(
+        changeTableThunk({
+         tableId:newTableId,
+         restaurantId:restaurantId,
+        })
+      );
+    }
+    setSelectedTable(newTableId);
+    setIsLoading(false);
   };
 
-  const { restaurantData } = useSelector(
-    (state: RootState) => state.restaurant
-  );
-  const availableTables =
-    restaurantData?.table || [];
   return (
     <Box className={`z-10 w-fit h-fit ${className}`} sx={sx}>
-      <div className="flex items-center justify-center text-red-500">
-        {/* Dropdown */}
-        <h1 className="font-semibold text-black mr-2">Table No.</h1>
-        <div className="ml-2 relative">
-          <div
-            tabIndex={0}
-            className="w-fit sm:px-2 px-3 py-2 text-[12px] sm:text-sm font-medium border border-red-500 rounded cursor-pointer text-red-500 focus:outline-none focus:border-red-500"
-            onClick={handleDropdownToggle}
-          >
-            {selectedTable || 'Select a table'}
-          </div>
+      <FormControl variant="outlined" className="w-full sm:w-60">
+        <Select
+          labelId="table-selector-label"
+          value={selectedTable || ''}
+          onChange={handleChange}
+          displayEmpty
+        >
+          <MenuItem value="" disabled>
+            Select a table
+          </MenuItem>
+          {availableTables
+            .filter((table: { isAvailable: boolean }) => table.isAvailable)
+            .map((table: { _id: string; name: string }) => (
+              <MenuItem key={table._id} value={table._id}>
+                {table.name}
+              </MenuItem>
+            ))}
+        </Select>
+      </FormControl>
 
-          {/* Dropdown List */}
-          {isDropdownOpen && (
-            <ul className="absolute left-0 w-full bg-white border border-gray-300 rounded shadow max-h-[100px] overflow-y-auto z-10">
-              {availableTables
-                .filter((table:any) => table.isAvailable)
-                .map((table:any) => (
-                  <li
-                    key={table.name}
-                    className={`px-3 py-2 text-sm cursor-pointer hover:bg-red-500 hover:text-white ${
-                      selectedTable === table.name ? 'bg-red-500 text-white' : ''
-                    }`}
-                    onClick={() => handleSelect(table.name)}
-                  >
-                    {table.name}
-                  </li>
-                ))}
-            </ul>
-          )}
-        </div>
-      </div>
+      {isLoading && (
+        <Box className="flex justify-center items-center mt-2">
+          <CircularProgress size={24} />
+        </Box>
+      )}
     </Box>
   );
-}
+};
 
 export default TTableSelector;

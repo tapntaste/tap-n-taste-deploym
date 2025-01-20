@@ -46,7 +46,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
     }
 
     if (!token) {
-      res.status(401).json({ error: 'Access denied. No token provided.' });
+      res.status(401).json({ error: 'Access denied. No token provided.',message:'Please Login/Signup' });
       return;
     }
 
@@ -55,7 +55,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
     req.user = decoded as JwtPayload; // Attach decoded token to request object
     next();
   } catch (error) {
-    res.status(401).json({ error: 'Invalid or expired token.' });
+    res.status(401).json({ error: 'Invalid or expired token.' ,message:'Please Login/Signup Again'});
   }
 };
 

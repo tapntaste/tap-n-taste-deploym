@@ -24,9 +24,11 @@ import {
 } from 'libs/utils/src/store/cartSlice';
 import { useNavigate } from 'react-router-dom';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { createOrder } from 'libs/utils/src/store/orderSlice';
 
 export const CartPage = () => {
   const [expanded, setExpanded] = useState(false);
+  const [cooking, setCooking] = useState('');
   const dispatch = useDispatch<AppDispatch>();
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -38,13 +40,38 @@ export const CartPage = () => {
   const navigate = useNavigate();
   const userId = authState?.userData?.id;
   const restaurantId = restaurantData?._id;
+  const { userData } = useSelector((state: RootState) => state.auth); // Get the user data
   const { cartItems, loading, error } = useSelector(
     (state: RootState) => state.cart
   );
   useEffect(() => {
     dispatch(fetchCartItemsThunk({ userId, restaurantId }));
-  }, []);
-  console.log(cartItems);
+  }, [dispatch, userId, restaurantId,cartItems.length]);
+
+  const handleOrderCreation = async () => {
+    // Create the payload
+    const orderData = {
+      restaurantId,
+      items: cartItems.map((cartItem:any) => ({
+        menuId: cartItem.menuItem._id,
+        quantity: cartItem.quantity,
+      })),
+      tableId: userData?.table,
+      cookingRequest:cooking
+    };
+    
+
+    // Dispatch the createOrder thunk
+    const result = await dispatch(createOrder(orderData));
+
+    // Handle the result
+    if (createOrder.fulfilled.match(result)) {
+      console.log('Order created successfully:', result.payload);
+    } else {
+      console.error('Order creation failed:', result.payload);
+    }
+  };
+
 
   const AddItemHandler = () => {
     // /restaurant/${restaurantId}${navLink.path}
@@ -109,19 +136,22 @@ export const CartPage = () => {
             className="w-full h-60 bg-zinc-200 p-4 rounded-xl"
             placeholder="Add Less Salt & Spices"
             style={{ height: '150px', resize: 'none' }} // This disables the resizing handle
+            onChange={(e:any)=>{
+              setCooking(e.target.value)
+            }}
           />
         </CardContent>
       </Collapse>
 
-      <Divider className="mt-20">
+      {/* <Divider className="mt-20">
         <h1>Deals & Coupons</h1>
-      </Divider>
+      </Divider> */}
 
       {/* Apply Coupon  */}
-      <ApplyCoupons />
+      {/* <ApplyCoupons /> */}
 
       {/* Hot Deals */}
-      <HotDeals />
+      {/* <HotDeals /> */}
 
       <Divider>
         <h1>Your Cart</h1>
@@ -140,6 +170,7 @@ export const CartPage = () => {
               backgroundColor: '#DC3D4A',
             },
           }}
+          onClick={handleOrderCreation}
         />
       </Box>
     </Box>

@@ -33,10 +33,21 @@ const tableSchema = new mongoose.Schema({
   // Booking Information
   bookings: [
     {
-      user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-      bookingTime: { type: Date },
-      duration: { type: Number, min: 1 }, // Duration in minutes
-      specialRequests: { type: String, trim: true }, // e.g., "High Chair", "Birthday Setup"
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+      bookingTime: {
+        type: Date,
+        default: Date.now,
+      },
+      duration: {
+        type: Number,
+        default: 120, // default duration if not provided
+      },
+      specialRequests: {
+        type: String,
+      },
     },
   ],
 

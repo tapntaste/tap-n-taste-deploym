@@ -33,6 +33,10 @@ import { AppDispatch, fetchRestaurantThunk, RootState } from '@tap-n-taste/utils
 import { useEffect } from 'react';
 import {BACKEND_URL,SCANNING_FRONTEND_URL,ADMIN_FRONTEND_URL} from '@tap-n-taste/constant';
 import { fetchUser } from 'libs/utils/src/store/authSlice';
+
+import OrderFlow from '../order-flow/order-flow';
+import OrderChoice from '../order-choice/order-choice';
+import OrderChoices from '../order-choice/order-choices';
 // @ Paths for routing as constants for easy maintenance and scalability
 const PATHS = {
   HOME: '/',
@@ -59,6 +63,8 @@ const PATHS = {
   ORDER_PLACED_SCREEN: '/order-placed',
   ABOUT: '/about*',
   CONTACT: '/contact*',
+  ORDER_CHOICE: "/order-choice",
+  ORDER_CHOICES: "/order-choices",
 };
 
 
@@ -72,8 +78,8 @@ export const LandingPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const authState = useSelector((state: RootState) => state.auth);
   console.log('fasd',authState);
-  
-  
+
+
   const { restaurantData, loading, error } = useSelector(
     (state: RootState) => state.restaurant
   );
@@ -125,7 +131,9 @@ export const LandingPage = () => {
           <Route path={PATHS.ORDER_PREPARE} element={<OrderPrepare />} />
           <Route path={PATHS.ORDER_COMPLETE} element={<OrderComplete />} />
           <Route path={PATHS.PROFILE} element={<ProfilePage />} />
-          <Route path={PATHS.ORDER_FLOW} element={<OrderComplete />} />
+          <Route path={PATHS.ORDER_FLOW} element={<OrderFlow />} />
+          <Route path={PATHS.ORDER_CHOICE} element={<OrderChoices />} />
+          <Route path={PATHS.ORDER_CHOICES} element={<OrderChoices />} />
           <Route path={PATHS.OTP_SUBMIT} element={<TSubmit />} />
 
           {/* @ Tap N Taste Flow Routes */}

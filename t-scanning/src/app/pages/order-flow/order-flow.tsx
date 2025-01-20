@@ -5,7 +5,6 @@ import { oneorderdata, OrderPageData } from "../../constants/orderpagedata";
 
 export const OrderComplete: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState(59);
-
   // Timer logic
   useEffect(() => {
     const timer = setInterval(() => {

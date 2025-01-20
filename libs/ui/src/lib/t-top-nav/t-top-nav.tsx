@@ -1,4 +1,4 @@
-import { Box, Snackbar, Alert } from '@mui/material';
+import { Box, Snackbar, Alert, IconButton } from '@mui/material';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import Logo from '../../assets/logo.png';
 import { useState } from 'react';
@@ -8,6 +8,7 @@ import { TButton } from '../t-button';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { RootState } from '@tap-n-taste/utils';
 import { useSelector } from 'react-redux';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const themeColor = '#F1414F'; // Define your color here
 
@@ -18,7 +19,7 @@ export function TopNav() {
   const { restaurantData } = useSelector(
     (state: RootState) => state.restaurant
   );
-  const restaurantId = restaurantData?._id;
+  const restaurantId = restaurantData?._id ||'6780da43d5eb2186d06373bb';
   const authState = useSelector((state: RootState) => state.auth);
   const handleNotificationClick = () => {
     navigate(`/restaurant/${restaurantId}/notification`);
@@ -102,11 +103,15 @@ export function TopNav() {
 
         {/* Notifications Icon (Visible on mobile and tablet only) */}
         <Box className="block lg:hidden">
-          <NotificationsNoneIcon
+       { authState?.isAuthenticated?<NotificationsNoneIcon
             className="text-black hover:text-[#F1414F] transition-colors duration-300 cursor-pointer"
             fontSize="large"
             onClick={handleNotificationClick}
-          />
+          />:
+          <IconButton onClick={() => navigate(`/restaurant/${restaurantId}/login`)}>
+
+            <AccountCircleIcon className='w-10 h-10'/>
+          </IconButton>}
         </Box>
 
         {/* Snackbar */}
