@@ -9,20 +9,14 @@ import {
   TSearchbar,
   TView,
 } from '@tap-n-taste/ui';
-import FooterPage from '../footer-page/footer-page';
-import CuisinesOffered from './cuisines-offered/cuisines-offered';
-import { ItemInfoPage } from './item-info/item-info';
+import CuisinesOffered from '../../../components/CuisinesOffered';
 import * as React from 'react';
-import Dialog from '@mui/material/Dialog';
-import BottomInfoPopUp from './bottom-info-popup/bottom-info-popup';
+import BottomInfoPopUp from '../../../components/BottomInfoPopup';
 import { menuCardData } from '../../constants/MenuPageData';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
-import burgerImage from '../../../assets/burger.jpg';
-import pastaImage from '../../../assets/pasta.jpg';
-import friesImage from '../../../assets/potatofries.jpg';
 
-export default function MenuPage() {
+export const MenuPage=() =>{
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -44,7 +38,6 @@ export default function MenuPage() {
 
   return (
     <Box className="px-[8%] sm:px-[15%]">
-      <TopNav />
       <TSearchbar />
       <TView />
 
@@ -70,9 +63,6 @@ export default function MenuPage() {
       </Box>
 
       <BottomInfoPopUp noOfItems={3} />
-      <Box className="mb-4">
-        <TFooter />
-      </Box>
     </Box>
   );
 }

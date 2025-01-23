@@ -12,7 +12,7 @@ export function TFooter() {
   const restaurantId = 'your-restaurant-id'; // Replace with actual restaurantId
 
   return (
-    <Box className="fixed z-[999] sm:hidden w-[85%] bg-white rounded-lg bottom-0 flex items-center justify-between p-4">
+    <Box className="fixed z-[10] sm:hidden min-w-full bg-white rounded-lg bottom-0 flex items-center justify-between p-4 px-[8%] sm:px-[15%]">
       <Button onClick={() => navigate(`/restaurant/${restaurantId}/`)}>
         <IoHomeOutline />
       </Button>

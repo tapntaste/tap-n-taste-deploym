@@ -1,4 +1,36 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
+interface Features {
+  isOrderOnline?: boolean;
+  isReviewActivated?: boolean;
+  isBookTable?: boolean;
+  isEventBook?: boolean;
+  isArMenu?: boolean;
+  isMenuAvailable?: boolean;
+  isDineInAvailable?: boolean;
+  isDeliveryAvailable?: boolean;
+  isTakeawayAvailable?: boolean;
+  isNonVeg?: boolean;
+  isPureVeg?: boolean;
+  isWifi?: boolean;
+  isParking?: boolean;
+  isKidsPlayArea?: boolean;
+}
+const FeaturesSchema = new Schema<Features>({
+  isOrderOnline: { type: Boolean, default: false },
+  isReviewActivated: { type: Boolean, default: false },
+  isBookTable: { type: Boolean, default: false },
+  isEventBook: { type: Boolean, default: false },
+  isArMenu: { type: Boolean, default: false },
+  isMenuAvailable: { type: Boolean, default: false },
+  isDineInAvailable: { type: Boolean, default: false },
+  isDeliveryAvailable: { type: Boolean, default: false },
+  isTakeawayAvailable: { type: Boolean, default: false },
+  isPureVeg: { type: Boolean, default: false },
+  isNonVeg: { type: Boolean, default: false },
+  isWifi: { type: Boolean, default: false },
+  isParking: { type: Boolean, default: false },
+  isKidsPlayArea: { type: Boolean, default: false },
+});
 const menuItemSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
@@ -12,19 +44,7 @@ const menuItemSchema = new mongoose.Schema(
     ratings: {
       averageRating: { type: Number, default: 0, min: 0, max: 5 },
       totalRatings: { type: Number, default: 0 },
-      reviews: [
-        {
-          user: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-            required: true,
-          },
-          reviewText: { type: String, trim: true },
-          rating: { type: Number, min: 1, max: 5, required: true },
-          photos: [{ type: String, trim: true }], // Optional review photos
-          createdAt: { type: Date, default: Date.now },
-        },
-      ],
+      reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
     },
 
     // Tags for dietary preferences and sorting
@@ -65,28 +85,13 @@ const menuItemSchema = new mongoose.Schema(
       eventBooking: { type: Boolean, default: false },
       tableBooking: { type: Boolean, default: true },
     },
-    facilities: {
-      wifi: { type: Boolean, default: false },
-      parking: { type: Boolean, default: false },
-      wheelchairAccessible: { type: Boolean, default: false },
-      kidsPlayArea: { type: Boolean, default: false },
-    },
+    features: { type: FeaturesSchema, default: () => ({}) },
     ambiance: [{ type: String }], // e.g., "Romantic, Family-friendly, Casual"
     openHoursByService: {
       dineIn: { start: { type: String }, end: { type: String } },
       delivery: { start: { type: String }, end: { type: String } },
       takeOut: { start: { type: String }, end: { type: String } },
     },
-    feedback: [
-      {
-        user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-        rating: { type: Number, min: 1, max: 5, required: true },
-        comment: { type: String, trim: true },
-        photo: { type: String }, // Optional photo of the dish by the user
-        video: { type: String }, // Optional video link of the dish by the user
-        createdAt: { type: Date, default: Date.now },
-      },
-    ],
     ratingsBreakdown: {
       fiveStars: { type: Number, default: 0 },
       fourStars: { type: Number, default: 0 },
@@ -199,7 +204,6 @@ const menuItemSchema = new mongoose.Schema(
     isMostLiked: { type: Boolean, default: false },
     isFeatured: { type: Boolean, default: false }, // For highlighting items
     isVeg: { type: Boolean, default: false }, // true = vegetarian, false = non-vegetarian
-    isHalal: { type: Boolean, default: false }, // true = halal certified
 
     // Relationships
     restaurant: {
@@ -210,14 +214,6 @@ const menuItemSchema = new mongoose.Schema(
     createdByUser: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User', // If created by a customer
-    },
-    createdByAdmin: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Admin', // If created by an admin
-    },
-    updatedBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User', // Could be a user or admin who updated it
     },
   },
   { timestamps: true }

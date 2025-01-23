@@ -47,7 +47,7 @@ const StyledTNavButton = styled(TNavButton)`
   top: -60px; /* Move the button upwards by 60px */
   left: 50%; /* Center the button horizontally */
   transform: translateX(-50%); /* Center it exactly */
-  z-index: 999; /* Ensure it appears above other elements */
+  z-index: 10; /* Ensure it appears above other elements */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Add shadow */
   background-color: red; /* Adding a background to test visibility */
 `;

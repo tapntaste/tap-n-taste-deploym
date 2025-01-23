@@ -1,9 +1,10 @@
+import { BACKEND_URL } from '@tap-n-taste/constant';
 import axios from 'axios';
 import { toast } from 'react-toastify'; // Import toast for notifications
 import 'react-toastify/dist/ReactToastify.css'; // Import toast styles
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3000/api', // API Base URL
+  baseURL: `${BACKEND_URL}/api`, // API Base URL
   withCredentials: true, // Send cookies with requests
   headers: {
     'Content-Type': 'application/json', // Set default content type

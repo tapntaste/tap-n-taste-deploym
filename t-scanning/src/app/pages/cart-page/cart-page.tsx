@@ -8,14 +8,14 @@ import {
 } from '@tap-n-taste/ui';
 import ControlPointRoundedIcon from '@mui/icons-material/ControlPointRounded';
 import Divider from '@mui/material/Divider';
-import ApplyCoupons from './apply-coupons/apply-coupons';
-import HotDeals from './hot-deals/hot-deals';
-import CartTable from './cart-table/cart-table';
+import ApplyCoupons from '../../../components/ApplyCoupons';
+import HotDeals from '../../../components/HotDeals';
 import { useState } from 'react';
 import { ExpandMoreOutlined } from '@mui/icons-material';
 import { cartPageCardsData } from '../../constants/CartPageData';
+import CartTable from 't-scanning/src/components/CartTable';
 
-const CartPage = () => {
+export const CartPage = () => {
   const [expanded, setExpanded] = useState(false);
 
   const handleExpandClick = () => {
@@ -24,7 +24,6 @@ const CartPage = () => {
 
   return (
     <Box className="px-[8%] sm:px-[10%] font-primary">
-      <TopNav />
       <Box className="mt-10 flex items-center justify-between border px-6 py-3 rounded-lg">
         <h1 className="text-primary">Your Table Number is</h1>
         <TTableSelector className="relative" />
@@ -98,7 +97,6 @@ const CartPage = () => {
         />
       </Box>
 
-      <TFooter />
     </Box>
   );
 };

@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import uploadImage from './imageupload.png'; // Make sure to adjust this path
 
-const ProductAdd: React.FC = () => {
+export const ProductAdd: React.FC = () => {
   const [formData, setFormData] = useState({
     dishName: "",
     description: "",

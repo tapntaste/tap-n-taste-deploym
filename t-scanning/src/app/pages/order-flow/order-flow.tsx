@@ -3,7 +3,7 @@ import { TCustomCard, TFooter } from '@tap-n-taste/ui';
 import SearchIcon from "../../../assets/mynaui_search.png";
 import { oneorderdata, OrderPageData } from "../../constants/orderpagedata";
 
-const OrderComplete: React.FC = () => {
+export const OrderComplete: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState(59);
 
   // Timer logic
@@ -173,11 +173,6 @@ const OrderComplete: React.FC = () => {
               veg={false}
             />
           ))}
-        </div>
-
-        {/* Bottom Navbar */}
-        <div style={{ marginTop: "16px" }}>
-          <TFooter />
         </div>
       </div>
     </div>
