@@ -16,6 +16,8 @@ import OrderComplete from '../order-complete/order-complete';
 import OrderFlow from '../order-flow/order-flow';
 import OrderChoices from '../order-choice/order-choice';
 import OrderChoice1 from '../order-choice/orderchoice1';
+import PopUp from '../sign-up-popup/sign-up-popup';
+import AddEvent from '../add-event/add-event'
 export const LandingPage = () => {
   return (
     <Box>
@@ -43,6 +45,8 @@ export const LandingPage = () => {
         <Route path="user/:userId/profile" element={<ProfilePage />} />
         <Route path="user/:userId/order-flow" element={<OrderFlow />} />
         <Route path="order-choice" element={<OrderChoices />} />
+        <Route path="sign-up-popup" element={<PopUp />} />
+        <Route path="add-event" element={<AddEvent />} />
         <Route path="order-choices-1" element={<OrderChoice1 />} />
         <Route path="otp" element={<TSubmit />} />
       </Routes>
