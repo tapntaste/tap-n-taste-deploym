@@ -67,7 +67,6 @@
       }
     }
   },
-  "nxCloudId": "675e6e038bd4db704732f1f0",
   "targetDefaults": {
     "@nx/esbuild:esbuild": {
       "cache": true,
