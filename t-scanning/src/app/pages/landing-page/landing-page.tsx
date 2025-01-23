@@ -11,6 +11,10 @@ import OrderFlow from '../order-flow/order-flow';
 import OrderChoices from '../order-choice/order-choice';
 import OrderChoice1 from '../order-choice/orderchoice1';
 
+import PopUp from '../sign-up-popup/sign-up-popup';
+import AddEvent from '../add-event/add-event'
+
+
 import { Routes, Route, useParams } from 'react-router-dom';
 import {
   TFaq,
@@ -80,6 +84,7 @@ console.log(BACKEND_URL,SCANNING_FRONTEND_URL,ADMIN_FRONTEND_URL);
  * @component LandingPage
  * @description Handles route navigation and shared layout with Tailwind CSS and constants for paths.
  */
+
 export const LandingPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   
@@ -98,6 +103,38 @@ export const LandingPage = () => {
   
 
   return (
+
+    <Box>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/user/:userId" element={<HomePage />} />
+        <Route path="login" element={<LoginSignUp type="login" />} />
+        <Route path="sign-up" element={<LoginSignUp type="signup" />} />
+        <Route path="menu" element={<MenuPage />} />
+        <Route path="user/:userId/cart" element={<CartPage />} />
+        <Route path="faq" element={<TFaq />} />
+        <Route path="login/otp" element={<TSubmit />} />
+        <Route
+          path="login/orderplaced"
+          element={
+            <TOrderplaced mainText="Order Successfully" subText="Placed!" />
+          }
+        />
+        <Route path="notification" element={<TNotificationPage />} />
+        <Route path="coupons" element={<TCouponpage />} />
+        <Route path="productadd" element={<ProductAdd />} />
+        <Route path="user/:userId/order" element={<OrderPage />} />
+        <Route path="user/:userId/order-prepare" element={<OrderPrepare />} />
+        <Route path="user/:userId/order-complete" element={<OrderComplete />} />
+        <Route path="user/:userId/profile" element={<ProfilePage />} />
+        <Route path="user/:userId/order-flow" element={<OrderFlow />} />
+        <Route path="order-choice" element={<OrderChoices />} />
+        <Route path="sign-up-popup" element={<PopUp />} />
+        <Route path="add-event" element={<AddEvent />} />
+        <Route path="order-choices-1" element={<OrderChoice1 />} />
+        <Route path="otp" element={<TSubmit />} />
+      </Routes>
+
     <Box className="min-h-screen flex flex-col bg-white shadow-lg text-gray-800 position-relative">
       {/* @ Top Navigation */}
       <TopNav />
@@ -150,6 +187,7 @@ export const LandingPage = () => {
 
       {/* @ Footer Section */}
       <TFooter />
+
     </Box>
   );
 };
