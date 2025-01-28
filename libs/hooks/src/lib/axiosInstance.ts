@@ -39,8 +39,7 @@ axiosInstance.interceptors.response.use(
     }
 
     // Success response handling
-    console.log('Response Data:', response);
-    toast.success(response?.data?.message||'Request successful!'); // Default success message
+    toast.success(response?.data?.message); // Default success message
     return response;
   },
   (error) => {

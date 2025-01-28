@@ -63,10 +63,25 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     // Reducer to set user data from localStorage
+    // setUser: (state, action: PayloadAction<any>) => {
+    //   state.isAuthenticated = true;
+    //   state.userData = action.payload;
+    // },
     setUser: (state, action: PayloadAction<any>) => {
-      state.isAuthenticated = true;
-      state.userData = action.payload;
+      const { user, timestamp } = action.payload;
+      const currentTime = new Date().getTime();
+    
+      // Check if the data is still valid (3 days = 3 * 24 * 60 * 60 * 1000 ms)
+      if (currentTime - timestamp < 3 * 24 * 60 * 60 * 1000) {
+        state.isAuthenticated = true;
+        state.userData = user;
+      } else {
+        state.isAuthenticated = false;
+        state.userData = null;
+        localStorage.removeItem('user'); // Clear expired data
+      }
     },
+    
     // Reducer to handle logout
     logout: (state) => {
       state.isAuthenticated = false;
@@ -80,12 +95,23 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
+      // .addCase(authenticateUser.fulfilled, (state, action: PayloadAction<any>) => {
+      //   state.loading = false;
+      //   state.isAuthenticated = true;
+      //   state.userData = action.payload.user;
+      //   localStorage.setItem('user', JSON.stringify(action.payload.user)); // Cache user data
+      // })
       .addCase(authenticateUser.fulfilled, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.isAuthenticated = true;
         state.userData = action.payload.user;
-        localStorage.setItem('user', JSON.stringify(action.payload.user)); // Cache user data
-      })
+      
+        // Save user data with a timestamp in localStorage
+        localStorage.setItem(
+          'user',
+          JSON.stringify({ user: action.payload.user, timestamp: new Date().getTime() })
+        );
+      })      
       .addCase(authenticateUser.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload;
@@ -98,12 +124,31 @@ const authSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = true;
         state.userData = action.payload;
-        localStorage.setItem('user', JSON.stringify(action.payload.user)); // Cache user data
-      })
+      
+        // Save user data with a timestamp in localStorage
+        localStorage.setItem(
+          'user',
+          JSON.stringify({ user: action.payload, timestamp: new Date().getTime() })
+        );
+      })      
+      // .addCase(fetchUser.fulfilled, (state, action) => {
+      //   state.loading = false;
+      //   state.isAuthenticated = true;
+      //   state.userData = action.payload;
+      //   localStorage.setItem('user', JSON.stringify(action.payload.user)); // Cache user data
+      // })
+      // .addCase(fetchUser.rejected, (state, action) => {
+      //   state.loading = false;
+      //   state.error = action.payload as string;
+      // })
       .addCase(fetchUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+        state.isAuthenticated = false;
+        state.userData = null;
+        localStorage.removeItem('user'); // Clear invalid data
       })
+      
       .addCase(logoutUser.pending, (state) => {
         state.loading = true;
         state.error = null;

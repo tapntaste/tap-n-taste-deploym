@@ -5,6 +5,8 @@ import authReducer from './authSlice';
 import cartReducer from './cartSlice';
 import tableReducer from './tableSlice';
 import orderReducer from './orderSlice';
+import restaurantSlice from './restaurantSlice';
+import menuCreateSlice from './menuCreateSlice';
 
 // Configure the store
 export const store = configureStore({
@@ -14,7 +16,9 @@ export const store = configureStore({
     auth: authReducer,
     cart: cartReducer,
     table: tableReducer,
-    order:orderReducer
+    order:orderReducer,
+    createRestaurant:restaurantSlice,
+    menuSlice:menuCreateSlice
   },
 });
 

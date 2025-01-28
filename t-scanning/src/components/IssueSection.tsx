@@ -1,8 +1,16 @@
 import { Box, Divider } from '@mui/material';
 import { TButton } from '@tap-n-taste/ui';
 import CallIcon from '@mui/icons-material/Call';
+import { useNavigate } from 'react-router-dom';
+import { RootState } from '@tap-n-taste/utils';
+import { useSelector } from 'react-redux';
 
 const IssueSection = () => {
+  const navigate=useNavigate()
+  const {restaurantData} = useSelector((state: RootState) => state.restaurant)
+  const handleContact = () => {
+    navigate( `/restaurant/${restaurantData?._id}/contact`)
+  }
   return (
     <Box className="mt-6 mb-6">
       <Divider
@@ -21,6 +29,7 @@ const IssueSection = () => {
         styles={{
           border: '2px solid #F1414F',
         }}
+        onClick={handleContact}
         icon={<CallIcon className="text-primary" />}
       />
     </Box>

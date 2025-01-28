@@ -17,6 +17,7 @@ menuRoutes.post('/', authenticate, authorize('Admin', 'SuperAdmin'), createMenuI
 // Get all menu items - All users can access
 menuRoutes.get('/', getAllMenuItemsForRestaurant);
 menuRoutes.get('/filter', getFilteredMenuItemsForRestaurant);
+menuRoutes.get('/filter/admin', authenticate, authorize('Admin', 'SuperAdmin'), getFilteredMenuItemsForRestaurant);
 
 // Get a specific menu item by ID - All users can access
 menuRoutes.get('/:menuId', getMenuItemById);

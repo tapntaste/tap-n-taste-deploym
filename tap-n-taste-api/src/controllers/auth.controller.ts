@@ -301,7 +301,7 @@ export const fetchUser = async (req: Request, res: Response) => {
         status: user.status,
         restaurantId: user.restaurantId,
         table: user.table,
-        user:user
+        user: user,
       },
       message: 'Fetch user successful',
       id: user?.id,
@@ -349,10 +349,29 @@ export const login = async (req: Request, res: Response) => {
         .status(401)
         .json({ message: 'Admin account pending approval' });
     }
+    if (user.role === 'Admin') {
+      if (restaurantId && user.restaurantId.toString()!== restaurantId) {
+        return res.status(401).json({
+          message: 'Access denied. You cannot log in to another restaurant account.',
+        });
+      }
+    
+      if (!user.restaurantId) {
+        return res.status(401).json({
+          message: 'Admin account is not associated with a specific restaurant.',
+        });
+      }
+    }
+    
 
     // Generate JWT token
     const token = jwt.sign(
-      { id: user._id, email: user.email, role: user.role },
+      {
+        id: user._id,
+        email: user.email,
+        role: user.role,
+        restaurantId: user.restaurantId, // Include restaurantId for admins
+      },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRY }
     );
@@ -381,7 +400,7 @@ export const login = async (req: Request, res: Response) => {
           status: user.status,
           restaurantId,
           table: user.table,
-          user:user
+          user: user,
         },
         message: 'Login successful',
         id: user?.id,

@@ -32,17 +32,20 @@ export const Navbar: React.FC = () => {
     <>
       {/* Navbar */}
       <AppBar position="sticky">
+
         <Toolbar className="flex justify-between bg-white p-2">
+      <Sidebar handleDrawerToggle={handleDrawerToggle} />
           {/* Mobile Hamburger Menu */}
           <Box className="flex items-center space-x-2">
-            <IconButton
+            {/* <IconButton
               edge="start"
               color="inherit"
               aria-label="menu"
               onClick={handleDrawerToggle}
             >
               <MenuIcon className="text-primary" />
-            </IconButton>
+            </IconButton> */}
+
 
             {/* Current Page */}
             <Typography variant="h6" className="font-bold">
@@ -94,9 +97,8 @@ export const Navbar: React.FC = () => {
       </AppBar>
 
       {/* Mobile Drawer for Sidebar */}
-      <Drawer anchor="left" open={mobileOpen} onClose={handleDrawerToggle}>
-        <Sidebar handleDrawerToggle={handleDrawerToggle} />
-      </Drawer>
+      {/* <Drawer anchor="left" open={mobileOpen} onClose={handleDrawerToggle}> */}
+      {/* </Drawer> */}
     </>
   );
 };

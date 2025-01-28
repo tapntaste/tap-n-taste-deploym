@@ -16,7 +16,7 @@ export const createRestaurant = async (req, res, next) => {
   try {
     const newRestaurant = new Restaurant(req.body);
     const savedRestaurant = await newRestaurant.save();
-    res.status(201).json(savedRestaurant);
+    res.status(200).json({restaurant:savedRestaurant,message:"Restaurant created successfully"});
   } catch (error) {
     next(error); // Pass to error handler middleware
   }
@@ -36,6 +36,30 @@ export const getRestaurants = async (req, res, next) => {
 export const getRestaurantById = async (req, res, next) => {
   try {
     const restaurant = await Restaurant.findById(req.params.id)
+      .populate('location')
+      .populate('contact')
+      .populate('openHours')
+      .populate('media')
+      .populate('socialLinks')
+      .populate('offers')
+      .populate('reviews')
+      .populate('faq')
+      .populate({
+        path: 'table',
+        options: { sort: { number: 1 } }, // Sorts tables by their 'number' field in ascending order
+      })
+      .populate('events')
+      .populate('features');
+    if (!restaurant)
+      return res.status(404).json({ message: 'Restaurant not found' });
+    res.status(200).json(restaurant);
+  } catch (error) {
+    next(error);
+  }
+};
+export const getAdminRestaurant = async (req, res, next) => {
+  try {
+    const restaurant = await Restaurant.findById(req.user.restaurantId)
       .populate('location')
       .populate('contact')
       .populate('openHours')
