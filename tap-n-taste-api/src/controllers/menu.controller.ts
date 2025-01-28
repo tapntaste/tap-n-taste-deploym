@@ -4,7 +4,7 @@ import Restaurant from '../models/restaurant.model.js';
 // Controller to create a menu item for a restaurant
 export const createMenuItem = async (req, res) => {
   try {
-    const restaurantId = req.params.id;
+    const restaurantId = req.params.id||req.user.restaurantId;
     const { name, price, category } = req.body;
 
     // Validate required fields
@@ -53,7 +53,11 @@ export const getAllMenuItemsForRestaurant = async (req, res) => {
 
 export const getFilteredMenuItemsForRestaurant = async (req, res) => {
   try {
-    const restaurantId = req.params.id;
+    let restaurantId = req.params.id||req.user.restaurantId;
+    if(restaurantId==='undefined'){
+      restaurantId=req.user.restaurantId;
+
+    }
 
     // Ensure the restaurant exists
     const restaurant = await Restaurant.findById(restaurantId);

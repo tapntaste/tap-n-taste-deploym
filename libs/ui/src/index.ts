@@ -40,3 +40,7 @@ export * from './lib/t-book-event/t-book-event';
 export * from './lib/t-book-events/t-book-events';
 export * from './lib/t-ticket/t-ticket';
 export * from './lib/t-protected/t-protected';
+export * from './lib/t-create-restaurant/t-create-restaurant';
+export * from './lib/t-update-restaurant/t-update-restaurant';
+export * from './lib/t-admin-page/t-admin-page';
+export * from './lib/create-menu-page/create-menu-page';

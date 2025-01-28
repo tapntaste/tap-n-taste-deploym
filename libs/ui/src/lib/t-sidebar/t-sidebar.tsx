@@ -10,10 +10,13 @@ import { AppDispatch, RootState } from '@tap-n-taste/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { AccountCircle } from '@mui/icons-material';
 import { logoutUser } from 'libs/utils/src/store/authSlice';
+import NotificationsActiveOutlinedIcon from '@mui/icons-material/NotificationsActiveOutlined';
 
 export default function TSidebar() {
   const [open, setOpen] = React.useState(false);
-  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated, userData } = useSelector(
+    (state: RootState) => state.auth
+  );
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
@@ -22,18 +25,28 @@ export default function TSidebar() {
   const { restaurantId } = useParams();
 
   const authLink = isAuthenticated
-    ? {
-        icon: AccountCircle,
-        linkText: 'Log Out',
-        path: '/logout',
-        end: true,
-      }
-    : {
-        icon: AccountCircle,
-        linkText: 'Login/SignUp',
-        path: '/login',
-        end: true,
-      };
+    ? [
+        {
+          icon: NotificationsActiveOutlinedIcon,
+          linkText: 'Notifications',
+          path: `/user/${userData?.id}/notification`,
+          end: true,
+        },
+        {
+          icon: AccountCircle,
+          linkText: 'Log Out',
+          path: '/logout',
+          end: true,
+        },
+      ]
+    : [
+        {
+          icon: AccountCircle,
+          linkText: 'Login/SignUp',
+          path: '/login',
+          end: true,
+        },
+      ];
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -45,7 +58,7 @@ export default function TSidebar() {
     }
   };
 
-  const combinedNavLinks = [...navLinksData, authLink];
+  const combinedNavLinks = [...navLinksData, ...authLink];
   const DrawerList = () => {
     return (
       <Box
@@ -58,7 +71,7 @@ export default function TSidebar() {
             // Generate the correct path for dynamic links
             const path =
               navLink.path === '/restaurant/:restaurantId'
-                ? `/restaurant/${restaurantId}/homepage`
+                ? `/restaurant/${restaurantId}/`
                 : `/restaurant/${restaurantId}${navLink.path}`;
 
             return navLink.linkText === 'Log Out' ? (

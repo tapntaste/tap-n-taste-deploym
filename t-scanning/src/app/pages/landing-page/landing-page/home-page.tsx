@@ -67,8 +67,6 @@ export const HomePage = () => {
       {/* Review Section */}
       <ReviewPage />
 
-      {/* FAQ Section */}
-      <FaqPage />
 
       {/* Issue */}
       <IssueSection />

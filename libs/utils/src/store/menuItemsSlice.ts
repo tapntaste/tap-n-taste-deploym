@@ -25,6 +25,23 @@ const initialState: MenuItemsState = {
   error: null,
 };
 
+// Async thunk to update a menu item
+export const updateMenuItemThunk = createAsyncThunk(
+  'menuItems/updateMenuItem',
+  async (
+    { restaurantId, menuItemId, data }: { restaurantId: string; menuItemId: string; data: Partial<MenuItem> },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.put(`/restaurants/${restaurantId}/menu/${menuItemId}`, data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
+
 // Async thunk to fetch menu items
 export const fetchMenuItemsThunk = createAsyncThunk(
   'menuItems/fetchMenuItems',
@@ -33,6 +50,8 @@ export const fetchMenuItemsThunk = createAsyncThunk(
     { restaurantId: string; category?: string; isChefSpecial?: boolean; isMostLiked?: boolean; isFeatured?: boolean },
     { rejectWithValue }
   ) => {
+    console.log(restaurantId);
+    
     try {
       const filters: { [key: string]: string | boolean } = {};
       if (category) filters.category = category;
@@ -64,6 +83,22 @@ const menuItemsSlice = createSlice({
         state.menuItems = action.payload;
       })
       .addCase(fetchMenuItemsThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+       // Update menu item
+       .addCase(updateMenuItemThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateMenuItemThunk.fulfilled, (state, action: PayloadAction<MenuItem>) => {
+        state.loading = false;
+        const updatedItem = action.payload;
+        state.menuItems = state.menuItems.map((item) =>
+          item._id === updatedItem._id ? updatedItem : item
+        );
+      })
+      .addCase(updateMenuItemThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

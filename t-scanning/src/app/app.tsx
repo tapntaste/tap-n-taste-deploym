@@ -9,9 +9,13 @@ import ContactPage from "./pages/tapn'taste flow/contact-page/contact-page";
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState, store } from '@tap-n-taste/utils';
 import { RestaurantList } from '@tap-n-taste/scanning';
+import { useEffect } from 'react';
+import { fetchUser, setUser } from 'libs/utils/src/store/authSlice';
+import { Navigate, Outlet } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { Box, CircularProgress } from '@mui/material';
 
 const App = () => {
-
 
   return (
     <Provider store={store}>

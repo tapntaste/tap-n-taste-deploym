@@ -4,9 +4,12 @@ import PaymentsIcon from '@mui/icons-material/Payments';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
-
+import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
+import MenuIcon from '@mui/icons-material/Menu';
 export const AdminPageroutes = [
   { path: '/dashboard', label: 'Dashboard', icon: DashboardIcon },
+  { path: '/create-menu', label: 'Create Menu', icon: RestaurantMenuIcon },
+  { path: '/menu', label: 'Menu', icon: MenuIcon },
   { path: '/orders', label: 'Orders', icon: ShoppingCartIcon },
   { path: '/payments', label: 'Payments', icon: PaymentsIcon },
   { path: '/notifications', label: 'Notifications', icon: NotificationsIcon },

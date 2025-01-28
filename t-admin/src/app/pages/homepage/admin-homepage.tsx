@@ -5,7 +5,7 @@ import {Sidebar} from '@tap-n-taste/ui';
 
 export const AdminHomepage: React.FC = () => {
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen items-center overflow-scroll flex-col mt-2">
           <Outlet />
     </div>
   );

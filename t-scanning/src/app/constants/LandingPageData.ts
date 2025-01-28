@@ -139,12 +139,6 @@ export const navLinksData = [
     end: false, // Sub-paths are fine
   },
   {
-    icon: NotificationsActiveOutlinedIcon,
-    linkText: 'Notifications',
-    path: '/user/:userId/notification',
-    end: true,
-  },
-  {
     icon: InfoOutlinedIcon,
     linkText: 'About Us',
     path: '/about',

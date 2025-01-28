@@ -72,3 +72,20 @@ export const authorize = (...roles: string[]) => {
     }
   };
 };
+
+export const restrictToRestaurant = () => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (req.user?.role === 'Admin' && req.user.restaurantId) {
+        req.query.restaurantId = req.user.restaurantId; // Add restaurantId to query
+      } else if (req.user?.role !== 'Admin') {
+        return res
+          .status(403)
+          .json({ error: 'Access denied. Only admins can access this data.' });
+      }
+      next();
+    } catch (error) {
+      res.status(500).json({ error: 'Error enforcing restaurant restrictions.' });
+    }
+  };
+};

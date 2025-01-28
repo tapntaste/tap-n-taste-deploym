@@ -14,6 +14,9 @@ import { TFooter, TopNav } from '@tap-n-taste/ui';
 import { useNavigate } from 'react-router-dom';
 import { BACKEND_URL } from '@tap-n-taste/constant';
 import { useFetchRestaurantList } from '@tap-n-taste/hooks';
+import { AppDispatch } from '@tap-n-taste/utils';
+import { useDispatch } from 'react-redux';
+import { fetchUser } from 'libs/utils/src/store/authSlice';
 
 const primaryColor = '#F1414F'; // Custom Red
 const secondaryColor = '#F1414F'; // Light Red
@@ -23,13 +26,17 @@ const textSecondaryColor = '#FFFFFF'; // White text for readability
 export const RestaurantList: React.FC = () => {
   const navigate = useNavigate();
   const { restaurants, loading, error } = useFetchRestaurantList();
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    dispatch(fetchUser());
+  }, [dispatch]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <Box>
-      <TopNav />
+      <TopNav isLandingPage={true}/>
       <div className="p-8 bg-gray-50 min-h-screen">
         <Typography 
           variant="h5" 
@@ -99,7 +106,6 @@ export const RestaurantList: React.FC = () => {
           ))}
         </Grid>
       </div>
-      <TFooter />
     </Box>
   );
 };

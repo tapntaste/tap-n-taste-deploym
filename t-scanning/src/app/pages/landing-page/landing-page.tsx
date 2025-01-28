@@ -41,7 +41,7 @@ import {
   SCANNING_FRONTEND_URL,
   ADMIN_FRONTEND_URL,
 } from '@tap-n-taste/constant';
-import { fetchUser } from 'libs/utils/src/store/authSlice';
+import { fetchUser, setUser } from 'libs/utils/src/store/authSlice';
 
 import OrderFlow from '../order-flow/order-flow';
 import OrderChoice from '../order-choice/order-choice';
@@ -84,26 +84,32 @@ console.log(BACKEND_URL, SCANNING_FRONTEND_URL, ADMIN_FRONTEND_URL);
 export const LandingPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const authState = useSelector((state: RootState) => state.auth);
-  console.log('fasd', authState);
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const userData = JSON.parse(storedUser);
+      dispatch(setUser(userData));
+      
+    } else {
+      dispatch(fetchUser()); // Fetch user from the backend if not in localStorage
+      
+    }
+  }, [dispatch]);
+  
 
   const { restaurantData, loading, error } = useSelector(
     (state: RootState) => state.restaurant
   );
   const { restaurantId } = useParams();
-  console.log(restaurantId);
 
   useEffect(() => {
     dispatch(fetchRestaurantThunk(restaurantId || '12345'));
   }, [dispatch]);
 
-  console.log(restaurantData);
 
   const { userData } = useSelector((state: RootState) => state.auth);
 
-  useEffect(() => {
-    dispatch(fetchUser());
-  }, [dispatch]);
-  console.log(userData);
+
 
   return (
     <Box className="min-h-screen flex flex-col bg-white shadow-lg text-gray-800 position-relative">

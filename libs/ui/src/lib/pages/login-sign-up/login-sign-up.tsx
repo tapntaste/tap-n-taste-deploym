@@ -128,7 +128,7 @@ const authState = useSelector((state: RootState) => state.auth);
       const userId = authState.userData?.id;
       const role = authState.userData?.role;
       const redirectUrl = role === 'Admin'
-        ? `/restaurant/${restaurantId}/admin/${userId}`
+        ? `/restaurant`
         : `/restaurant/${restaurantId}/user/${userId}`;
 
       navigate(redirectUrl);
