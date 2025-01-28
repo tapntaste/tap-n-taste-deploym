@@ -63,6 +63,8 @@ export const AdminMenuPage = () => {
 
   const onSubmit = (data: any) => {
     if (!selectedItem || !restaurantId) return;
+    console.log(selectedItem);
+    
 
     const payload = {
       restaurantId,
@@ -90,19 +92,6 @@ export const AdminMenuPage = () => {
       <Typography variant="h4" className="mb-5">
         Admin Menu
       </Typography>
-      {/* <Grid container spacing={2}>
-        {menuItems.map((item: any) => (
-          <Grid item xs={12} sm={6} md={4} key={item._id}>
-            <MenuItemCard
-              image={item.banner}
-              heading={item.name}
-              description={item.description}
-              price={item.price}
-              onEdit={() => handleOpen(item)}
-            />
-          </Grid>
-        ))}
-      </Grid> */}
       <Grid container spacing={2}>
         {menuItems.map((item: any) => (
           <Grid item xs={12} sm={6} md={4} key={item._id}>
@@ -276,6 +265,494 @@ export const AdminMenuPage = () => {
                 <FormControlLabel
                   control={<Checkbox {...field} checked={field.value} />}
                   label="Vegetarian"
+                />
+              )}
+            />
+             <Controller
+              name="images.url"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Image URLs (comma-separated)"
+                  fullWidth
+                  margin="normal"
+                  onChange={(e) =>
+                    field.onChange(
+                      e.target.value.split(',').map((url) => url.trim())
+                    )
+                  }
+                />
+              )}
+            />
+            <Controller
+              name="videos"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Video URLs (comma-separated)"
+                  fullWidth
+                  margin="normal"
+                  onChange={(e) =>
+                    field.onChange(
+                      e.target.value.split(',').map((url) => url.trim())
+                    )
+                  }
+                />
+              )}
+            />
+              <Controller
+              name="isChefSpecial"
+              control={control}
+              render={({ field }) => (
+                <FormControlLabel
+                  control={<Checkbox {...field} checked={field.value} />}
+                  label="Chef Special"
+                />
+              )}
+            />
+            <Controller
+              name="isMostLiked"
+              control={control}
+              render={({ field }) => (
+                <FormControlLabel
+                  control={<Checkbox {...field} checked={field.value} />}
+                  label="Most Liked"
+                />
+              )}
+            />
+            <Controller
+              name="isFeatured"
+              control={control}
+              render={({ field }) => (
+                <FormControlLabel
+                  control={<Checkbox {...field} checked={field.value} />}
+                  label="Featured"
+                />
+              )}
+            />
+            <Controller
+              name="customizations"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Customizations (comma-separated)"
+                  fullWidth
+                  margin="normal"
+                  onChange={(e) =>
+                    field.onChange(
+                      e.target.value.split(',').map((item) => item.trim())
+                    )
+                  }
+                />
+              )}
+            />
+            <Controller
+              name="ingredients"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Ingredients (comma-separated)"
+                  fullWidth
+                  margin="normal"
+                  onChange={(e) =>
+                    field.onChange(
+                      e.target.value.split(',').map((item) => item.trim())
+                    )
+                  }
+                />
+              )}
+            />
+            <Controller
+              name="dynamicPricing"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Dynamic Pricing Rules (comma-separated)"
+                  fullWidth
+                  margin="normal"
+                  onChange={(e) =>
+                    field.onChange(
+                      e.target.value.split(',').map((rule) => rule.trim())
+                    )
+                  }
+                />
+              )}
+            />
+            <Controller
+              name="promotions"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Promotions (comma-separated)"
+                  fullWidth
+                  margin="normal"
+                  onChange={(e) =>
+                    field.onChange(
+                      e.target.value.split(',').map((promo) => promo.trim())
+                    )
+                  }
+                />
+              )}
+            />
+            <Controller
+              name="comboOptions"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Combo Options (comma-separated)"
+                  fullWidth
+                  margin="normal"
+                  onChange={(e) =>
+                    field.onChange(
+                      e.target.value.split(',').map((option) => option.trim())
+                    )
+                  }
+                />
+              )}
+            />
+             <Controller
+              name="popularity"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Popularity"
+                  type="number"
+                  fullWidth
+                  margin="normal"
+                />
+              )}
+            />
+            <Controller
+              name="ambiance"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Ambiance (comma-separated)"
+                  fullWidth
+                  margin="normal"
+                  onChange={(e) =>
+                    field.onChange(
+                      e.target.value.split(',').map((item) => item.trim())
+                    )
+                  }
+                />
+              )}
+            />
+            <Controller
+              name="inStock"
+              control={control}
+              render={({ field }) => (
+                <FormControlLabel
+                  control={<Checkbox {...field} checked={field.value} />}
+                  label="In Stock"
+                />
+              )}
+            />
+            <Controller
+              name="popularityScore"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Popularity Score"
+                  type="number"
+                  fullWidth
+                  margin="normal"
+                />
+              )}
+            />
+            <Controller
+              name="isOnPromotion"
+              control={control}
+              render={({ field }) => (
+                <FormControlLabel
+                  control={<Checkbox {...field} checked={field.value} />}
+                  label="On Promotion"
+                />
+              )}
+            />
+            <Controller
+              name="availableDays"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Available Days (comma-separated)"
+                  fullWidth
+                  margin="normal"
+                  onChange={(e) =>
+                    field.onChange(
+                      e.target.value.split(',').map((day) => day.trim())
+                    )
+                  }
+                />
+              )}
+            />
+            <Controller
+              name="salesCount"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Sales Count"
+                  type="number"
+                  fullWidth
+                  margin="normal"
+                />
+              )}
+            />
+            <Controller
+              name="frequentlyBoughtTogether"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Frequently Bought Together (comma-separated IDs)"
+                  fullWidth
+                  margin="normal"
+                  onChange={(e) =>
+                    field.onChange(
+                      e.target.value.split(',').map((id) => id.trim())
+                    )
+                  }
+                />
+              )}
+            />
+            <Controller
+              name="deliveryRadius"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Delivery Radius"
+                  type="number"
+                  fullWidth
+                  margin="normal"
+                />
+              )}
+            />
+            <Controller
+              name="ratings.averageRating"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Average Rating"
+                  type="number"
+                  fullWidth
+                  margin="normal"
+                />
+              )}
+            />
+            <Controller
+              name="ratings.totalRatings"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Total Ratings"
+                  type="number"
+                  fullWidth
+                  margin="normal"
+                />
+              )}
+            />
+            <Controller
+              name="ratingsBreakdown.fiveStars"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="5-Star Ratings"
+                  type="number"
+                  fullWidth
+                  margin="normal"
+                />
+              )}
+            />
+            <Controller
+              name="ratingsBreakdown.fourStars"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="4-Star Ratings"
+                  type="number"
+                  fullWidth
+                  margin="normal"
+                />
+              )}
+            />
+            <Controller
+              name="ratingsBreakdown.threeStars"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="3-Star Ratings"
+                  type="number"
+                  fullWidth
+                  margin="normal"
+                />
+              )}
+            />
+            <Controller
+              name="ratingsBreakdown.twoStars"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="2-Star Ratings"
+                  type="number"
+                  fullWidth
+                  margin="normal"
+                />
+              )}
+            />
+            <Controller
+              name="ratingsBreakdown.oneStar"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="1-Star Ratings"
+                  type="number"
+                  fullWidth
+                  margin="normal"
+                />
+              )}
+            />
+            <Controller
+              name="services.dineIn"
+              control={control}
+              render={({ field }) => (
+                <FormControlLabel
+                  control={<Checkbox {...field} checked={field.value} />}
+                  label="Dine In"
+                />
+              )}
+            />
+            <Controller
+              name="services.delivery"
+              control={control}
+              render={({ field }) => (
+                <FormControlLabel
+                  control={<Checkbox {...field} checked={field.value} />}
+                  label="Delivery"
+                />
+              )}
+            />
+            <Controller
+              name="services.takeOut"
+              control={control}
+              render={({ field }) => (
+                <FormControlLabel
+                  control={<Checkbox {...field} checked={field.value} />}
+                  label="Take Out"
+                />
+              )}
+            />
+            <Controller
+              name="services.eventBooking"
+              control={control}
+              render={({ field }) => (
+                <FormControlLabel
+                  control={<Checkbox {...field} checked={field.value} />}
+                  label="Event Booking"
+                />
+              )}
+            />
+            <Controller
+              name="services.tableBooking"
+              control={control}
+              render={({ field }) => (
+                <FormControlLabel
+                  control={<Checkbox {...field} checked={field.value} />}
+                  label="Table Booking"
+                />
+              )}
+            />
+            <Controller
+              name="threeDView.threedTags"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="3D Tags (comma-separated)"
+                  fullWidth
+                  margin="normal"
+                  onChange={(e) =>
+                    field.onChange(
+                      e.target.value.split(',').map((tag) => tag.trim())
+                    )
+                  }
+                />
+              )}
+            />
+              {/* New Fields */}
+              <Controller
+              name="customerPreferences.isFavorite"
+              control={control}
+              render={({ field }) => (
+                <FormControlLabel
+                  control={<Checkbox {...field} checked={field.value} />}
+                  label="Is Favorite"
+                />
+              )}
+            />
+            <Controller
+              name="dietaryPreferences.isVegan"
+              control={control}
+              render={({ field }) => (
+                <FormControlLabel
+                  control={<Checkbox {...field} checked={field.value} />}
+                  label="Is Vegan"
+                />
+              )}
+            />
+            <Controller
+              name="dietaryPreferences.isVegetarian"
+              control={control}
+              render={({ field }) => (
+                <FormControlLabel
+                  control={<Checkbox {...field} checked={field.value} />}
+                  label="Is Vegetarian"
+                />
+              )}
+            />
+            <Controller
+              name="dietaryPreferences.isGlutenFree"
+              control={control}
+              render={({ field }) => (
+                <FormControlLabel
+                  control={<Checkbox {...field} checked={field.value} />}
+                  label="Is Gluten Free"
+                />
+              )}
+            />
+            <Controller
+              name="arView.arTags"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="AR Tags (comma-separated)"
+                  fullWidth
+                  margin="normal"
+                  onChange={(e) =>
+                    field.onChange(
+                      e.target.value.split(',').map((tag) => tag.trim())
+                    )
+                  }
                 />
               )}
             />
