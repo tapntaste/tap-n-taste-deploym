@@ -23,7 +23,6 @@ const BackIcon = styled.span`
   margin-right: 10px;
   color: #000000;
   font-weight: bold;
-  font-family: 'Poppins', sans-serif; /* Updated font to Poppins */
 `;
 
 const Title = styled.h1`

@@ -9,7 +9,7 @@ import {
   TTableSelector,
   TViewBar,
 } from '@tap-n-taste/ui';
-import OfferPage from '../../offers-page/offers-page';
+import OfferPage from '../../../../components/OffersPage';
 import ChefSpecial from 't-scanning/src/components/ChefSpecial';
 import FaqPage from 't-scanning/src/components/FaqPage';
 import IssueSection from 't-scanning/src/components/IssueSection';
@@ -17,12 +17,16 @@ import GalleryPage from 't-scanning/src/components/GalleryPage';
 import TopCustomerLikes from 't-scanning/src/components/TopCustomerLikes';
 import { RestaurantInfoPage } from 't-scanning/src/components/RestaurantInfoPage';
 import ReviewPage from 't-scanning/src/components/ReviewCard';
-
-const HomePage = () => {
+import {useFetchRestaurantData} from '@tap-n-taste/hooks'
+import { RootState } from '@tap-n-taste/utils';
+import { useSelector } from 'react-redux';
+export const HomePage = () => {
+  const { restaurantData } = useSelector((state: RootState) => state.restaurant);
+  
+  
   return (
     <Box className="px-[8%] sm:px-[15%]">
       {/* Top Navigation Bar */}
-      <TopNav />
 
       {/* Table Selector */}
       <Box className="w-full flex items-center justify-center">
@@ -35,11 +39,10 @@ const HomePage = () => {
         restaurantDesc="North Indian | Chinese | Thai"
         restaurantAddress="Door 8-9/2, Rushikonda, Visakhapatnam"
         isOpen={true}
-        closingTime={11}
-        daysOperate="Mon-Fri"
         deliveryAndDinning={true}
         distance={2.2}
         ratings={4.5}
+        restaurantData={restaurantData}
       />
 
       {/* <Box className="flex justify-between items-center mb-8">
@@ -82,9 +85,6 @@ const HomePage = () => {
           Powered by Tap'nTaste
         </h1>
       </Box>
-
-      {/* Mobile Bottom Navigation */}
-      <TFooter />
     </Box>
   );
 };

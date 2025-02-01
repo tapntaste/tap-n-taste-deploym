@@ -3,45 +3,111 @@ import {
   TButton,
   TCustomCard,
   TFooter,
+  TLoadingSpinner,
   TopNav,
   TTableSelector,
 } from '@tap-n-taste/ui';
 import ControlPointRoundedIcon from '@mui/icons-material/ControlPointRounded';
 import Divider from '@mui/material/Divider';
-import ApplyCoupons from './apply-coupons/apply-coupons';
-import HotDeals from './hot-deals/hot-deals';
-import CartTable from './cart-table/cart-table';
-import { useState } from 'react';
+import ApplyCoupons from '../../../components/ApplyCoupons';
+import HotDeals from '../../../components/HotDeals';
+import { useEffect, useState } from 'react';
 import { ExpandMoreOutlined } from '@mui/icons-material';
 import { cartPageCardsData } from '../../constants/CartPageData';
+import CartTable from 't-scanning/src/components/CartTable';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@tap-n-taste/utils';
+import {
+  addMenuItemToCartThunk,
+  fetchCartItemsThunk,
+  removeMenuItemFromCartThunk,
+} from 'libs/utils/src/store/cartSlice';
+import { useNavigate } from 'react-router-dom';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { createOrder } from 'libs/utils/src/store/orderSlice';
 
-const CartPage = () => {
+export const CartPage = () => {
   const [expanded, setExpanded] = useState(false);
-
+  const [cooking, setCooking] = useState('');
+  const dispatch = useDispatch<AppDispatch>();
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+  const authState = useSelector((state: RootState) => state.auth);
+  const { restaurantData } = useSelector(
+    (state: RootState) => state.restaurant
+  );
+  const navigate = useNavigate();
+  const userId = authState?.userData?.id;
+  const restaurantId = restaurantData?._id;
+  const { userData } = useSelector((state: RootState) => state.auth); // Get the user data
+  const { cartItems, loading, error } = useSelector(
+    (state: RootState) => state.cart
+  );
+  useEffect(() => {
+    dispatch(fetchCartItemsThunk({ userId, restaurantId }));
+  }, [dispatch, userId, restaurantId, cartItems.length]);
+
+  const handleOrderCreation = async () => {
+    // Create the payload
+    const orderData = {
+      restaurantId,
+      items: cartItems.map((cartItem: any) => ({
+        menuId: cartItem.menuItem._id,
+        quantity: cartItem.quantity,
+      })),
+      tableId: userData?.table,
+      cookingRequest: cooking,
+    };
+
+    // Dispatch the createOrder thunk
+    const result = await dispatch(createOrder(orderData));
+    console.log(result);
+    if(result.meta.requestStatus === 'fulfilled') {
+      navigate(`/restaurant/${restaurantId}/user/${userId}/order-complete`);
+    }
+  };
+
+  const AddItemHandler = () => {
+    // /restaurant/${restaurantId}${navLink.path}
+    navigate(`/restaurant/${restaurantId}/menu`);
+  };
+  if (loading) return <TLoadingSpinner />;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <Box className="px-[8%] sm:px-[10%] font-primary">
-      <TopNav />
       <Box className="mt-10 flex items-center justify-between border px-6 py-3 rounded-lg">
         <h1 className="text-primary">Your Table Number is</h1>
         <TTableSelector className="relative" />
       </Box>
       <Box className="mt-10 mb-10">
-        {cartPageCardsData.map((item, index) => (
-          <TCustomCard
-            image={item.image}
-            title={item.title}
-            description={item.description}
-            rating={item.rating}
-            price={item.price}
-            veg={false}
-          />
-        ))}
+        {cartItems?.length === 0 ? (
+          <Box className="flex flex-col gap-5 justify-center items-center">
+            <ShoppingCartIcon className="h-10 w-10" />
+            <h1 className="text-xl font-semibold text-gray-500">
+              Your cart is empty
+            </h1>
+          </Box>
+        ) : (
+          cartItems.map((item: any) => (
+            <TCustomCard
+              key={item?.menuItem?._id}
+              image={item?.menuItem?.banner || ''}
+              title={item?.menuItem?.name || ''}
+              description={item?.menuItem?.description || ''}
+              rating={item?.menuItem?.ratings?.averageRating || 0}
+              price={item?.menuItem?.price || 0}
+              veg={item?.menuItem?.isVeg}
+              id={item?.menuItem?._id}
+              quantity={item?.quantity}
+              isAddButton={false}
+              isRemoveButton={true}
+            />
+          ))
+        )}
       </Box>
-      <Box className="w-full flex justify-between items-center mb-10">
+      <Box className="w-full flex justify-between items-center mb-10 ">
         <TButton
           text="Cooking Requests"
           expand={expanded}
@@ -55,6 +121,7 @@ const CartPage = () => {
           text="Add More Items"
           icon={<ControlPointRoundedIcon className="text-primary" />}
           className={{ text: 'text-primary capitalize font-semibold' }}
+          onClick={AddItemHandler}
         />
       </Box>
 
@@ -64,25 +131,28 @@ const CartPage = () => {
             className="w-full h-60 bg-zinc-200 p-4 rounded-xl"
             placeholder="Add Less Salt & Spices"
             style={{ height: '150px', resize: 'none' }} // This disables the resizing handle
+            onChange={(e: any) => {
+              setCooking(e.target.value);
+            }}
           />
         </CardContent>
       </Collapse>
 
-      <Divider className="mt-20">
+      {/* <Divider className="mt-20">
         <h1>Deals & Coupons</h1>
-      </Divider>
+      </Divider> */}
 
       {/* Apply Coupon  */}
-      <ApplyCoupons />
+      {/* <ApplyCoupons /> */}
 
       {/* Hot Deals */}
-      <HotDeals />
+      {/* <HotDeals /> */}
 
       <Divider>
         <h1>Your Cart</h1>
       </Divider>
 
-      <CartTable />
+     { cartItems.length > 0 && <CartTable cart={cartItems} />}
       <Box className="w-full flex justify-center items-center mb-10">
         <TButton
           text="Place Order"
@@ -95,10 +165,9 @@ const CartPage = () => {
               backgroundColor: '#DC3D4A',
             },
           }}
+          onClick={handleOrderCreation}
         />
       </Box>
-
-      <TFooter />
     </Box>
   );
 };

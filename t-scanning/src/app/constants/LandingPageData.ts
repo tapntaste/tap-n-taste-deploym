@@ -122,24 +122,26 @@ import RestaurantMenuOutlinedIcon from '@mui/icons-material/RestaurantMenuOutlin
 import NotificationsActiveOutlinedIcon from '@mui/icons-material/NotificationsActiveOutlined';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
+import { AccountCircle } from '@mui/icons-material';
+
 
 export const navLinksData = [
   {
     icon: HomeOutlinedIcon,
     linkText: 'Home',
-    path: '/restaurant/:restaurantId/',
+    path: '/',
     end: true, // Active only for the exact "/restaurants/:id"
   },
   {
     icon: RestaurantMenuOutlinedIcon,
     linkText: 'Menu',
-    path: '/restaurant/:restaurantId/menu',
+    path: '/menu',
     end: false, // Sub-paths are fine
   },
   {
     icon: NotificationsActiveOutlinedIcon,
     linkText: 'Notifications',
-    path: '/restaurant/:restaurantId/notification',
+    path: '/user/:userId/notification',
     end: true,
   },
   {
@@ -154,6 +156,7 @@ export const navLinksData = [
     path: '/contact',
     end: true,
   },
+
 ];
 
 export const chefSpecialData = [

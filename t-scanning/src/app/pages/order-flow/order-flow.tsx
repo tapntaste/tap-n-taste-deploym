@@ -1,24 +1,53 @@
 import React, { useState, useEffect } from "react";
 import { TCustomCard, TFooter } from '@tap-n-taste/ui';
 import SearchIcon from "../../../assets/mynaui_search.png";
-import { oneorderdata, OrderPageData } from "../../constants/orderpagedata";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@tap-n-taste/utils";
+import { deleteMenuItemFromOrder, fetchOrdersByUserId } from "libs/utils/src/store/orderSlice";
 
-const OrderComplete: React.FC = () => {
-  const [timeLeft, setTimeLeft] = useState(59);
+export const OrderComplete: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { orders, loading, error } = useSelector((state: RootState) => state.order);
+  const userId = useSelector((state: RootState) => state.auth.userData?.id);
 
-  // Timer logic
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+      dispatch(fetchOrdersByUserId(userId));
+  }, [dispatch,orders.length]);
 
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-    return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
+
+  const handleDeleteMenuItem = async (orderId:any,id:any) => {
+    try {
+      await dispatch(deleteMenuItemFromOrder({ orderId, menuId: id })).unwrap();
+      console.log('Item deleted successfully',orders);
+    } catch (error) {
+      console.error('Failed to delete item:', error);
+    }
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
+  const renderOrderItems = (items: any[],orderId:any) => (
+    items.map((item, index) => (
+      <TCustomCard
+        key={item.menuId._id || index}
+        image={item.menuId.banner}
+        title={item.menuId.name}
+        description={item.menuId.description}
+        rating={item.menuId.ratings.averageRating}
+        price={item.menuId.price}
+        veg={item.menuId.isVeg}
+        quantity={item?.quantity}
+        isOrderCard={true}
+        orderId={orderId}
+        id={item.menuId._id}
+        handleDeleteMenuItems={handleDeleteMenuItem}
+      />
+    ))
+  );
+
+  const activeOrders = orders.filter(order => order.orderStatus === "Pending");
+  const completedOrders = orders.filter(order => order.orderStatus === "Completed");
 
   return (
     <div
@@ -26,8 +55,6 @@ const OrderComplete: React.FC = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        minHeight: "100vh",
-        backgroundColor: "#f9f9f9",
         padding: "16px",
         fontFamily: "Poppins, sans-serif",
         boxSizing: "border-box",
@@ -37,13 +64,10 @@ const OrderComplete: React.FC = () => {
       <div
         style={{
           backgroundColor: "#ffffff",
-          width: "100%",
-          maxWidth: "470px", // Adjusted for mobile-first design
           borderRadius: "12px",
-          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
           padding: "16px",
           boxSizing: "border-box",
-          overflow: "hidden", // Prevent any overflowing content
+          overflow: "hidden",
         }}
       >
         {/* Top Heading */}
@@ -53,7 +77,7 @@ const OrderComplete: React.FC = () => {
           </h3>
         </div>
 
-        {/* Buttons */}
+        {/* Order Filters */}
         <div style={{ display: "flex", justifyContent: "space-between", margin: "12px 0" }}>
           {["Active", "Completed", "All"].map((label, index) => (
             <button
@@ -64,7 +88,7 @@ const OrderComplete: React.FC = () => {
                 padding: "6px 0",
                 border: "none",
                 borderRadius: "20px",
-                backgroundColor: label === "All" ? "#ff4c61" : "#e6e6e6",
+                backgroundColor: label === "Active" ? "#ff4c61" : "#e6e6e6",
                 color: "#fff",
                 fontSize: "14px",
                 cursor: "pointer",
@@ -102,48 +126,22 @@ const OrderComplete: React.FC = () => {
               fontSize: "16px",
               margin: "12px 0",
               color: "#000",
-              display: "flex",
-              justifyContent: "space-between",
-              flexWrap: "wrap", // Prevent overflowing
             }}
           >
-            Active Orders{" "}
-            <span style={{ color: "#ff4c61" }}>(Id: 7465hbndfg7)</span>
-            <span style={{ color: "#ff4c61", marginLeft: "auto" }}>In Progress</span>
+            Active Orders
           </h4>
-          {OrderPageData.map((item, index) => (
-            <TCustomCard
-              key={index}
-              image={item.image}
-              title={item.title}
-              description={item.description}
-              rating={item.rating}
-              price={item.price}
-              veg={false}
-            />
-          ))}
-
-          {/* Cancel Button */}
-          <div style={{ textAlign: "center", marginTop: "16px" }}>
-            <button
-              style={{
-                backgroundColor: "#ff4c61",
-                color: "#fff",
-                border: "none",
-                borderRadius: "8px",
-                padding: "12px",
-                fontSize: "16px",
-                width: "100%",
-                cursor: "pointer",
-              }}
-            >
-              Cancel Order
-            </button>
-            <p style={{ marginTop: "8px", fontSize: "12px", color: "#000" }}>
-              Time left to cancel:{" "}
-              <span style={{ color: "#ff4c61" }}>{formatTime(timeLeft)}</span>
-            </p>
-          </div>
+          {activeOrders.length > 0 ? (
+            activeOrders.map(order => (
+              <div key={order._id}>
+                <h5 style={{ fontSize: "14px", color: "#ff4c61" }}>
+                  {order.items.length?`Order ID: ${order._id}`:''}
+                </h5>
+                {renderOrderItems(order.items,order._id)}
+              </div>
+            ))
+          ) : (
+            <p style={{ fontSize: "14px", color: "#9e9e9e" }}>No active orders</p>
+          )}
         </div>
 
         {/* Completed Orders */}
@@ -153,31 +151,22 @@ const OrderComplete: React.FC = () => {
               fontSize: "16px",
               margin: "12px 0",
               color: "#000",
-              display: "flex",
-              justifyContent: "space-between",
-              flexWrap: "wrap", // Prevent overflowing
             }}
           >
-            Completed Orders{" "}
-            <span style={{ color: "#ff4c61" }}>(Id: 7465hbndfg7)</span>
-            <span style={{ color: "#ff4c61", marginLeft: "auto" }}>Order Completed</span>
+            Completed Orders
           </h4>
-          {oneorderdata.map((item, index) => (
-            <TCustomCard
-              key={index}
-              image={item.image}
-              title={item.title}
-              description={item.description}
-              rating={item.rating}
-              price={item.price}
-              veg={false}
-            />
-          ))}
-        </div>
-
-        {/* Bottom Navbar */}
-        <div style={{ marginTop: "16px" }}>
-          <TFooter />
+          {completedOrders.length > 0 ? (
+            completedOrders.map(order => (
+              <div key={order._id}>
+                <h5 style={{ fontSize: "14px", color: "#4caf50" }}>
+                  {order.items.length&&`Order ID: ${order._id}`}
+                </h5>
+                {renderOrderItems(order.items,order._id)}
+              </div>
+            ))
+          ) : (
+            <p style={{ fontSize: "14px", color: "#9e9e9e" }}>No completed orders</p>
+          )}
         </div>
       </div>
     </div>

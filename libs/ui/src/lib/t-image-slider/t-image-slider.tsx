@@ -1,9 +1,10 @@
 import { Box } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSwipeable } from 'react-swipeable';
+import { RootState } from '@tap-n-taste/utils';
+import { useSelector } from 'react-redux';
 
 interface ImageSliderProps {
-  images: string[]; // Array of image URLs
   className?: {
     root?: string; // Root container class
     image?: string; // Image class
@@ -14,21 +15,21 @@ interface ImageSliderProps {
   [rest: string]: any; // Additional props
 }
 
-export function ImageSlider({
-  images,
-  className = {},
-  ...rest
-}: ImageSliderProps) {
+export function ImageSlider({ className = {}, ...rest }: ImageSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleSwipeLeft = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    setCurrentIndex((prevIndex) => {
+      if (prevIndex === restaurantData?.media?.gallery?.length - 1) return 0;
+      return prevIndex + 1;
+    });
   };
 
   const handleSwipeRight = () => {
-    setCurrentIndex(
-      (prevIndex) => (prevIndex - 1 + images.length) % images.length
-    );
+    setCurrentIndex((prevIndex) => {
+      if (prevIndex === 0) return restaurantData?.media?.gallery?.length - 1;
+      return prevIndex - 1;
+    });
   };
 
   const handlers = useSwipeable({
@@ -47,6 +48,10 @@ export function ImageSlider({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  const { restaurantData } = useSelector(
+    (state: RootState) => state.restaurant
+  );
+
   return (
     <Box
       {...handlers}
@@ -57,14 +62,16 @@ export function ImageSlider({
     >
       {/* Container for image */}
       <div className="w-full h-full overflow-hidden">
-        <img
-          src={images[currentIndex]}
-          alt={`Slide ${currentIndex}`}
-          loading="lazy"
-          className={`w-full h-full object-cover object-center rounded-xl transition-transform duration-500 ${
-            className.image || ''
-          }`}
-        />
+        <Suspense fallback={<div>Loading Image...</div>}>
+          <img
+            loading="lazy"
+            src={restaurantData?.media?.gallery[currentIndex]}
+            alt={`Slide ${currentIndex}`}
+            className={`w-full h-full object-cover object-center rounded-xl transition-transform duration-500 ${
+              className.image || ''
+            }`}
+          />
+        </Suspense>
       </div>
 
       {/* Indicators */}
@@ -73,7 +80,7 @@ export function ImageSlider({
           className.indicator || ''
         }`}
       >
-        {images.map((_, index) => (
+        {restaurantData?.media?.gallery?.map((_: any, index: any) => (
           <div
             key={index}
             onClick={() => setCurrentIndex(index)}

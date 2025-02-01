@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const tableSchema = new mongoose.Schema({
   name: { type: String, required: true, trim: true }, // e.g., "Table 1"
-  number: { type: Number, required: true, unique: true }, // e.g., 1
+  number: { type: Number, required: true }, // e.g., 1
   restaurant: { type: mongoose.Schema.Types.ObjectId, ref: "Restaurant", required: true },
   
   // QR Code for menu/digital interaction
@@ -33,10 +33,21 @@ const tableSchema = new mongoose.Schema({
   // Booking Information
   bookings: [
     {
-      user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-      bookingTime: { type: Date },
-      duration: { type: Number, min: 1 }, // Duration in minutes
-      specialRequests: { type: String, trim: true }, // e.g., "High Chair", "Birthday Setup"
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+      bookingTime: {
+        type: Date,
+        default: Date.now,
+      },
+      duration: {
+        type: Number,
+        default: 120, // default duration if not provided
+      },
+      specialRequests: {
+        type: String,
+      },
     },
   ],
 

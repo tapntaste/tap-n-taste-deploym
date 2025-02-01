@@ -7,16 +7,19 @@ import './app.css';
 import '@fontsource/poppins'; // Defaults to weight 400
 import { LoginSignUp } from '@tap-n-taste/ui';
 import { ToastContainer } from 'react-toastify';
+import { Provider } from 'react-redux';
+import { store } from '@tap-n-taste/utils';
 
 // Main App Component
 const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
+        <Provider store={store}>
        <ToastContainer position="top-right" autoClose={5000} />
       <CssBaseline /> {/* Ensures consistent baseline styles across browsers */}
       <Routes>
         {/* Default Route */}
-        <Route path="/" element={<div>Tap-n-Taste Home Page</div>} />
+        <Route path="/admin/page" element={<div>Tap-n-Taste Home Page</div>} />
 
         <Route
           path="/restaurant/:restaurantId/login"
@@ -35,6 +38,7 @@ const App: React.FC = () => {
           element={<RestaurantAdminPage />}
         />
       </Routes>
+      </Provider>
     </ThemeProvider>
   );
 };

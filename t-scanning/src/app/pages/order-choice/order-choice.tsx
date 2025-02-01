@@ -6,7 +6,7 @@ import takeAwayIcon from '../../../assets/Ellipse 166.png';
 import dineInIcon from '../../../assets/Ellipse 166.png';
 import bellIcon from '../../../assets/hugeicons_notification-02.png';
 
-const OrderChoices = () => {
+export const OrderChoices = () => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [showDineInPopup, setShowDineInPopup] = useState<boolean>(false);
   const [showTakeAwayPopup, setShowTakeAwayPopup] = useState<boolean>(false);
@@ -299,9 +299,9 @@ const OrderChoices = () => {
                   Schedule Later
                 </h3>
               </div>
-              
-            
-            
+
+
+
             {takeAwayChoice === 'scheduleLater' && (
               <p
                 style={{
@@ -317,9 +317,9 @@ const OrderChoices = () => {
             )}
             </div>
           )}
-          
-            
-          
+
+
+
           {/* Popup */}
       {showTakeAwayPopup && (
         <div
@@ -542,7 +542,7 @@ const OrderChoices = () => {
         <div
           style={{
             width: '100%',
-            
+
             marginTop: 'auto',
             borderTop: '1px solid #e6e6e6',
           }}
@@ -550,7 +550,7 @@ const OrderChoices = () => {
           <TFooter />
         </div>
       </div>
-  
+
     </div>
   );
 };

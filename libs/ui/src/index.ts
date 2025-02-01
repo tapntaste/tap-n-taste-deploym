@@ -34,3 +34,9 @@ export * from './lib/t-button/t-button';
 export * from './lib/t-main-layout';
 export * from './lib/t-image-slider';
 export * from './lib/t-admin-components'
+export * from './lib/t-loading/t-loading';
+export * from './lib/t-error/t-error';
+export * from './lib/t-book-event/t-book-event';
+export * from './lib/t-book-events/t-book-events';
+export * from './lib/t-ticket/t-ticket';
+export * from './lib/t-protected/t-protected';

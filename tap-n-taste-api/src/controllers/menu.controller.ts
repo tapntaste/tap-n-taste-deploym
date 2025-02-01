@@ -5,7 +5,7 @@ import Restaurant from '../models/restaurant.model.js';
 export const createMenuItem = async (req, res) => {
   try {
     const restaurantId = req.params.id;
-    const { name, price, category, createdBy } = req.body;
+    const { name, price, category } = req.body;
 
     // Validate required fields
     if (!name || !price || !category) {
@@ -21,9 +21,13 @@ export const createMenuItem = async (req, res) => {
     const menuItem = new MenuItem({ ...req.body, restaurant: restaurantId });
     const savedMenuItem = await menuItem.save();
 
-    res.status(201).json({ message: 'Menu item created successfully', data: savedMenuItem });
+    res
+      .status(201)
+      .json({ message: 'Menu item created successfully', data: savedMenuItem });
   } catch (error) {
-    res.status(500).json({ error: 'Error creating menu item', details: error.message });
+    res
+      .status(500)
+      .json({ error: 'Error creating menu item', details: error.message });
   }
 };
 
@@ -41,23 +45,74 @@ export const getAllMenuItemsForRestaurant = async (req, res) => {
     const menuItems = await MenuItem.find({ restaurant: restaurantId });
     res.status(200).json({ data: menuItems });
   } catch (error) {
-    res.status(500).json({ error: 'Error fetching menu items', details: error.message });
+    res
+      .status(500)
+      .json({ error: 'Error fetching menu items', details: error.message });
   }
 };
+
+export const getFilteredMenuItemsForRestaurant = async (req, res) => {
+  try {
+    const restaurantId = req.params.id;
+
+    // Ensure the restaurant exists
+    const restaurant = await Restaurant.findById(restaurantId);
+    if (!restaurant) {
+      return res.status(404).json({ error: 'Restaurant not found' });
+    }
+
+    // Initialize filter object
+    const filter: { [key: string]: any } = { restaurant: restaurantId };
+
+    // Apply filters if present in the query
+    if (req.query.category) {
+      filter.category = req.query.category;
+    }
+
+    if (req.query.isChefSpecial !== undefined) {
+      filter.isChefSpecial = req.query.isChefSpecial === 'true';
+    }
+
+    if (req.query.isMostLiked !== undefined) {
+      filter.isMostLiked = req.query.isMostLiked === 'true';
+    }
+
+    if (req.query.isFeatured !== undefined) {
+      filter.isFeatured = req.query.isFeatured === 'true';
+    }
+
+    // Fetch filtered menu items
+    const menuItems = await MenuItem.find(filter);
+
+    res.status(200).json({ data: menuItems });
+  } catch (error) {
+    res.status(500).json({
+      error: 'Error fetching menu items',
+      details: error.message,
+    });
+  }
+};
+
+
 
 // Controller to get a specific menu item by ID for a restaurant
 export const getMenuItemById = async (req, res) => {
   try {
     const { id: restaurantId, menuId } = req.params;
 
-    const menuItem = await MenuItem.findOne({ _id: menuId, restaurant: restaurantId });
+    const menuItem = await MenuItem.findOne({
+      _id: menuId,
+      restaurant: restaurantId,
+    });
     if (!menuItem) {
       return res.status(404).json({ error: 'Menu item not found' });
     }
 
     res.status(200).json({ data: menuItem });
   } catch (error) {
-    res.status(500).json({ error: 'Error fetching menu item', details: error.message });
+    res
+      .status(500)
+      .json({ error: 'Error fetching menu item', details: error.message });
   }
 };
 
@@ -76,9 +131,16 @@ export const updateMenuItem = async (req, res) => {
       return res.status(404).json({ error: 'Menu item not found' });
     }
 
-    res.status(200).json({ message: 'Menu item updated successfully', data: updatedMenuItem });
+    res
+      .status(200)
+      .json({
+        message: 'Menu item updated successfully',
+        data: updatedMenuItem,
+      });
   } catch (error) {
-    res.status(500).json({ error: 'Error updating menu item', details: error.message });
+    res
+      .status(500)
+      .json({ error: 'Error updating menu item', details: error.message });
   }
 };
 
@@ -87,7 +149,10 @@ export const deleteMenuItem = async (req, res) => {
   try {
     const { id: restaurantId, menuId } = req.params;
 
-    const deletedMenuItem = await MenuItem.findOneAndDelete({ _id: menuId, restaurant: restaurantId });
+    const deletedMenuItem = await MenuItem.findOneAndDelete({
+      _id: menuId,
+      restaurant: restaurantId,
+    });
 
     if (!deletedMenuItem) {
       return res.status(404).json({ error: 'Menu item not found' });
@@ -95,6 +160,8 @@ export const deleteMenuItem = async (req, res) => {
 
     res.status(200).json({ message: 'Menu item deleted successfully' });
   } catch (error) {
-    res.status(500).json({ error: 'Error deleting menu item', details: error.message });
+    res
+      .status(500)
+      .json({ error: 'Error deleting menu item', details: error.message });
   }
 };

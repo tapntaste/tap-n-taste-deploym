@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {axiosInstance} from '@tap-n-taste/hooks';
 import { useNavigate, useParams } from 'react-router-dom';
-import {T_ADMIN_FRONTEND_URL,T_SCANNING_FRONTEND_URL} from '@tap-n-taste/constant'
+import {ADMIN_FRONTEND_URL, SCANNING_FRONTEND_URL, T_ADMIN_FRONTEND_URL,T_SCANNING_FRONTEND_URL} from '@tap-n-taste/constant'
 export function useAuth() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -14,8 +14,6 @@ export function useAuth() {
     isAdminSignUpLogin?: boolean,
     type?:string,
   ) => {
-    console.log(endpoint, payload, isLogin,isAdminSignUpLogin,type);
-    
     setLoading(true);
     setError(null);
     try {
@@ -25,17 +23,16 @@ export function useAuth() {
         payload
       );
       setData(response.data);
-      console.log(response.status===200);
+      console.log('fdadsfsa',response.data);
       if (response?.status === 200) {
-        
-        const restaurantId = response?.data?.restaurantId||'1';
-        const userId = response?.data?.id;
+        const restaurantId = response?.data?.user?.restaurantId||'1';
+        const userId = response?.data?.user?.id;
         console.log('response',response,isLogin);
       
-        if (response?.data?.role==='Admin') {
-              window.location.href = `${T_ADMIN_FRONTEND_URL}/restaurant/${restaurantId}/admin/${userId}`;
-        } else if(response?.data?.role==='User'){
-              window.location.href = `${T_SCANNING_FRONTEND_URL}/restaurant/${restaurantId}/user/${userId}`;
+        if (response?.data?.user?.role==='Admin') {
+              window.location.href = `${ADMIN_FRONTEND_URL}/restaurant/${restaurantId}/admin/${userId}`;
+        } else if(response?.data?.user?.role==='User'){
+              window.location.href = `${SCANNING_FRONTEND_URL}/restaurant/${restaurantId}/user/${userId}`;
         }
       }
       return response.data;

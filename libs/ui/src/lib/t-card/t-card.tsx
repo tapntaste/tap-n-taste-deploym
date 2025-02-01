@@ -74,7 +74,7 @@ export function TCard({
 
   return (
     <Card
-      className={clsx(root)} // Apply the root className
+      className={`flex felx-grow mb-4 ${clsx(root)}`} // Apply the root className
       sx={{
         ...styles.container,
         backgroundImage: `url(${imgURL})`,

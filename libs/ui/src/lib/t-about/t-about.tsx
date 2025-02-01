@@ -1,12 +1,21 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import XIcon from '@mui/icons-material/X';
 import GradeIcon from '@mui/icons-material/Grade';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { Box } from '@mui/material';
+import {
+  Box,
+  Chip,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+} from '@mui/material';
 import { TopNav } from '../t-top-nav';
+import { RootState } from '@tap-n-taste/utils';
+import { useSelector } from 'react-redux';
 
 // Main container for the restaurant card
 const RestaurantCard = styled.div`
@@ -141,54 +150,102 @@ const IconButton = styled.button`
 `;
 
 // Component
-export function TAbout({
-  restaurantName = 'Restaurant Name',
-  openingTime = '10:00am',
-  closingTime = '11:00pm',
-  cuisines = 'Chinese | Italian | Cafe',
-  address = 'Address, address',
-  phoneNumber = 'Phone Number',
-  distance = '2.2km away',
-  facilities = [
-    'Take away Available',
-    'Indoor Seating',
-    'Event Booking',
-    'Table Booking',
-    'Dine In',
-    'Home Delivery',
-  ],
-}) {
+export function TAbout() {
+  const { restaurantData } = useSelector(
+    (state: RootState) => state.restaurant
+  );
+  const [activeFeatures, setActiveFeatures] = useState<any[]>([]);
+  useEffect(() => {
+    const featureLabels: { [key: string]: string } = {
+      isOrderOnline: 'Order Online Available',
+      isReviewActivated: 'Reviews Activated',
+      isBookTable: 'Table Booking Available',
+      isEventBook: 'Event Booking Available',
+      isArMenu: 'Augmented Reality Menu Available',
+      isMenuAvailable: 'Menu Available',
+      isDineInAvailable: 'Dine-In Available',
+      isDeliveryAvailable: 'Delivery Available',
+      isTakeawayAvailable: 'Takeaway Available',
+      isPureVeg: 'Pure Vegetarian',
+      isNonVeg: 'Non-Vegetarian Options Available',
+    };
+
+    const features = restaurantData?.features || {};
+
+    // Filter for features that are true and map to the featureLabels
+    const activeFeatures = Object.keys(features)
+      .filter((key) => features[key] === true) // Only keep keys where the value is true
+      .map((key) => featureLabels[key]); // Map the key to its label
+    setActiveFeatures(activeFeatures); // Set the state with the active feature labels
+  }, [restaurantData]);
+
   return (
     <RestaurantCard>
       <Header>
-        <RestaurantName>{restaurantName}</RestaurantName>
+        <RestaurantName>{restaurantData?.name}</RestaurantName>
         <Rating>
           <GradeIcon />
-          4.5
+        {restaurantData?.averageRating}
         </Rating>
       </Header>
       <Details>
-        {cuisines}
+        {/* {cuisines} */}
         <br />
-        {address}
+        <Typography>
+          {[
+            restaurantData?.location?.street,
+            restaurantData?.location?.city,
+            restaurantData?.location?.state,
+            restaurantData?.location?.zipCode,
+            restaurantData?.location?.country,
+          ]
+            .filter(Boolean)
+            .join(', ')}
+        </Typography>
         <br />
-        {phoneNumber}
+        {restaurantData?.contact[0]?.phone}
         <br />
-        {distance}
         <Timing>
-          Opens at {openingTime} | Closes at {closingTime}
+          {/* Opens at {openingTime} | Closes at {closingTime} */}
+          <p>
+            {restaurantData?.status === 'Open' ? (
+              <Chip
+                label="Open now"
+                color="success"
+                size="small"
+                sx={{ mr: 1 }}
+              />
+            ) : (
+              <Chip
+                label="Closed now"
+                color="error"
+                size="small"
+                sx={{ mr: 1 }}
+              />
+            )}
+            Closes at {restaurantData?.openHours?.closingTime} |{' '}
+            {restaurantData?.openHours?.days[0] || 'N/A'} -{' '}
+            {restaurantData?.openHours?.days[
+              restaurantData?.openHours?.days.length - 1
+            ] || 'N/A'}
+          </p>
         </Timing>
       </Details>
       <SectionHeader>Facilities</SectionHeader>
       <FacilityList>
-        {facilities.map((facility, index) => (
-          <FacilityItem key={index}>
-            <Checkmark>
-              <CheckCircleIcon />
-            </Checkmark>{' '}
-            {facility}
-          </FacilityItem>
-        ))}
+        {activeFeatures.length > 0 ? (
+          <List>
+            {activeFeatures.map((label, index) => (
+              <ListItem key={index}>
+                <ListItemText primary={label} />
+              </ListItem>
+            ))}
+          </List>
+        ) : (
+          <Typography color="textSecondary">
+            No active features available.
+          </Typography>
+        )}
       </FacilityList>
       <SectionHeader>Connect with us</SectionHeader>
       <IconsButtonContainer>

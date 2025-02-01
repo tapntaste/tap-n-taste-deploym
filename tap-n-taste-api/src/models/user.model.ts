@@ -1,4 +1,4 @@
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Document, Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
 
 // Define the User interface extending Document
@@ -12,6 +12,11 @@ export interface IUser extends Document {
   otpExpiry?: number; // Add OTP expiry date
   role: 'User' | 'Admin' | 'SuperAdmin';
   restaurantId?: mongoose.Schema.Types.ObjectId; // Admin only, linking to restaurant
+  // cart?: mongoose.Schema.Types.ObjectId[]; // Admin only, linking to restaurant
+  cart?: {
+    menuItemId: Schema.Types.ObjectId;
+    quantity: number;
+  }[]; // This defines cart as an array of objects
   status: 'pending' | 'verified'; // Status after email verification
   comparePassword: (candidatePassword: string) => Promise<boolean>;
 
@@ -43,6 +48,7 @@ export interface IUser extends Document {
   isBlocked?: boolean; // Block user from login if true
   favoriteRestaurants?: mongoose.Schema.Types.ObjectId[]; // List of restaurants the user prefers
   orderHistory?: mongoose.Schema.Types.ObjectId[]; // List of past orders by user
+  table?: mongoose.Schema.Types.ObjectId;
 }
 
 const userSchema = new mongoose.Schema(
@@ -72,8 +78,8 @@ const userSchema = new mongoose.Schema(
       language: { type: String, default: 'English' },
       currency: { type: String, default: 'USD' },
       notificationsEnabled: { type: Boolean, default: true },
-      dietaryPreferences: { 
-        type: [String], 
+      dietaryPreferences: {
+        type: [String],
         default: [], // e.g., Vegan, Gluten-Free, Dairy-Free
       },
       favoriteCuisine: { type: String, default: null }, // e.g., Italian, Chinese, etc.
@@ -95,14 +101,28 @@ const userSchema = new mongoose.Schema(
     resetPasswordToken: { type: String },
     resetPasswordExpiry: { type: Date },
     isBlocked: { type: Boolean, default: false }, // Blocked users cannot log in
-    favoriteRestaurants: [{ 
-      type: mongoose.Schema.Types.ObjectId, 
-      ref: 'Restaurant' 
-    }], // List of restaurants the user prefers
-    orderHistory: [{ 
-      type: mongoose.Schema.Types.ObjectId, 
-      ref: 'Order' 
-    }], // List of past orders by the user
+    favoriteRestaurants: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Restaurant',
+      },
+    ], // List of restaurants the user prefers
+    orderHistory: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Order',
+      },
+    ], // List of past orders by the user
+    cart: [
+      {
+        menuItemId: { type: mongoose.Schema.Types.ObjectId, ref: 'Menu' },
+        quantity: { type: Number, required: true, default: 1 },
+      },
+    ],
+    table: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Table',
+    },
   },
   { timestamps: true }
 );

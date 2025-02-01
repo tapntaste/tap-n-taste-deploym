@@ -1,4 +1,3 @@
-
 import React from "react";
 import styled from "styled-components";
 import eventimg from "./event.jpg";
@@ -25,24 +24,20 @@ const StyledTTicket = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   font-family: Arial, sans-serif;
   overflow: hidden;
-
   img {
     width: 100%;
     height: auto;
     object-fit: cover;
   }
-
   .ticket-content {
     padding: 16px;
   }
-
   .ticket-title {
     font-size: 20px;
     margin-bottom: 12px;
     text-align: center;
     color:#616161;
   }
-
   .ticket-info {
     display: flex;
     justify-content: space-between;
@@ -50,46 +45,38 @@ const StyledTTicket = styled.div`
     color: #444;
     margin-bottom: 8px;
   }
-
   .ticket-info div {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     
   }
-
   .ticket-info-right {
     text-align: right;
     width: 50%; 
   }
-
   .ticket-info span {
     font-weight: bold;
   }
-
   .dashed-line {
     height: 1px;
     border-top: 2px dashed #ccc;
     margin: 16px 0;
   }
-
   .barcode {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: 16px 0;
   }
-
   .barcode img {
     height: 40px;
   }
-
   .barcode p {
     margin-top: 8px;
     font-size: 12px;
     color: #777;
   }
-
   .responsive-btn {
     display: flex;
     justify-content: center;

@@ -1,10 +1,18 @@
 // export default TCustomCard;
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaStar } from 'react-icons/fa6';
 import { TbSquareDot } from 'react-icons/tb'; // Import the TbSquareDot icon
 import TCounter from '../t-counter/t-counter';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@tap-n-taste/utils';
+import {
+  addMenuItemToCartThunk,
+  removeMenuItemFromCartThunk,
+  updateCartItemQuantity,
+} from 'libs/utils/src/store/cartSlice';
+import { Button } from '@mui/material';
+import { deleteMenuItemFromOrder } from 'libs/utils/src/store/orderSlice';
 
 const CardContainer = styled.div`
   display: flex;
@@ -165,10 +173,55 @@ export function TCustomCard({
   rating,
   price,
   veg,
-  onClick,
+  id,
+  quantity,
+  isAddButton = false, // Default to true (add button)
+  isRemoveButton = false, // Default to false (remove button)
+  isCancelButton=false,
+  isMenuCard=false,
+  isOrderCard=false,
+  orderId,
+  handleDeleteMenuItems
 }: any) {
+  const dispatch = useDispatch<AppDispatch>();
+  const [count, setCount] = useState(quantity || 1);
+
+  const { restaurantData } = useSelector(
+    (state: RootState) => state.restaurant
+  );
+  const authState = useSelector((state: RootState) => state.auth);
+  const {orders} = useSelector((state: RootState) => state.order);
+  console.log(orders);
+  const handleAddItem = () => {
+    dispatch(
+      addMenuItemToCartThunk({
+        userId: authState?.userData?.id,
+        menuItemId: id,
+        restaurantId: restaurantData._id,
+        quantity: count,
+      })
+    );
+  };
+
+  const handleDeleteMenuItem = async () => {
+    handleDeleteMenuItems(orderId,id)
+  };
+  const handleRemoveItem = () => {
+    dispatch(
+      removeMenuItemFromCartThunk({
+        userId: authState?.userData?.id,
+        menuItemId: id,
+        restaurantId: restaurantData._id,
+      })
+    );
+  };
+
+  const handleCountChange = (newCount: number) => {
+    dispatch(updateCartItemQuantity({ menuItemId: id, quantity: newCount }));
+  };
+
   return (
-    <StyledTCustomCard onClick={onClick}>
+    <StyledTCustomCard>
       <CardContainer>
         <Image src={image} alt={title} />
         <InfoContainer>
@@ -190,8 +243,15 @@ export function TCustomCard({
               <RatingText>{rating}</RatingText>
             </RatingContainer>
             <RightContainer>
-              <TCounter />
-              <AddButton>ADD</AddButton>
+              <TCounter disabled={isOrderCard} count={isMenuCard?count:quantity} setCount={isMenuCard?setCount:handleCountChange} />
+              {/* <Button onClick={handleAddItem}>ADD</Button> */}
+              {!isOrderCard&&isAddButton && !isRemoveButton && (
+                <Button onClick={handleAddItem}>ADD</Button>
+              )}
+              {!isOrderCard&& isRemoveButton && !isAddButton && (
+                <Button onClick={handleRemoveItem}>REMOVE</Button>
+              )}
+              {isOrderCard&&<Button onClick={handleDeleteMenuItem}>Cancel</Button>}
             </RightContainer>
           </ActionContainer>
         </InfoContainer>
@@ -200,5 +260,3 @@ export function TCustomCard({
     </StyledTCustomCard>
   );
 }
-
-export default TCustomCard;
