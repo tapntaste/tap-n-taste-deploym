@@ -58,6 +58,7 @@ import EditProfile from '../settings-admin-screen/edit-profile';
 import ResDetails from '../settings-admin-screen/res-details';
 import AdminPageOrderChoice from '../admin-order-choice/admin-order-choice';
 import AdminPageAddChoice from '../admin-add-choice/admin-add-choice';
+import AdminContactus from '../admin-page-contact/admin-page-contact';
 // @ Paths for routing as constants for easy maintenance and scalability
 const PATHS = {
   HOME: '/',
@@ -150,6 +151,7 @@ export const LandingPage = () => {
 
         <Route path="admin-order-choice" element={<AdminPageOrderChoice />} />
         <Route path="admin-add-choice" element={<AdminPageAddChoice />} />
+        <Route path="admin-contact-us" element={<AdminContactus/>} />
 
         <Route path="settings" element={<Settings />} />
         <Route path="general" element={<General />} />
